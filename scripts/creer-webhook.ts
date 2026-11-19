@@ -25,7 +25,6 @@ const corps = {
     filter: '_type in ["page", "reglages"]',
     projection: '{_id, _type}',
   },
-  isDisabled: false,
 };
 
 const reponse = await fetch(`https://api.sanity.io/v2021-10-04/hooks/projects/${projectId}`, {
