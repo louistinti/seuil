@@ -1,0 +1,50 @@
+---
+// Témoignage : emplacements seulement, jamais de faux témoignage ni de faux logo.
+import Emplacement from '../Emplacement.astro';
+import type { SectionTemoignage } from '../../lib/types';
+
+interface Props {
+  section: SectionTemoignage;
+  niveau: 1 | 2;
+}
+const { section: s } = Astro.props;
+const logos = Array.from({ length: s.logos ?? 4 });
+---
+
+<section class="conteneur temoignage" id={s.ancre} aria-label="Témoignage client à venir">
+  <Emplacement libelle="emplacement témoignage client" taille="temoignage" />
+  {
+    logos.length > 0 && (
+      <div class="logos" style={`--colonnes: ${logos.length}`}>
+        {logos.map(() => (
+          <Emplacement libelle="emplacement logo client" taille="logo" />
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .temoignage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-300);
+  }
+
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(var(--colonnes), minmax(0, 1fr));
+    gap: var(--space-300);
+  }
+
+  @media (max-width: 767px) {
+    .temoignage {
+      gap: var(--space-200);
+    }
+
+    .logos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-200);
+    }
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+// Badge d'état : toujours une icône et un libellé, jamais la couleur seule.
+import Icone from './Icone.astro';
+
+interface Props {
+  resultat: string;
+  /** Texte affiché à la place du libellé, par exemple « 3 envoyées à l'analyste ». */
+  texte?: string;
+}
+const { resultat, texte } = Astro.props;
+const etat = resultat === 'Acceptée' ? 'accepted' : resultat === 'Refusée' ? 'refused' : 'pending';
+const icone = etat === 'accepted' ? 'coche' : etat === 'refused' ? 'croix' : 'horloge';
+---
+
+<span class="badge" data-etat={etat}>
+  <Icone nom={icone} taille={14} />
+  <span>{texte ?? resultat}</span>
+</span>

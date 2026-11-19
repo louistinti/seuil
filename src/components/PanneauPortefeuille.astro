@@ -1,0 +1,224 @@
+---
+// Panneau de données Portefeuille clients : 3 chiffres, tableau (cartes empilées sur mobile), répartition des décisions.
+import Badge from './Badge.astro';
+import Etiquette from './Etiquette.astro';
+import donnees from '../data/donnees-produit.json';
+import { euros } from '../lib/simulateur';
+
+const p = donnees.portefeuille;
+const pct = (n: number) => `${n.toFixed(1).replace('.', ',')} %`;
+const jours = (n?: number) => (!n ? 'Aucun' : `${n} jours`);
+const decisions = p.decision_par_client as Record<string, string>;
+const lignes = donnees.clients.map((c) => ({
+  nom: c.nom,
+  encours: euros(c.encours),
+  limite: c.limite === null ? 'À fixer' : euros(c.limite),
+  usage: 'usage_pct' in c && typeof c.usage_pct === 'number' ? pct(c.usage_pct) : 'Sans objet',
+  retard: jours(c.retard_en_cours_jours),
+  decision: decisions[c.nom],
+}));
+const m = p.demandes_du_mois;
+const total = m.acceptees + m.refusees + m.envoyees_a_l_analyste;
+---
+
+<div class="panneau" data-theme="produit">
+  <div class="panneau-entete">
+    <h3 class="panneau-titre">Portefeuille clients</h3>
+    <Etiquette>Données fictives</Etiquette>
+  </div>
+
+  <dl class="chiffres-cles">
+    <div><dt>Encours total</dt><dd class="chiffres">{euros(p.encours_total)}</dd></div>
+    <div><dt>Limites accordées</dt><dd class="chiffres">{euros(p.limites_accordees)}</dd></div>
+    <div><dt>Usage des limites</dt><dd class="chiffres">{pct(p.usage_pct)}</dd></div>
+  </dl>
+
+  <table class="tableau chiffres">
+    <caption class="sr-only">Encours, limite, usage et retard en cours par client</caption>
+    <thead>
+      <tr>
+        <th scope="col">Client</th>
+        <th scope="col">Encours</th>
+        <th scope="col">Limite</th>
+        <th scope="col">Usage</th>
+        <th scope="col">Retard en cours</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        lignes.map((l) => (
+          <tr>
+            <th scope="row">{l.nom}</th>
+            <td>{l.encours}</td>
+            <td class="texte-secondaire">{l.limite}</td>
+            <td>{l.usage}</td>
+            <td>{l.retard}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <ul class="cartes-clients">
+    {
+      lignes.map((l) => (
+        <li>
+          <span class="carte-nom">{l.nom}</span>
+          <span class="chiffres texte-secondaire">
+            {l.encours} / {l.limite}
+          </span>
+          {l.decision && <Badge resultat={l.decision} />}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="repartition">
+    <span class="texte-secondaire">{total} demandes ce mois-ci&nbsp;:</span>
+    <Badge resultat="Acceptée" texte={`${m.acceptees} acceptée${m.acceptees > 1 ? 's' : ''}`} />
+    <Badge resultat="Refusée" texte={`${m.refusees} refusée${m.refusees > 1 ? 's' : ''}`} />
+    <Badge resultat="Envoyée à l'analyste" texte={`${m.envoyees_a_l_analyste} envoyée${m.envoyees_a_l_analyste > 1 ? 's' : ''} à l'analyste`} />
+  </div>
+</div>
+
+<style>
+  .panneau {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-300);
+    padding: var(--space-400);
+    border-radius: var(--radius-2xl);
+    background: var(--neutral-900);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text-primary);
+  }
+
+  .panneau-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-150);
+  }
+
+  .panneau-titre {
+    font-family: var(--font-text);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 500;
+  }
+
+  .chiffres-cles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-200) var(--space-400);
+    margin: 0;
+  }
+
+  .chiffres-cles div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+    flex: 1 1 140px;
+  }
+
+  .chiffres-cles dt {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .chiffres-cles dd {
+    margin: 0;
+    font-size: var(--figure-lg-size);
+    line-height: var(--figure-lg-line);
+    font-weight: var(--figure-lg-weight);
+    letter-spacing: var(--figure-lg-tracking);
+    white-space: nowrap;
+  }
+
+  .tableau {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--figure-sm-size);
+    line-height: var(--figure-sm-line);
+  }
+
+  .tableau th,
+  .tableau td {
+    height: 48px;
+    padding: 0 0 0 var(--space-200);
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .tableau th:first-child {
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .tableau thead th {
+    height: 40px;
+    font-family: var(--font-text);
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    vertical-align: top;
+  }
+
+  .tableau tbody th {
+    font-weight: 500;
+  }
+
+  .tableau tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .cartes-clients {
+    display: none;
+    padding: 0;
+    list-style: none;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .cartes-clients li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+    padding: var(--space-200);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-default);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+  }
+
+  .carte-nom {
+    font-weight: 500;
+  }
+
+  .repartition {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-100);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+  }
+
+  /* Sur mobile : cartes empilées, jamais de défilement horizontal. */
+  @media (max-width: 767px) {
+    .panneau {
+      padding: var(--space-250);
+    }
+
+    .tableau {
+      display: none;
+    }
+
+    .cartes-clients {
+      display: flex;
+    }
+  }
+</style>

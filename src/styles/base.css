@@ -1,0 +1,279 @@
+/* Styles communs. Toutes les valeurs viennent de tokens.css. */
+
+/* Valeurs dérivées des tokens : les maquettes utilisent 12, 20 et 28 px, absents de l échelle. */
+:root {
+  --space-150: calc(var(--space-100) + var(--space-050));
+  --space-250: calc(var(--space-200) + var(--space-050));
+  --space-350: calc(var(--space-300) + var(--space-050));
+  --mesure-titre: 880px;
+  --mesure-texte: 640px;
+  --tracking-capitales: 0.08em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-300);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-text);
+  font-size: var(--text-md-size);
+  line-height: var(--text-md-line);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Focus : partout le même, 2 px --color-focus-ring décalé de 2 px. */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lien-evitement {
+  position: absolute;
+  left: var(--space-200);
+  top: -100px;
+  z-index: 10;
+  padding: var(--space-100) var(--space-200);
+  border-radius: var(--radius-full);
+  background: var(--color-text-primary);
+  color: var(--color-bg-page);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lien-evitement:focus {
+  top: var(--space-200);
+}
+
+/* Page : sections empilées, 96 px entre elles sur desktop, 64 px sur mobile. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1200);
+  overflow-x: clip;
+}
+
+.conteneur {
+  width: 100%;
+  max-width: var(--grid-desktop-viewport);
+  margin: 0 auto;
+  padding: 0 var(--grid-desktop-margin);
+}
+
+/* Entête de section */
+.entete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin-bottom: var(--space-600);
+}
+
+.surtitre {
+  font-size: var(--text-xs-size);
+  line-height: var(--text-xs-line);
+  font-weight: 600;
+  letter-spacing: var(--tracking-capitales);
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+
+.titre-section {
+  max-width: var(--mesure-titre);
+  font-family: var(--title-xl-family);
+  font-size: var(--title-xl-size);
+  line-height: var(--title-xl-line);
+  font-weight: var(--title-xl-weight);
+  letter-spacing: var(--title-xl-tracking);
+  text-wrap: balance;
+}
+
+.chapeau {
+  max-width: var(--mesure-texte);
+  font-size: var(--text-lg-size);
+  line-height: var(--text-lg-line);
+  color: var(--color-text-secondary);
+}
+
+.titre-carte {
+  font-family: var(--title-sm-family);
+  font-size: var(--title-sm-size);
+  line-height: var(--title-sm-line);
+  font-weight: var(--title-sm-weight);
+}
+
+.texte-secondaire {
+  color: var(--color-text-secondary);
+}
+
+.chiffres {
+  font-family: var(--font-text);
+  font-variant-numeric: var(--figure-numeric);
+}
+
+/* Carte de contenu */
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-150);
+  padding: var(--space-300);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(var(--colonnes, 3), minmax(0, 1fr));
+  gap: var(--space-300);
+}
+
+/* Liste à coches */
+.coches {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-150);
+}
+
+.coches li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-150);
+}
+
+.coches svg {
+  flex: none;
+  margin-top: var(--space-050);
+  color: var(--color-accent-text);
+}
+
+@media (max-width: 1279px) {
+  .conteneur {
+    padding: 0 var(--space-400);
+  }
+}
+
+@media (max-width: 767px) {
+  .page {
+    gap: var(--space-800);
+  }
+
+  .conteneur {
+    padding: 0 var(--grid-mobile-margin);
+  }
+
+  .entete {
+    margin-bottom: var(--space-400);
+  }
+
+  .titre-section {
+    font-size: var(--title-md-size);
+    line-height: var(--title-md-line);
+  }
+
+  .chapeau {
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+  }
+
+  .carte {
+    padding: var(--space-250);
+  }
+
+  .grille {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-200);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .grille {
+    grid-template-columns: repeat(min(var(--colonnes, 3), 2), minmax(0, 1fr));
+  }
+}
+
+/* Badge d’état (aussi utilisé par le simulateur). */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: var(--space-100);
+    height: 28px;
+    padding: 0 var(--space-150);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .badge[data-etat='accepted'] {
+    background: var(--color-state-accepted-bg);
+    color: var(--color-state-accepted-text);
+  }
+
+  .badge[data-etat='refused'] {
+    background: var(--color-state-refused-bg);
+    color: var(--color-state-refused-text);
+  }
+
+  .badge[data-etat='pending'] {
+    background: var(--color-state-pending-bg);
+    color: var(--color-state-pending-text);
+  }
+

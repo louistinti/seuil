@@ -1,0 +1,48 @@
+---
+import '@fontsource/urbanist/latin-500.css';
+import '@fontsource/urbanist/latin-600.css';
+import '@fontsource/geist/latin-400.css';
+import '@fontsource/geist/latin-500.css';
+import '@fontsource/geist/latin-600.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import Navigation from '../components/Navigation.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import type { Reglages } from '../lib/types';
+
+interface Props {
+  titre: string;
+  description: string;
+  reglages: Reglages;
+  chemin: string;
+}
+const { titre, description, reglages, chemin } = Astro.props;
+const canonique = new URL(chemin, Astro.site);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="theme-color" content="#F3F4F4" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+    <div class="page">
+      <Navigation reglages={reglages} cheminCourant={chemin} />
+      <main id="contenu" class="page">
+        <slot />
+      </main>
+      <PiedDePage reglages={reglages} />
+    </div>
+  </body>
+</html>

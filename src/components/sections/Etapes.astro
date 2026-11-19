@@ -1,0 +1,103 @@
+---
+import Emplacement from '../Emplacement.astro';
+import Entete from '../Entete.astro';
+import { typo } from '../../lib/typo';
+import type { SectionEtapes } from '../../lib/types';
+
+interface Props {
+  section: SectionEtapes;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+---
+
+<section class="conteneur" id={s.ancre}>
+  <Entete surtitre={s.surtitre} titre={s.titre} niveau={niveau} />
+  <ol class:list={['etapes', `etapes--${s.disposition}`]} style={`--colonnes: ${s.etapes.length}`}>
+    {
+      s.etapes.map((e, i) => (
+        <li>
+          <span class="numero chiffres" aria-hidden="true">{i + 1}</span>
+          <div class="corps">
+            <h3 class="titre-carte">
+              <span class="sr-only">Étape {i + 1} : </span>
+              {typo(e.titre)}
+            </h3>
+            <p class="texte-secondaire">{typo(e.texte)}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  {s.emplacement && <Emplacement libelle={s.emplacement.libelle} class="emplacement-etapes" />}
+</section>
+
+<style>
+  .etapes {
+    padding: 0;
+    list-style: none;
+  }
+
+  .numero {
+    font-family: var(--title-lg-family);
+    font-size: var(--title-lg-size);
+    line-height: var(--title-lg-line);
+    font-weight: var(--title-lg-weight);
+  }
+
+  .corps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-150);
+  }
+
+  /* En colonnes, filet de 2 px au-dessus. */
+  .etapes--colonnes {
+    display: grid;
+    grid-template-columns: repeat(var(--colonnes), minmax(0, 1fr));
+    gap: var(--space-400);
+  }
+
+  .etapes--colonnes li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-150);
+    padding-top: var(--space-300);
+    border-top: 2px solid var(--color-text-primary);
+  }
+
+  /* En liste, numéro à gauche. */
+  .etapes--liste {
+    max-width: var(--mesure-titre);
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .etapes--liste li {
+    display: grid;
+    grid-template-columns: var(--space-600) minmax(0, 1fr);
+    padding: var(--space-300) 0;
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .etapes--liste .numero {
+    font-size: var(--title-md-size);
+    line-height: var(--title-md-line);
+  }
+
+  .etapes--liste .corps {
+    gap: var(--space-050);
+  }
+
+  .conteneur :global(.emplacement-etapes) {
+    max-width: var(--mesure-titre);
+    margin-top: var(--space-300);
+    min-height: 56px;
+  }
+
+  @media (max-width: 1023px) {
+    .etapes--colonnes {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-200);
+    }
+  }
+</style>

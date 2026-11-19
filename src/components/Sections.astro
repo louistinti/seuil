@@ -1,0 +1,38 @@
+---
+// Une section Sanity → un composant Astro. Le titre de la première section est le h1 de la page.
+import AppelAction from './sections/AppelAction.astro';
+import Benefices from './sections/Benefices.astro';
+import Etapes from './sections/Etapes.astro';
+import Faq from './sections/Faq.astro';
+import Fonctionnalite from './sections/Fonctionnalite.astro';
+import Hero from './sections/Hero.astro';
+import Integrations from './sections/Integrations.astro';
+import Probleme from './sections/Probleme.astro';
+import Tarifs from './sections/Tarifs.astro';
+import Temoignage from './sections/Temoignage.astro';
+import type { Section } from '../lib/types';
+
+interface Props {
+  sections: Section[];
+}
+const { sections } = Astro.props;
+const composants = {
+  sectionHero: Hero,
+  sectionProbleme: Probleme,
+  sectionBenefices: Benefices,
+  sectionEtapes: Etapes,
+  sectionFonctionnalite: Fonctionnalite,
+  sectionIntegrations: Integrations,
+  sectionTemoignage: Temoignage,
+  sectionTarifs: Tarifs,
+  sectionFaq: Faq,
+  sectionAppelAction: AppelAction,
+} as const;
+---
+
+{
+  sections.map((section, i) => {
+    const Composant = composants[section._type] as any;
+    return Composant ? <Composant section={section} niveau={i === 0 ? 1 : 2} /> : null;
+  })
+}

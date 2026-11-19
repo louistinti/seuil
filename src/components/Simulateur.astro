@@ -1,0 +1,522 @@
+---
+// Simulateur de décision : seul composant interactif côté client, en TypeScript sans framework.
+// Rendu initial côté serveur (Menuiseries Valdorre, 38 000 €), puis mis à jour par le script.
+import Etiquette from './Etiquette.astro';
+import Icone from './Icone.astro';
+import {
+  affichageUsage,
+  clientParId,
+  clients,
+  decider,
+  euros,
+  montantParDefaut,
+  montantsChips,
+  messageErreurSaisie,
+} from '../lib/simulateur';
+import { VERDICTS, conditionEnCause, faits, largeurJauge, nomRegle } from '../lib/simulateur-affichage';
+
+const client = clients[0];
+const d = decider(clientParId(client.id), montantParDefaut);
+const etat = d.resultat === 'Acceptée' ? 'accepted' : d.resultat === 'Refusée' ? 'refused' : 'pending';
+const f = faits(client);
+const ligneUsage = affichageUsage(d);
+---
+
+<div class="sim-cadre">
+  <div class="halo" aria-hidden="true"></div>
+  <section id="simulateur" class="simulateur" data-theme="produit" aria-labelledby="sim-titre">
+    <div class="sim-entete">
+      <h2 id="sim-titre" class="sim-titre">Simulateur de décision</h2>
+      <Etiquette>Données fictives</Etiquette>
+    </div>
+
+    <div class="groupe">
+      <span id="sim-clients" class="libelle-groupe">Client</span>
+      <div class="chips" role="group" aria-labelledby="sim-clients">
+        {
+          clients.map((c, i) => (
+            <button type="button" class="chip" data-client={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {c.nom}
+            </button>
+          ))
+        }
+      </div>
+      <dl class="faits chiffres" aria-label="Faits du client">
+        {
+          f.map((fait) => (
+            <div class="fait">
+              <dt>{fait.libelle}</dt>
+              <dd data-fait={fait.cle}>{fait.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <div class="groupe">
+      <span id="sim-montants" class="libelle-groupe">Montant de la commande</span>
+      <div class="chips" role="group" aria-labelledby="sim-montants">
+        {
+          montantsChips.map((m) => (
+            <button type="button" class="chip chiffres" data-montant={m} aria-pressed={m === montantParDefaut ? 'true' : 'false'}>
+              {euros(m)}
+            </button>
+          ))
+        }
+      </div>
+      <div class="champ">
+        <label for="sim-autre">Autre montant</label>
+        <input id="sim-autre" class="chiffres" type="text" inputmode="numeric" autocomplete="off" placeholder="Par exemple 68 000" aria-describedby="sim-erreur" />
+        <span id="sim-erreur" class="erreur" role="alert" hidden>
+          <Icone nom="alerte" taille={14} />
+          <span>{messageErreurSaisie}</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="resultat" aria-live="polite" aria-atomic="true">
+      <div class="verdict">
+        <span class="badge" data-etat={etat} data-sim="badge">
+          <span class="icone-etat icone-accepted"><Icone nom="coche" taille={14} /></span>
+          <span class="icone-etat icone-refused"><Icone nom="croix" taille={14} /></span>
+          <span class="icone-etat icone-pending"><Icone nom="horloge" taille={14} /></span>
+          <span data-sim="resultat">{d.resultat}</span>
+        </span>
+        <p class="phrase" data-sim="verdict">{VERDICTS[d.resultat]}</p>
+        <span class="priorite" data-sim="priorite" hidden={d.priorite !== 'haute'}>
+          <Etiquette>Priorité haute</Etiquette>
+        </span>
+      </div>
+
+      <div class="usage">
+        <div class="ligne-total">
+          <span class="texte-secondaire">Encours après commande</span>
+          <span class="chiffres total" data-sim="total">{euros(d.total)}</span>
+        </div>
+        <div class="jauge" aria-hidden="true">
+          <div class="jauge-remplissage" data-sim="jauge" style={`width: ${largeurJauge(d)}%`}></div>
+        </div>
+        <p class="chiffres ligne-usage" data-sim="usage" data-depasse={d.depassement > 0 ? 'true' : 'false'}>
+          {d.depassement > 0 ? ligneUsage : `${ligneUsage} de la limite`}
+        </p>
+      </div>
+
+      <div class="bloc-regle">
+        <span class="regle-nom" data-sim="regle">{nomRegle(d)}</span>
+        <div class="regle-corps">
+          <span data-sim="libelle">{d.libelle}</span>
+          <ul class="conditions" data-sim="conditions" hidden={d.conditionsEchouees.length === 0}>
+            {d.conditionsEchouees.map((c) => <li>{conditionEnCause(c)}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { affichageUsage, clientParId, decider, euros, lireMontant, type Decision } from '../lib/simulateur';
+  import { VERDICTS, conditionEnCause, faits, largeurJauge, nomRegle } from '../lib/simulateur-affichage';
+
+  const racine = document.getElementById('simulateur');
+  if (racine) {
+    const $ = <T extends HTMLElement>(sel: string) => racine.querySelector<T>(sel)!;
+    const chipsClients = [...racine.querySelectorAll<HTMLButtonElement>('[data-client]')];
+    const chipsMontants = [...racine.querySelectorAll<HTMLButtonElement>('[data-montant]')];
+    const champ = $<HTMLInputElement>('#sim-autre');
+    const erreur = $('#sim-erreur');
+
+    let clientId = chipsClients.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.client ?? chipsClients[0].dataset.client!;
+    let montant = Number(chipsMontants.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.montant ?? chipsMontants[0].dataset.montant);
+
+    const presser = (boutons: HTMLButtonElement[], actif?: HTMLButtonElement) =>
+      boutons.forEach((b) => b.setAttribute('aria-pressed', String(b === actif)));
+
+    const afficher = (d: Decision) => {
+      const etat = d.resultat === 'Acceptée' ? 'accepted' : d.resultat === 'Refusée' ? 'refused' : 'pending';
+      $('[data-sim="badge"]').dataset.etat = etat;
+      $('[data-sim="resultat"]').textContent = d.resultat;
+      $('[data-sim="verdict"]').textContent = VERDICTS[d.resultat];
+      $('[data-sim="priorite"]').hidden = d.priorite !== 'haute';
+      $('[data-sim="total"]').textContent = euros(d.total);
+      $('[data-sim="jauge"]').style.width = `${largeurJauge(d)}%`;
+      const usage = $('[data-sim="usage"]');
+      usage.textContent = d.depassement > 0 ? affichageUsage(d) : `${affichageUsage(d)} de la limite`;
+      usage.dataset.depasse = String(d.depassement > 0);
+      $('[data-sim="regle"]').textContent = nomRegle(d);
+      $('[data-sim="libelle"]').textContent = d.libelle;
+      const liste = $('[data-sim="conditions"]');
+      liste.replaceChildren(
+        ...d.conditionsEchouees.map((c) => {
+          const li = document.createElement('li');
+          li.textContent = conditionEnCause(c);
+          return li;
+        }),
+      );
+      liste.hidden = d.conditionsEchouees.length === 0;
+    };
+
+    const afficherFaits = () => {
+      for (const fait of faits(clientParId(clientId))) {
+        $(`[data-fait="${fait.cle}"]`).textContent = fait.valeur;
+      }
+    };
+
+    const recalculer = () => afficher(decider(clientParId(clientId), montant));
+
+    const signalerErreur = (enErreur: boolean) => {
+      erreur.hidden = !enErreur;
+      champ.toggleAttribute('aria-invalid', enErreur);
+    };
+
+    chipsClients.forEach((b) =>
+      b.addEventListener('click', () => {
+        clientId = b.dataset.client!;
+        presser(chipsClients, b);
+        afficherFaits();
+        recalculer();
+      }),
+    );
+
+    chipsMontants.forEach((b) =>
+      b.addEventListener('click', () => {
+        montant = Number(b.dataset.montant);
+        presser(chipsMontants, b);
+        champ.value = '';
+        signalerErreur(false);
+        recalculer();
+      }),
+    );
+
+    champ.addEventListener('input', () => {
+      if (champ.value.trim() === '') {
+        signalerErreur(false);
+        return;
+      }
+      const lu = lireMontant(champ.value);
+      if (lu === null) {
+        signalerErreur(true);
+        return;
+      }
+      signalerErreur(false);
+      montant = lu;
+      presser(chipsMontants, chipsMontants.find((b) => Number(b.dataset.montant) === lu));
+      recalculer();
+    });
+  }
+</script>
+
+<style>
+  .sim-cadre {
+    position: relative;
+    width: 100%;
+  }
+
+  /* Halo : uniquement derrière la carte de verre, un seul par écran. Hors du thème produit pour garder la valeur claire. */
+  .halo {
+    position: absolute;
+    top: var(--space-600);
+    right: var(--space-400);
+    width: 70%;
+    height: 50%;
+    border-radius: var(--radius-full);
+    background: var(--color-halo);
+    filter: blur(var(--blur-halo));
+  }
+
+  .simulateur {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-250);
+    padding: var(--space-350);
+    border-radius: var(--radius-2xl);
+    background: color-mix(in srgb, var(--neutral-900) 92%, transparent);
+    border: 1px solid var(--color-border-glass);
+    backdrop-filter: blur(var(--blur-glass));
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text-primary);
+    font-family: var(--font-text);
+  }
+
+  .sim-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-150);
+  }
+
+  .sim-titre {
+    font-family: var(--font-text);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 600;
+  }
+
+  .groupe {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .libelle-groupe {
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-100);
+  }
+
+  /* Chip de choix : verre au repos, sélectionné en plein. Survol à dériver : --color-bg-subtle. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: var(--target-min);
+    padding: 0 var(--space-200);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-glass);
+    border: 1px solid var(--color-border-glass);
+    color: var(--color-text-primary);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .chip:hover {
+    background: var(--color-bg-subtle);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+    color: var(--color-bg-page);
+  }
+
+  .faits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-050) var(--space-300);
+    margin: 0;
+    padding-top: var(--space-050);
+  }
+
+  .fait {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-100);
+  }
+
+  .fait dt {
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    color: var(--color-text-secondary);
+  }
+
+  .fait dd {
+    margin: 0;
+    font-size: var(--figure-sm-size);
+    line-height: var(--figure-sm-line);
+    font-weight: var(--figure-sm-weight);
+    white-space: nowrap;
+  }
+
+  .champ {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+    padding-top: var(--space-100);
+  }
+
+  .champ label {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+  }
+
+  .champ input {
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--space-200);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-subtle);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+  }
+
+  .champ input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 1;
+  }
+
+  /* Survol à dériver : bordure --color-text-primary. */
+  .champ input:hover {
+    border-color: var(--color-text-primary);
+  }
+
+  .champ input[aria-invalid] {
+    border: 2px solid var(--color-state-refused-text);
+  }
+
+  .erreur {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-050);
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    color: var(--color-state-refused-text);
+  }
+
+  .erreur[hidden] {
+    display: none;
+  }
+
+  .resultat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-200);
+    padding-top: var(--space-200);
+    border-top: 1px solid var(--color-border-glass);
+  }
+
+  .verdict {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-100);
+  }
+
+  .icone-etat {
+    display: none;
+  }
+
+  .badge[data-etat='accepted'] .icone-accepted,
+  .badge[data-etat='refused'] .icone-refused,
+  .badge[data-etat='pending'] .icone-pending {
+    display: inline-flex;
+  }
+
+  .phrase {
+    font-family: var(--title-md-family);
+    font-size: var(--title-md-size);
+    line-height: var(--title-md-line);
+    font-weight: var(--title-md-weight);
+  }
+
+  .priorite[hidden] {
+    display: none;
+  }
+
+  .usage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .ligne-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-150);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+  }
+
+  .total {
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 500;
+  }
+
+  .jauge {
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-border-default);
+    overflow: hidden;
+  }
+
+  .jauge-remplissage {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: var(--color-gauge-fill);
+    transition: width 0.25s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jauge-remplissage {
+      transition: none;
+    }
+  }
+
+  .ligne-usage {
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    color: var(--color-text-secondary);
+  }
+
+  .ligne-usage[data-depasse='true'] {
+    font-size: var(--figure-sm-size);
+    line-height: var(--figure-sm-line);
+    font-weight: var(--figure-sm-weight);
+    color: var(--color-text-primary);
+  }
+
+  /* Bloc règle : contour pointillé, numéro en accent. */
+  .bloc-regle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-050) var(--space-150);
+    padding: var(--space-150) var(--space-200);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-border-strong);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .regle-nom {
+    color: var(--color-accent-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .regle-corps {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .conditions {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+    color: var(--color-text-primary);
+    font-variant-numeric: var(--figure-numeric);
+  }
+
+  .conditions[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .simulateur {
+      padding: var(--space-250);
+    }
+
+    .faits {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

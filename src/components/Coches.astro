@@ -1,0 +1,21 @@
+---
+import Icone from './Icone.astro';
+import { typo } from '../lib/typo';
+
+interface Props {
+  elements: string[];
+  class?: string;
+}
+const { elements, class: classe } = Astro.props;
+---
+
+<ul class:list={['coches', classe]}>
+  {
+    elements.map((e) => (
+      <li>
+        <Icone nom="coche" />
+        <span>{typo(e)}</span>
+      </li>
+    ))
+  }
+</ul>

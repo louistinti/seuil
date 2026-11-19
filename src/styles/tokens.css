@@ -1,0 +1,211 @@
+/* Seuil, tokens de design. Site clair par défaut, produit sombre avec [data-theme="produit"]. */
+/* Seuil est une entreprise fictive, conçue comme démonstration. */
+
+:root {
+  /* Primitives */
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F3F4F4;
+  --neutral-100: #E8EAEA;
+  --neutral-200: #D9DCDD;
+  --neutral-300: #BFC4C6;
+  --neutral-400: #A0A7AA;
+  --neutral-500: #7A8285;
+  --neutral-600: #565D60;
+  --neutral-700: #2F3537;
+  --neutral-800: #1C2022;
+  --neutral-900: #121516;
+  --neutral-950: #0A0C0D;
+  --cyan-50: #E5F8FD;
+  --cyan-100: #C2EEFA;
+  --cyan-200: #8DE2F7;
+  --cyan-300: #45D3F5;
+  --cyan-400: #1AC4EE;
+  --cyan-500: #00B8E6;
+  --cyan-600: #00A3CC;
+  --cyan-700: #00819F;
+  --cyan-800: #00667F;
+  --cyan-900: #064150;
+  --cyan-950: #03212A;
+  --green-100: #DFF3EA;
+  --green-300: #5FE0A8;
+  --green-500: #1F9D6E;
+  --green-700: #0B6B4A;
+  --red-100: #FBE7E4;
+  --red-300: #FF8A80;
+  --red-500: #D9443A;
+  --red-700: #B3261E;
+  --amber-100: #FAEFD6;
+  --amber-300: #F5C451;
+  --amber-500: #C98A0A;
+  --amber-700: #8A5A00;
+
+  /* Sémantiques, site clair */
+  --color-bg-page: var(--neutral-50);
+  --color-bg-surface: var(--neutral-0);
+  --color-bg-subtle: var(--neutral-100);
+  --color-bg-glass: rgb(255 255 255 / 0.60);
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-on-accent: var(--cyan-950);
+  --color-border-default: var(--neutral-200);
+  --color-border-strong: var(--neutral-500);
+  --color-border-glass: rgb(255 255 255 / 0.80);
+  --color-accent-default: var(--cyan-500);
+  --color-accent-hover: var(--cyan-600);
+  --color-accent-text: var(--cyan-800);
+  --color-gauge-fill: var(--cyan-700);
+  --color-focus-ring: var(--neutral-900);
+  --color-state-accepted-text: var(--green-700);
+  --color-state-accepted-bg: var(--green-100);
+  --color-state-refused-text: var(--red-700);
+  --color-state-refused-bg: var(--red-100);
+  --color-state-pending-text: var(--amber-700);
+  --color-state-pending-bg: var(--amber-100);
+  --color-disabled-bg: var(--neutral-200);
+  --color-disabled-text: var(--neutral-500);
+  --color-halo: rgb(0 184 230 / 0.45);
+
+  /* Typographie */
+  --font-display: Urbanist, 'Helvetica Neue', Arial, sans-serif;
+  --font-text: Geist, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  --display-xl-size: 80px;
+  --display-xl-line: 88px;
+  --display-xl-family: var(--font-display);
+  --display-xl-weight: 500;
+  --display-xl-tracking: -0.02em;
+  --display-lg-size: 72px;
+  --display-lg-line: 80px;
+  --display-lg-family: var(--font-display);
+  --display-lg-weight: 500;
+  --display-lg-tracking: -0.02em;
+  --display-md-size: 56px;
+  --display-md-line: 64px;
+  --display-md-family: var(--font-display);
+  --display-md-weight: 500;
+  --display-md-tracking: -0.02em;
+  --title-xl-size: 48px;
+  --title-xl-line: 56px;
+  --title-xl-family: var(--font-display);
+  --title-xl-weight: 500;
+  --title-xl-tracking: -0.01em;
+  --title-lg-size: 40px;
+  --title-lg-line: 48px;
+  --title-lg-family: var(--font-display);
+  --title-lg-weight: 500;
+  --title-lg-tracking: -0.01em;
+  --title-md-size: 32px;
+  --title-md-line: 40px;
+  --title-md-family: var(--font-display);
+  --title-md-weight: 500;
+  --title-md-tracking: 0;
+  --title-sm-size: 24px;
+  --title-sm-line: 32px;
+  --title-sm-family: var(--font-display);
+  --title-sm-weight: 600;
+  --title-sm-tracking: 0;
+  --text-lg-size: 20px;
+  --text-lg-line: 28px;
+  --text-lg-family: var(--font-text);
+  --text-lg-weight: 400;
+  --text-lg-tracking: 0;
+  --text-md-size: 16px;
+  --text-md-line: 24px;
+  --text-md-family: var(--font-text);
+  --text-md-weight: 400;
+  --text-md-tracking: 0;
+  --text-sm-size: 14px;
+  --text-sm-line: 20px;
+  --text-sm-family: var(--font-text);
+  --text-sm-weight: 400;
+  --text-sm-tracking: 0;
+  --text-xs-size: 12px;
+  --text-xs-line: 16px;
+  --text-xs-family: var(--font-text);
+  --text-xs-weight: 500;
+  --text-xs-tracking: 0;
+  --figure-lg-size: 40px;
+  --figure-lg-line: 48px;
+  --figure-lg-family: var(--font-text);
+  --figure-lg-weight: 500;
+  --figure-lg-tracking: -0.02em;
+  --figure-md-size: 24px;
+  --figure-md-line: 32px;
+  --figure-md-family: var(--font-text);
+  --figure-md-weight: 500;
+  --figure-md-tracking: 0;
+  --figure-sm-size: 14px;
+  --figure-sm-line: 20px;
+  --figure-sm-family: var(--font-text);
+  --figure-sm-weight: 500;
+  --figure-sm-tracking: 0;
+  --figure-numeric: tabular-nums;
+
+  /* Espacements, base 8 avec demi-pas de 4 */
+  --space-050: 4px;
+  --space-100: 8px;
+  --space-200: 16px;
+  --space-300: 24px;
+  --space-400: 32px;
+  --space-500: 40px;
+  --space-600: 48px;
+  --space-800: 64px;
+  --space-1000: 80px;
+  --space-1200: 96px;
+  --space-1600: 128px;
+
+  /* Rayons */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 999px;
+
+  /* Ombres et verre */
+  --shadow-sm: 0 2px 8px rgb(18 21 22 / 0.06);
+  --shadow-md: 0 8px 24px rgb(18 21 22 / 0.08);
+  --shadow-lg: 0 24px 56px rgb(18 21 22 / 0.16);
+  --blur-glass: 24px;
+  --blur-halo: 40px;
+
+  /* Grille */
+  --grid-desktop-viewport: 1440px;
+  --grid-desktop-columns: 12;
+  --grid-desktop-gutter: 24px;
+  --grid-desktop-margin: 64px;
+  --grid-desktop-container: 1312px;
+  --grid-mobile-viewport: 390px;
+  --grid-mobile-columns: 4;
+  --grid-mobile-gutter: 16px;
+  --grid-mobile-margin: 16px;
+  --target-min: 44px;
+}
+
+[data-theme="produit"] {
+  /* Sémantiques, produit sombre */
+  --color-bg-page: var(--neutral-900);
+  --color-bg-surface: var(--neutral-800);
+  --color-bg-subtle: var(--neutral-700);
+  --color-bg-glass: rgb(255 255 255 / 0.08);
+  --color-text-primary: var(--neutral-50);
+  --color-text-secondary: var(--neutral-400);
+  --color-text-on-accent: var(--cyan-950);
+  --color-border-default: var(--neutral-700);
+  --color-border-strong: var(--neutral-500);
+  --color-border-glass: rgb(255 255 255 / 0.14);
+  --color-accent-default: var(--cyan-300);
+  --color-accent-hover: var(--cyan-200);
+  --color-accent-text: var(--cyan-300);
+  --color-gauge-fill: var(--cyan-300);
+  --color-focus-ring: var(--neutral-0);
+  --color-state-accepted-text: var(--green-300);
+  --color-state-accepted-bg: rgb(95 224 168 / 0.14);
+  --color-state-refused-text: var(--red-300);
+  --color-state-refused-bg: rgb(255 138 128 / 0.14);
+  --color-state-pending-text: var(--amber-300);
+  --color-state-pending-bg: rgb(245 196 81 / 0.14);
+  --color-disabled-bg: var(--neutral-700);
+  --color-disabled-text: var(--neutral-500);
+  --color-halo: rgb(69 211 245 / 0.10);
+}

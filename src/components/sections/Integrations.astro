@@ -1,0 +1,78 @@
+---
+import Emplacement from '../Emplacement.astro';
+import Entete from '../Entete.astro';
+import { typo } from '../../lib/typo';
+import type { SectionIntegrations } from '../../lib/types';
+
+interface Props {
+  section: SectionIntegrations;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+---
+
+<section class="conteneur" id={s.ancre}>
+  <Entete surtitre={s.surtitre} titre={s.titre} niveau={niveau} />
+  {
+    s.variante === 'tuiles' ? (
+      <ul class="grille tuiles" style={`--colonnes: ${s.elements.length}`}>
+        {s.elements.map((e) => (
+          <li class="tuile">
+            <span class="tuile-titre">{typo(e.titre)}</span>
+            <span class="tuile-texte">{typo(e.texte)}</span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="grille" style={`--colonnes: ${s.elements.length}`}>
+        {s.elements.map((e) => (
+          <div class="carte">
+            <h3 class="titre-carte">{typo(e.titre)}</h3>
+            <p class="texte-secondaire">{typo(e.texte)}</p>
+            {e.emplacement && <Emplacement libelle={e.emplacement.libelle} taille="pastille" />}
+          </div>
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .tuiles {
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Tuile d'intégration : titre et description, sans logo ni nom d'éditeur réel. */
+  .tuile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+    padding: var(--space-200) var(--space-250);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+  }
+
+  .tuile-titre {
+    font-weight: 600;
+  }
+
+  .tuile-texte {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 767px) {
+    .tuiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tuiles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

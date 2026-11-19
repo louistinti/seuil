@@ -1,0 +1,990 @@
+{
+  "_note": "Contenu de départ du site, repris de l'export Claude Design (contenu/*.json). Source du script npm run seed, et contenu de secours en local quand aucun projet Sanity n'est configuré. Les captures (champ fichier) sont dans content/captures/.",
+  "reglages": {
+    "_id": "reglages",
+    "_type": "reglages",
+    "navigation": [
+      {
+        "_type": "lien",
+        "libelle": "Produit",
+        "href": "/produit"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Finance",
+        "href": "/finance"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Commerciaux",
+        "href": "/commerciaux"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Tarifs",
+        "href": "/tarifs"
+      }
+    ],
+    "bouton": {
+      "_type": "lien",
+      "libelle": "Demander une démo",
+      "href": "/demo"
+    },
+    "boutonMobile": "Démo",
+    "piedDePage": [
+      {
+        "_type": "lien",
+        "libelle": "Produit",
+        "href": "/produit"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Finance et credit management",
+        "href": "/finance"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Commerciaux et ADV",
+        "href": "/commerciaux"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Tarifs",
+        "href": "/tarifs"
+      },
+      {
+        "_type": "lien",
+        "libelle": "Demande de démo",
+        "href": "/demo"
+      }
+    ],
+    "mention": "Seuil est une entreprise fictive, conçue comme démonstration."
+  },
+  "pages": [
+    {
+      "_id": "page-accueil",
+      "_type": "page",
+      "titre": "Accueil",
+      "slug": {
+        "_type": "slug",
+        "current": "accueil"
+      },
+      "ordre": 1,
+      "description": "Seuil aide les PME et ETI à décider des limites de crédit client en quelques secondes, et garde l'analyste pour les cas qui le méritent.",
+      "sections": [
+        {
+          "_type": "sectionHero",
+          "etiquette": "Crédit client pour PME et ETI",
+          "titre": "Décidez des limites de crédit en quelques secondes.",
+          "texte": "Et gardez l'analyste pour les cas qui le méritent. Seuil applique vos règles aux cas simples et envoie les autres dans une file d'exceptions.",
+          "boutons": [
+            {
+              "_type": "lien",
+              "libelle": "Demander une démo",
+              "href": "/demo"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Voir le produit",
+              "href": "#produit"
+            }
+          ],
+          "note": "Essayez : choisissez un client et un montant.",
+          "visuel": "simulateur"
+        },
+        {
+          "_type": "sectionProbleme",
+          "surtitre": "Le problème",
+          "titre": "Une commande attend, parce que la décision de crédit est dispersée.",
+          "cartes": [
+            {
+              "_type": "carte",
+              "titre": "Des encours éparpillés",
+              "texte": "L'encours est dans l'ERP, la limite dans un tableur, la couverture chez l'assureur. Personne ne voit le groupe entier."
+            },
+            {
+              "_type": "carte",
+              "titre": "Des règles implicites",
+              "texte": "Les critères existent, mais dans la tête de quelques personnes. Deux demandes identiques ne reçoivent pas toujours la même réponse."
+            },
+            {
+              "_type": "carte",
+              "titre": "Des commerciaux en attente",
+              "texte": "Chaque commande au-dessus du seuil part en validation. La finance traite les cas simples au lieu des cas difficiles."
+            }
+          ],
+          "emplacement": {
+            "_type": "emplacement",
+            "libelle": "donnée sourcée à venir"
+          }
+        },
+        {
+          "_type": "sectionBenefices",
+          "surtitre": "Pour chaque rôle",
+          "titre": "Une même décision, lue par quatre métiers.",
+          "cartes": [
+            {
+              "_type": "carteRole",
+              "role": "Direction financière",
+              "titre": "Moins d'impayés, sans freiner les ventes",
+              "texte": "Des limites tenues à jour et des règles que vous fixez vous-même.",
+              "lien": {
+                "_type": "lien",
+                "libelle": "Moteur de règles",
+                "href": "/produit#regles"
+              }
+            },
+            {
+              "_type": "carteRole",
+              "role": "Credit management",
+              "titre": "L'analyste sur les vrais cas",
+              "texte": "Les cas simples sont tranchés. La file d'exceptions ne garde que le reste, avec la règle en cause.",
+              "lien": {
+                "_type": "lien",
+                "libelle": "File d'exceptions",
+                "href": "/produit#exceptions"
+              }
+            },
+            {
+              "_type": "carteRole",
+              "role": "Commerciaux et ADV",
+              "titre": "La réponse sans attendre",
+              "texte": "Cette commande passe‑t‑elle ? La réponse arrive sur mobile, avec sa raison.",
+              "lien": {
+                "_type": "lien",
+                "libelle": "Page Commerciaux",
+                "href": "/commerciaux"
+              }
+            },
+            {
+              "_type": "carteRole",
+              "role": "DSI",
+              "titre": "Branché, pas greffé",
+              "texte": "Connexion à l'ERP, droits d'accès par rôle, hébergement documenté.",
+              "lien": {
+                "_type": "lien",
+                "libelle": "Sécurité et intégrations",
+                "href": "/produit#integrations"
+              }
+            }
+          ]
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "produit",
+          "surtitre": "Le produit",
+          "titre": "L'analyste ne voit que les cas qui le méritent.",
+          "texte": "L'interface du produit, avec des données fictives : la file des exceptions, triée par priorité puis par montant, avec le motif de chaque demande et la règle en cause.",
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-File-exceptions.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-Mobile-commande.png"
+          }
+        },
+        {
+          "_type": "sectionEtapes",
+          "surtitre": "Fonctionnement",
+          "titre": "Trois étapes, de l'encours à la décision.",
+          "disposition": "colonnes",
+          "etapes": [
+            {
+              "_type": "carte",
+              "titre": "Centraliser",
+              "texte": "Seuil lit les encours dans l'ERP et les croise avec le comportement de paiement, les informations légales et l'assurance-crédit."
+            },
+            {
+              "_type": "carte",
+              "titre": "Écrire vos règles",
+              "texte": "La finance définit ses conditions en phrases lisibles et les ajuste sans passer par un développeur."
+            },
+            {
+              "_type": "carte",
+              "titre": "Décider",
+              "texte": "Les cas simples sont tranchés en quelques secondes. Les autres arrivent chez l'analyste, triés par priorité puis par montant."
+            }
+          ]
+        },
+        {
+          "_type": "sectionIntegrations",
+          "surtitre": "Intégrations",
+          "titre": "Branché sur l'ERP et sur l'assurance-crédit.",
+          "variante": "tuiles",
+          "elements": [
+            {
+              "_type": "element",
+              "titre": "ERP",
+              "texte": "Encours et commandes"
+            },
+            {
+              "_type": "element",
+              "titre": "Assurance-crédit",
+              "texte": "Couvertures et agréments"
+            },
+            {
+              "_type": "element",
+              "titre": "Informations légales",
+              "texte": "Procédures, comptes"
+            },
+            {
+              "_type": "element",
+              "titre": "SSO",
+              "texte": "Droits par rôle"
+            },
+            {
+              "_type": "element",
+              "titre": "API",
+              "texte": "Décision en temps réel"
+            }
+          ]
+        },
+        {
+          "_type": "sectionTemoignage",
+          "logos": 4
+        },
+        {
+          "_type": "sectionAppelAction",
+          "variante": "bandeau",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Une démonstration construite sur vos règles et vos demandes d'exception.",
+          "bouton": {
+            "_type": "lien",
+            "libelle": "Demander une démo",
+            "href": "/demo"
+          }
+        }
+      ]
+    },
+    {
+      "_id": "page-produit",
+      "_type": "page",
+      "titre": "Produit",
+      "slug": {
+        "_type": "slug",
+        "current": "produit"
+      },
+      "ordre": 2,
+      "description": "Les encours, le moteur de règles, la file des exceptions et les alertes de Seuil, montrés avec les écrans du produit et des données fictives.",
+      "sections": [
+        {
+          "_type": "sectionHero",
+          "surtitre": "Produit",
+          "titre": "De l'encours à la décision, sans changer d'outil.",
+          "texte": "Seuil réunit quatre briques : les encours, le moteur de règles, la file des exceptions et les alertes. Les écrans de cette page sont ceux du produit, avec des données fictives.",
+          "sousNavigation": [
+            {
+              "_type": "lien",
+              "libelle": "Encours",
+              "href": "#encours"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Règles",
+              "href": "#regles"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Exceptions",
+              "href": "#exceptions"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Alertes",
+              "href": "#alertes"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Sécurité",
+              "href": "#securite"
+            },
+            {
+              "_type": "lien",
+              "libelle": "Intégrations",
+              "href": "#integrations"
+            }
+          ],
+          "visuel": "aucun"
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "encours",
+          "surtitre": "1. Encours",
+          "titre": "Une vue unique des encours, par client et par groupe.",
+          "texte": "Encours, limite, retards, assurance-crédit et informations légales tiennent sur une seule fiche. Pour un groupe, Seuil additionne les entités.",
+          "coches": [
+            "Encours et factures lus dans l'ERP",
+            "Retard en cours et historique sur 12 mois, distingués",
+            "Couverture d'assurance-crédit en regard de l'encours"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-Fiche-client.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-Fiche-client.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6885,
+              "right": 0.0117,
+              "top": 0.1939,
+              "bottom": 0.4061
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8384,
+              "y": 0.3939,
+              "width": 0.2998,
+              "height": 0.4
+            }
+          }
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "regles",
+          "surtitre": "2. Moteur de règles",
+          "titre": "Des règles que la finance écrit et ajuste elle-même.",
+          "texte": "Chaque règle se lit comme une phrase. Elles s'appliquent dans l'ordre, et chaque décision cite la règle qui l'a produite.",
+          "coches": [
+            "Des conditions lisibles, sans code",
+            "Un test du brouillon avant publication",
+            "Un historique de toutes les versions"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-Editeur-regles.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-Editeur-regles.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6885,
+              "right": 0.0117,
+              "top": 0.1915,
+              "bottom": 0.2841
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8384,
+              "y": 0.4537,
+              "width": 0.2998,
+              "height": 0.5244
+            }
+          }
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "exceptions",
+          "surtitre": "3. File des exceptions",
+          "titre": "L'analyste ne voit que les cas qui le méritent.",
+          "texte": "Les demandes que les règles ne tranchent pas arrivent dans une file, triées par priorité puis par montant, avec leur motif et les chiffres utiles.",
+          "coches": [
+            "Le motif et la règle en cause sur chaque demande",
+            "La vue groupe, entité par entité",
+            "Une décision en un clic, tracée"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-File-exceptions.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-File-exceptions.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6722,
+              "right": 0.0109,
+              "top": 0.1923,
+              "bottom": 0.0833
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8307,
+              "y": 0.5545,
+              "width": 0.3169,
+              "height": 0.7244
+            }
+          }
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "alertes",
+          "surtitre": "4. Alertes",
+          "titre": "Prévenu quand un client change de profil.",
+          "texte": "Seuil signale un encours qui approche la limite, un retard qui s'installe ou une couverture d'assurance-crédit qui ne suffit plus.",
+          "coches": [
+            "Des seuils d'alerte réglés par la finance",
+            "Une alerte par client, pas par facture",
+            "Un lien direct vers la fiche concernée"
+          ],
+          "visuel": "alertes"
+        },
+        {
+          "_type": "sectionIntegrations",
+          "ancre": "securite",
+          "surtitre": "Pour le DSI",
+          "titre": "Hébergement, sécurité et accès : les réponses avant le premier appel.",
+          "variante": "cartes",
+          "elements": [
+            {
+              "_type": "element",
+              "titre": "Hébergement",
+              "texte": "Région d'hébergement, sous-traitants et plan de reprise sont documentés et remis avant signature.",
+              "emplacement": {
+                "_type": "emplacement",
+                "libelle": "région d'hébergement à préciser"
+              }
+            },
+            {
+              "_type": "element",
+              "titre": "Sécurité",
+              "texte": "Données chiffrées en transit et au repos, journal des accès et des décisions consultable.",
+              "emplacement": {
+                "_type": "emplacement",
+                "libelle": "certifications à préciser"
+              }
+            },
+            {
+              "_type": "element",
+              "titre": "Droits par rôle",
+              "texte": "Finance, credit management, commerciaux, consultation seule : chaque rôle voit et modifie ce qui le concerne."
+            },
+            {
+              "_type": "element",
+              "titre": "SSO",
+              "texte": "Connexion par le fournisseur d'identité de l'entreprise, comptes créés et retirés automatiquement.",
+              "emplacement": {
+                "_type": "emplacement",
+                "libelle": "protocoles à préciser"
+              }
+            }
+          ]
+        },
+        {
+          "_type": "sectionIntegrations",
+          "ancre": "integrations",
+          "surtitre": "Intégrations",
+          "titre": "Branché sur l'ERP et sur l'assurance-crédit.",
+          "variante": "tuiles",
+          "elements": [
+            {
+              "_type": "element",
+              "titre": "ERP",
+              "texte": "Encours et commandes"
+            },
+            {
+              "_type": "element",
+              "titre": "Assurance-crédit",
+              "texte": "Couvertures et agréments"
+            },
+            {
+              "_type": "element",
+              "titre": "Informations légales",
+              "texte": "Procédures, comptes"
+            },
+            {
+              "_type": "element",
+              "titre": "SSO",
+              "texte": "Droits par rôle"
+            },
+            {
+              "_type": "element",
+              "titre": "API",
+              "texte": "Décision en temps réel"
+            }
+          ]
+        },
+        {
+          "_type": "sectionAppelAction",
+          "variante": "bandeau",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Une démonstration construite sur vos règles et vos demandes d'exception.",
+          "bouton": {
+            "_type": "lien",
+            "libelle": "Demander une démo",
+            "href": "/demo"
+          }
+        }
+      ]
+    },
+    {
+      "_id": "page-finance",
+      "_type": "page",
+      "titre": "Finance et credit management",
+      "slug": {
+        "_type": "slug",
+        "current": "finance"
+      },
+      "ordre": 3,
+      "description": "Pour la finance et le credit management : des limites tenues, une file d'exceptions triée, un reporting du portefeuille et des règles publiées sous contrôle.",
+      "sections": [
+        {
+          "_type": "sectionHero",
+          "surtitre": "Finance et credit management",
+          "titre": "Tenez vos limites de crédit sans devenir le goulot des ventes.",
+          "texte": "Seuil applique vos règles aux demandes simples et vous réserve les autres. Vous gardez la main sur les limites, les exceptions et les règles elles-mêmes.",
+          "boutons": [
+            {
+              "_type": "lien",
+              "libelle": "Demander une démo",
+              "href": "/demo"
+            }
+          ],
+          "visuel": "aucun"
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "limites",
+          "surtitre": "1. Limites",
+          "titre": "Des limites fixées, suivies et révisées au même endroit.",
+          "texte": "Chaque client a sa limite, son encours et sa couverture d'assurance-crédit en regard. Quand l'un des trois bouge, vous le voyez sur la fiche.",
+          "coches": [
+            "Encours et limite par client et par groupe",
+            "Retard en cours et pire retard sur 12 mois",
+            "Révision de la limite depuis la fiche"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-Fiche-client.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-Fiche-client.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6885,
+              "right": 0.0117,
+              "top": 0.1939,
+              "bottom": 0.4061
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8384,
+              "y": 0.3939,
+              "width": 0.2998,
+              "height": 0.4
+            }
+          }
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "exceptions",
+          "surtitre": "2. Exceptions",
+          "titre": "Votre temps d'analyste va aux cas qui le méritent.",
+          "texte": "Les règles tranchent les demandes simples. Le reste arrive dans une file, les priorités hautes en tête, avec le motif et la règle en cause.",
+          "coches": [
+            "Tri par priorité, puis par montant",
+            "Vue groupe, entité par entité",
+            "Décision tracée, avec son auteur"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-File-exceptions.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-File-exceptions.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6722,
+              "right": 0.0109,
+              "top": 0.1923,
+              "bottom": 0.0833
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8307,
+              "y": 0.5545,
+              "width": 0.3169,
+              "height": 0.7244
+            }
+          }
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "reporting",
+          "surtitre": "3. Reporting",
+          "titre": "Où en sont vos encours, et qui a décidé quoi.",
+          "texte": "Un tableau du portefeuille, à jour, que vous pouvez montrer en comité de crédit sans le reconstruire dans un tableur.",
+          "coches": [
+            "Encours, limites et usage par client",
+            "Retards en cours repérés d'un coup d'œil",
+            "Répartition des décisions : règles ou analyste"
+          ],
+          "visuel": "portefeuille"
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "ancre": "gouvernance",
+          "surtitre": "4. Gouvernance des règles",
+          "titre": "Vos règles, écrites par vous, publiées sous contrôle.",
+          "texte": "La finance rédige et teste ses règles. Rien ne s'applique sans publication, et chaque version reste consultable.",
+          "coches": [
+            "Qui peut modifier, qui valide",
+            "Un brouillon testé avant publication",
+            "Un historique complet des versions"
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-Editeur-regles.png"
+          },
+          "captureMobile": {
+            "_type": "imageCommentee",
+            "fichier": "App-Editeur-regles.png",
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "left": 0.6885,
+              "right": 0.0117,
+              "top": 0.1915,
+              "bottom": 0.2841
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "x": 0.8384,
+              "y": 0.4537,
+              "width": 0.2998,
+              "height": 0.5244
+            }
+          }
+        },
+        {
+          "_type": "sectionProbleme",
+          "emplacement": {
+            "_type": "emplacement",
+            "libelle": "donnée sourcée à venir"
+          }
+        },
+        {
+          "_type": "sectionTemoignage",
+          "logos": 4
+        },
+        {
+          "_type": "sectionAppelAction",
+          "variante": "bandeau",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Une démonstration construite sur vos règles et vos demandes d'exception.",
+          "bouton": {
+            "_type": "lien",
+            "libelle": "Demander une démo",
+            "href": "/demo"
+          }
+        }
+      ]
+    },
+    {
+      "_id": "page-commerciaux",
+      "_type": "page",
+      "titre": "Commerciaux et ADV",
+      "slug": {
+        "_type": "slug",
+        "current": "commerciaux"
+      },
+      "ordre": 4,
+      "description": "Pour les commerciaux et l'ADV : savoir tout de suite si une commande passe, avec la règle qui explique la réponse, sur mobile.",
+      "sections": [
+        {
+          "_type": "sectionHero",
+          "surtitre": "Commerciaux et ADV",
+          "titre": "Cette commande passe‑t‑elle ? Vous le savez avant de raccrocher.",
+          "texte": "Choisissez le client, saisissez le montant : Seuil répond tout de suite, avec la règle qui explique la réponse. Vous n'attendez plus la finance pour les cas simples.",
+          "boutons": [
+            {
+              "_type": "lien",
+              "libelle": "Demander une démo",
+              "href": "/demo"
+            }
+          ],
+          "visuel": "capture",
+          "capture": {
+            "_type": "imageCommentee",
+            "fichier": "App-Mobile-commande.png"
+          }
+        },
+        {
+          "_type": "sectionBenefices",
+          "surtitre": "Trois réponses possibles",
+          "titre": "Une réponse claire, et la raison qui va avec.",
+          "cartes": [
+            {
+              "_type": "carteRole",
+              "resultat": "Acceptée",
+              "titre": "Vous confirmez la commande",
+              "texte": "L'encours après commande reste sous la limite et le client paie à l'heure. Vous pouvez vous engager auprès du client."
+            },
+            {
+              "_type": "carteRole",
+              "resultat": "Refusée",
+              "titre": "Vous savez pourquoi",
+              "texte": "La règle en cause est affichée : limite dépassée ou retard en cours. Vous avez une explication à donner, pas un simple non."
+            },
+            {
+              "_type": "carteRole",
+              "resultat": "Envoyée à l'analyste",
+              "titre": "Un analyste prend le relais",
+              "texte": "La demande part dans la file de la finance avec son motif. Vous n'avez rien à ressaisir ni à relancer par e-mail."
+            }
+          ]
+        },
+        {
+          "_type": "sectionEtapes",
+          "ancre": "mobile",
+          "surtitre": "Sur mobile",
+          "titre": "Trois gestes, entre deux rendez-vous.",
+          "disposition": "colonnes",
+          "etapes": [
+            {
+              "_type": "carte",
+              "titre": "Choisir le client",
+              "texte": "Recherchez le client ou le groupe. Seuil affiche son encours et sa limite."
+            },
+            {
+              "_type": "carte",
+              "titre": "Saisir le montant",
+              "texte": "Indiquez le montant de la commande que vous voulez prendre."
+            },
+            {
+              "_type": "carte",
+              "titre": "Lire la réponse",
+              "texte": "Acceptée, refusée ou envoyée à l'analyste, avec la règle qui a décidé."
+            }
+          ]
+        },
+        {
+          "_type": "sectionFonctionnalite",
+          "surtitre": "Pour l'ADV",
+          "titre": "La même réponse au moment de saisir la commande.",
+          "coches": [
+            "La décision est la même pour le commercial et pour l'ADV : mêmes règles, mêmes données",
+            "Une commande envoyée à l'analyste garde son statut visible jusqu'à la décision",
+            "Consultation et soumission de demandes, sans modification des limites ni des règles"
+          ],
+          "visuel": "aucun"
+        },
+        {
+          "_type": "sectionTemoignage",
+          "logos": 4
+        },
+        {
+          "_type": "sectionAppelAction",
+          "variante": "bandeau",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Une démonstration construite sur vos règles et vos demandes d'exception.",
+          "bouton": {
+            "_type": "lien",
+            "libelle": "Demander une démo",
+            "href": "/demo"
+          }
+        }
+      ]
+    },
+    {
+      "_id": "page-tarifs",
+      "_type": "page",
+      "titre": "Tarifs",
+      "slug": {
+        "_type": "slug",
+        "current": "tarifs"
+      },
+      "ordre": 5,
+      "description": "Trois formules Seuil, distinguées par le nombre de clients actifs suivis. Prix à caler sur des tarifs publics sourcés.",
+      "sections": [
+        {
+          "_type": "sectionHero",
+          "surtitre": "Tarifs",
+          "titre": "Trois formules, selon le nombre de clients actifs.",
+          "texte": "Ce qui distingue d'abord les formules, c'est le nombre de clients actifs que vous suivez. Les seuils et les prix ci-dessous sont des emplacements : les prix seront calés sur des tarifs publics sourcés.",
+          "visuel": "aucun"
+        },
+        {
+          "_type": "sectionTarifs",
+          "formules": [
+            {
+              "_type": "formule",
+              "nom": "Départ",
+              "clientsActifs": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "jusqu'à [seuil 1]"
+              },
+              "description": "Pour structurer la décision de crédit d'une première équipe.",
+              "prix": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "prix à caler sur un tarif public sourcé"
+              },
+              "coches": [
+                "Vue des encours par client",
+                "Moteur de règles",
+                "Réponse mobile pour les commerciaux",
+                "Import des encours depuis l'ERP"
+              ],
+              "bouton": {
+                "_type": "lien",
+                "libelle": "Demander une démo",
+                "href": "/demo"
+              },
+              "miseEnAvant": false
+            },
+            {
+              "_type": "formule",
+              "nom": "Équipe",
+              "clientsActifs": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "de [seuil 1] à [seuil 2]"
+              },
+              "description": "Pour une finance qui traite des exceptions tous les jours.",
+              "prix": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "prix à caler sur un tarif public sourcé"
+              },
+              "coches": [
+                "Tout le contenu de Départ",
+                "File des exceptions",
+                "Alertes sur limites et retards",
+                "Connexion à l'assurance-crédit",
+                "Connecteur ERP en continu"
+              ],
+              "bouton": {
+                "_type": "lien",
+                "libelle": "Demander une démo",
+                "href": "/demo"
+              },
+              "miseEnAvant": true
+            },
+            {
+              "_type": "formule",
+              "nom": "Groupe",
+              "clientsActifs": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "au-delà de [seuil 2]"
+              },
+              "description": "Pour plusieurs entités et une DSI exigeante.",
+              "prix": {
+                "_type": "valeurOuEmplacement",
+                "emplacement": "prix à caler sur un tarif public sourcé"
+              },
+              "coches": [
+                "Tout le contenu d'Équipe",
+                "Vue groupe, entité par entité",
+                "SSO et droits par rôle",
+                "Accompagnement à l'intégration"
+              ],
+              "bouton": {
+                "_type": "lien",
+                "libelle": "Demander une démo",
+                "href": "/demo"
+              },
+              "miseEnAvant": false
+            }
+          ]
+        },
+        {
+          "_type": "sectionFaq",
+          "surtitre": "Questions fréquentes",
+          "titre": "Ce dont le prix dépend, et ce dont il ne dépend pas.",
+          "questions": [
+            {
+              "_type": "question",
+              "question": "Qu'est-ce qu'un client actif ?",
+              "reponse": "Un client qui a au moins une facture ouverte ou une commande sur les 12 derniers mois."
+            },
+            {
+              "_type": "question",
+              "question": "Le nombre d'utilisateurs change‑t‑il le prix ?",
+              "reponse": "Non : les formules dépendent du nombre de clients actifs, pas du nombre de personnes qui utilisent Seuil."
+            },
+            {
+              "_type": "question",
+              "question": "Peut-on changer de formule en cours d'année ?",
+              "reponse": "Modalités à préciser."
+            }
+          ]
+        },
+        {
+          "_type": "sectionAppelAction",
+          "variante": "bandeau",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Une démonstration construite sur vos règles et vos demandes d'exception.",
+          "bouton": {
+            "_type": "lien",
+            "libelle": "Demander une démo",
+            "href": "/demo"
+          }
+        }
+      ]
+    },
+    {
+      "_id": "page-demo",
+      "_type": "page",
+      "titre": "Demande de démo",
+      "slug": {
+        "_type": "slug",
+        "current": "demo"
+      },
+      "ordre": 6,
+      "description": "Demandez une démonstration de Seuil construite sur vos règles et vos demandes d'exception. Quatre champs suffisent.",
+      "sections": [
+        {
+          "_type": "sectionAppelAction",
+          "variante": "formulaire",
+          "surtitre": "Demande de démo",
+          "titre": "Voyez Seuil décider sur vos propres cas.",
+          "texte": "Quatre champs suffisent. Nous revenons vers vous pour préparer une démonstration sur vos règles et vos demandes d'exception.",
+          "delai": {
+            "_type": "emplacement",
+            "libelle": "délai de réponse à préciser"
+          },
+          "roles": [
+            "Direction financière",
+            "Credit management",
+            "Commerciaux et ADV",
+            "DSI"
+          ],
+          "libelleEnvoi": "Demander une démo",
+          "mention": "Formulaire de démonstration : rien n'est envoyé."
+        },
+        {
+          "_type": "sectionEtapes",
+          "surtitre": "Le déroulé",
+          "titre": "Ce qui se passe après votre demande.",
+          "disposition": "liste",
+          "etapes": [
+            {
+              "_type": "carte",
+              "titre": "Un échange de cadrage",
+              "texte": "Nous regardons vos règles actuelles, votre ERP et la façon dont les commandes sont validées aujourd'hui."
+            },
+            {
+              "_type": "carte",
+              "titre": "La démonstration sur vos cas",
+              "texte": "Nous rejouons quelques-unes de vos demandes dans Seuil : une simple, une refusée, une exception."
+            },
+            {
+              "_type": "carte",
+              "titre": "Les suites",
+              "texte": "Vous repartez avec les règles écrites pendant la démonstration et une proposition d'intégration."
+            }
+          ],
+          "emplacement": {
+            "_type": "emplacement",
+            "libelle": "durée de la démonstration à préciser"
+          }
+        }
+      ]
+    }
+  ],
+  "captures": {
+    "App-Fiche-client.png": "Fiche client de Menuiseries Valdorre dans Seuil : encours de 182 400 € pour une limite de 250 000 €, aucun retard en cours, historique de paiement sur 12 mois et décision recommandée Acceptée, par la règle 2. Données fictives.",
+    "App-File-exceptions.png": "File des exceptions de Seuil : trois demandes triées par priorité puis par montant, et le détail de la demande de Groupe Orvelle, envoyée à l'analyste par la règle 3. Données fictives.",
+    "App-Editeur-regles.png": "Éditeur de règles de Seuil : les quatre règles de décision écrites en phrases, le test du brouillon sur les trois clients de démonstration et les droits de publication. Données fictives.",
+    "App-Mobile-commande.png": "Vue mobile de Seuil : pour Menuiseries Valdorre, une commande de 38 000 € est acceptée par la règle 2. Dessous, les dernières vérifications. Données fictives."
+  }
+}

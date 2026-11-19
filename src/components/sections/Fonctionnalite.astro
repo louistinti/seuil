@@ -1,0 +1,84 @@
+---
+import Capture from '../Capture.astro';
+import Coches from '../Coches.astro';
+import Entete from '../Entete.astro';
+import PanneauAlertes from '../PanneauAlertes.astro';
+import PanneauPortefeuille from '../PanneauPortefeuille.astro';
+import type { SectionFonctionnalite } from '../../lib/types';
+
+interface Props {
+  section: SectionFonctionnalite;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+const coches = s.coches ?? [];
+const pleineLargeur = (s.visuel === 'capture' && s.capture) || s.visuel === 'portefeuille';
+---
+
+<section class="conteneur" id={s.ancre}>
+  {
+    s.visuel === 'alertes' ? (
+      <div class="deux-colonnes">
+        <Entete surtitre={s.surtitre} titre={s.titre} texte={s.texte} niveau={niveau} sansMarge>
+          {coches.length > 0 && <Coches elements={coches} class="coches-sous-texte" />}
+        </Entete>
+        <PanneauAlertes />
+      </div>
+    ) : (
+      <>
+        <div class:list={['rangee', { 'rangee--avec-visuel': pleineLargeur, 'rangee--seule': !coches.length }]}>
+          <Entete surtitre={s.surtitre} titre={s.titre} texte={s.texte} niveau={niveau} sansMarge />
+          {coches.length > 0 && <Coches elements={coches} />}
+        </div>
+        {s.visuel === 'capture' && s.capture && <Capture image={s.capture} mobile={s.captureMobile} />}
+        {s.visuel === 'portefeuille' && <PanneauPortefeuille />}
+      </>
+    )
+  }
+</section>
+
+<style>
+  .rangee {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--space-800);
+    align-items: end;
+  }
+
+  .rangee--avec-visuel {
+    margin-bottom: var(--space-600);
+  }
+
+  .rangee:not(.rangee--avec-visuel) {
+    align-items: start;
+  }
+
+  .rangee--seule {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .deux-colonnes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-800);
+    align-items: center;
+  }
+
+  .deux-colonnes :global(.coches-sous-texte) {
+    margin-top: var(--space-100);
+  }
+
+  @media (max-width: 1023px) {
+    .rangee,
+    .deux-colonnes {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-300);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .rangee--avec-visuel {
+      margin-bottom: var(--space-400);
+    }
+  }
+</style>

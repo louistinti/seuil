@@ -1,0 +1,223 @@
+{
+  "note": "Données fictives des écrans produit, cohérentes avec simulateur.json. Seuil est une entreprise fictive, conçue comme démonstration.",
+  "clients": [
+    {
+      "nom": "Menuiseries Valdorre",
+      "encours": 182400,
+      "limite": 250000,
+      "usage_pct": 73.0,
+      "retard_en_cours_jours": 0,
+      "pire_retard_12_mois_jours": 8,
+      "couverture_assurance_credit": 200000,
+      "client_depuis": 2019,
+      "conditions_paiement": "45 jours fin de mois",
+      "disponible": 67600,
+      "retards_par_mois_jours": {
+        "mois": [
+          "D",
+          "J",
+          "F",
+          "M",
+          "A",
+          "M",
+          "J",
+          "J",
+          "A",
+          "S",
+          "O",
+          "N"
+        ],
+        "valeurs": [
+          0,
+          3,
+          0,
+          0,
+          8,
+          2,
+          0,
+          0,
+          5,
+          0,
+          0,
+          4
+        ]
+      },
+      "factures_ouvertes": [
+        {
+          "piece": "F-2041",
+          "echeance": "dans 12 jours",
+          "montant": 64200
+        },
+        {
+          "piece": "F-2057",
+          "echeance": "dans 19 jours",
+          "montant": 48900
+        },
+        {
+          "piece": "F-2063",
+          "echeance": "dans 26 jours",
+          "montant": 41300
+        },
+        {
+          "piece": "F-2070",
+          "echeance": "dans 33 jours",
+          "montant": 28000
+        }
+      ],
+      "informations_legales": {
+        "procedure_collective": "Aucune",
+        "comptes_annuels": "Déposés"
+      },
+      "assurance": {
+        "encours_couvert_pct": 100.0,
+        "police": "En vigueur"
+      }
+    },
+    {
+      "nom": "Négoce Tréhault",
+      "encours": 96750,
+      "limite": 90000,
+      "usage_pct": 107.5,
+      "retard_en_cours_jours": 18,
+      "pire_retard_12_mois_jours": 41,
+      "couverture_assurance_credit": 60000
+    },
+    {
+      "nom": "Groupe Orvelle",
+      "encours": 412000,
+      "limite": 450000,
+      "usage_pct": 91.6,
+      "retard_en_cours_jours": 0,
+      "pire_retard_12_mois_jours": 22,
+      "couverture_assurance_credit": 480000,
+      "entites": [
+        {
+          "nom": "Orvelle Distribution",
+          "encours": 228000
+        },
+        {
+          "nom": "Orvelle Logistique",
+          "encours": 131500
+        },
+        {
+          "nom": "Orvelle Services",
+          "encours": 52500
+        }
+      ]
+    },
+    {
+      "nom": "Fonderie Brévanne",
+      "encours": 61200,
+      "limite": 120000,
+      "usage_pct": 51.0,
+      "retard_en_cours_jours": 41
+    },
+    {
+      "nom": "Scierie du Haut-Lauzet",
+      "encours": 0,
+      "limite": null,
+      "retard_en_cours_jours": 0,
+      "commentaire": "Nouveau client, sans historique, limite à fixer"
+    }
+  ],
+  "file_des_exceptions": {
+    "tri": "priorité, puis montant",
+    "demandes": [
+      {
+        "client": "Fonderie Brévanne",
+        "commande": 24300,
+        "encours_apres_commande": 85500,
+        "limite": 120000,
+        "usage_pct": 71.3,
+        "regle": "Par défaut",
+        "priorite": "haute",
+        "motif": "Retard en cours de 41 jours",
+        "recue": "hier",
+        "echeance": "Sous 3 jours"
+      },
+      {
+        "client": "Scierie du Haut-Lauzet",
+        "commande": 9800,
+        "encours_apres_commande": 9800,
+        "limite": null,
+        "regle": "Par défaut",
+        "priorite": "haute",
+        "motif": "Nouveau client, sans historique",
+        "recue": "hier",
+        "echeance": "Sans échéance"
+      },
+      {
+        "client": "Groupe Orvelle",
+        "commande": 60000,
+        "encours_apres_commande": 472000,
+        "limite": 450000,
+        "usage_pct": 104.9,
+        "depassement": 22000,
+        "depassement_pct": 4.9,
+        "regle": "Règle 3",
+        "priorite": "normale",
+        "motif": "Dépassement de 4,9 %, assuré",
+        "recue": "il y a 2 h",
+        "echeance": "Livraison demain"
+      }
+    ]
+  },
+  "alertes": [
+    {
+      "client": "Négoce Tréhault",
+      "message": "Encours à 107,5 % de la limite",
+      "type": "Limite"
+    },
+    {
+      "client": "Fonderie Brévanne",
+      "message": "Retard en cours de 41 jours",
+      "type": "Retard"
+    },
+    {
+      "client": "Groupe Orvelle",
+      "message": "Encours à 91,6 % de la limite",
+      "type": "Limite"
+    },
+    {
+      "client": "Menuiseries Valdorre",
+      "message": "Encours à 91,2 % de la couverture",
+      "type": "Assurance"
+    }
+  ],
+  "portefeuille": {
+    "encours_total": 752350,
+    "limites_accordees": 910000,
+    "usage_pct": 82.7,
+    "demandes_du_mois": {
+      "acceptees": 1,
+      "refusees": 1,
+      "envoyees_a_l_analyste": 3
+    },
+    "decision_par_client": {
+      "Groupe Orvelle": "Envoyée à l'analyste",
+      "Menuiseries Valdorre": "Acceptée",
+      "Négoce Tréhault": "Refusée",
+      "Fonderie Brévanne": "Envoyée à l'analyste",
+      "Scierie du Haut-Lauzet": "Envoyée à l'analyste"
+    }
+  },
+  "vue_mobile_commerciale": {
+    "dernieres_verifications": [
+      {
+        "client": "Négoce Tréhault",
+        "montant": 12500,
+        "resultat": "Refusée"
+      },
+      {
+        "client": "Groupe Orvelle",
+        "montant": 60000,
+        "resultat": "Envoyée à l'analyste"
+      }
+    ]
+  },
+  "gouvernance_des_regles": {
+    "peuvent_modifier": "Finance, credit management",
+    "publication": "Validation par la direction financière",
+    "etat": "Brouillon non publié"
+  }
+}

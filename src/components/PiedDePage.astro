@@ -1,0 +1,81 @@
+---
+import { typo } from '../lib/typo';
+import type { Reglages } from '../lib/types';
+
+interface Props {
+  reglages: Reglages;
+}
+const { reglages } = Astro.props;
+---
+
+<footer class="pied conteneur">
+  <div class="marque">
+    <a class="logo" href="/">Seuil</a>
+    <p class="mention">{reglages.mention}</p>
+  </div>
+  <nav aria-label="Pied de page">
+    {reglages.piedDePage.map((l) => <a href={l.href}>{typo(l.libelle)}</a>)}
+  </nav>
+</footer>
+
+<style>
+  .pied {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-300);
+    padding-top: var(--space-400);
+    padding-bottom: var(--space-600);
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .marque {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: var(--target-min);
+    font-family: var(--title-sm-family);
+    font-size: var(--title-sm-size);
+    line-height: var(--title-sm-line);
+    font-weight: var(--title-sm-weight);
+    letter-spacing: var(--title-xl-tracking);
+    text-decoration: none;
+  }
+
+  .mention {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0 var(--space-300);
+  }
+
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    color: var(--color-accent-text);
+  }
+
+  @media (max-width: 1023px) {
+    .pied {
+      flex-direction: column;
+    }
+  }
+</style>

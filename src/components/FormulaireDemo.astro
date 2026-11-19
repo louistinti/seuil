@@ -1,0 +1,198 @@
+---
+// Formulaire de démo : 4 champs et un bouton. Il n'envoie rien et le dit.
+// Erreurs par champ : celles du composant Champ. Confirmation : non dessinée, dérivée (message dans la carte).
+import Icone from './Icone.astro';
+import { typo } from '../lib/typo';
+
+interface Props {
+  roles: string[];
+  libelleEnvoi: string;
+  mention: string;
+}
+const { roles, libelleEnvoi, mention } = Astro.props;
+const champs = [
+  { id: 'nom', libelle: 'Prénom et nom', type: 'text', autocomplete: 'name', erreur: 'Indiquez votre prénom et votre nom.' },
+  { id: 'email', libelle: 'E-mail professionnel', type: 'email', autocomplete: 'email', erreur: 'Saisissez une adresse e-mail valide, par exemple prenom.nom@entreprise.fr.' },
+  { id: 'entreprise', libelle: 'Entreprise', type: 'text', autocomplete: 'organization', erreur: 'Indiquez le nom de votre entreprise.' },
+] as const;
+---
+
+<div class="carte-formulaire">
+  <form class="formulaire" novalidate data-formulaire-demo>
+    {
+      champs.map((c) => (
+        <div class="champ">
+          <label for={`demo-${c.id}`}>{c.libelle}</label>
+          <input id={`demo-${c.id}`} name={c.id} type={c.type} autocomplete={c.autocomplete} required aria-describedby={`demo-${c.id}-erreur`} />
+          <span id={`demo-${c.id}-erreur`} class="erreur" role="alert" hidden>
+            <Icone nom="alerte" taille={14} />
+            <span>{c.erreur}</span>
+          </span>
+        </div>
+      ))
+    }
+    <div class="champ">
+      <label for="demo-role">Votre rôle</label>
+      <div class="liste">
+        <select id="demo-role" name="role">
+          {roles.map((r) => <option>{typo(r)}</option>)}
+        </select>
+        <Icone nom="chevron" />
+      </div>
+    </div>
+    <button type="submit" class="bouton bouton--principal bouton--plein">{typo(libelleEnvoi)}<Icone nom="fleche" /></button>
+    <p class="mention">{typo(mention)}</p>
+  </form>
+  <div class="confirmation" role="status" tabindex="-1" hidden>
+    <span class="badge" data-etat="accepted"><Icone nom="coche" taille={14} /><span>Demande prête</span></span>
+    <p class="titre-carte">Merci, c'est noté pour la démonstration.</p>
+    <p class="texte-secondaire">Ceci est un site de démonstration : rien n'a été envoyé et aucune donnée n'est conservée.</p>
+    <button type="button" class="bouton bouton--secondaire" data-recommencer>Remplir à nouveau</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-formulaire-demo]').forEach((formulaire) => {
+    const carte = formulaire.parentElement!;
+    const confirmation = carte.querySelector<HTMLElement>('.confirmation')!;
+    const valide = (champ: HTMLInputElement) =>
+      champ.type === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(champ.value.trim()) : champ.value.trim().length > 0;
+    const marquer = (champ: HTMLInputElement, ok: boolean) => {
+      champ.toggleAttribute('aria-invalid', !ok);
+      document.getElementById(`${champ.id}-erreur`)!.hidden = ok;
+    };
+
+    formulaire.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const champs = [...formulaire.querySelectorAll<HTMLInputElement>('input[required]')];
+      const invalides = champs.filter((c) => !valide(c));
+      champs.forEach((c) => marquer(c, valide(c)));
+      if (invalides.length) {
+        invalides[0].focus();
+        return;
+      }
+      formulaire.hidden = true;
+      confirmation.hidden = false;
+      confirmation.focus();
+    });
+
+    formulaire.querySelectorAll<HTMLInputElement>('input[required]').forEach((c) =>
+      c.addEventListener('input', () => {
+        if (c.hasAttribute('aria-invalid') && valide(c)) marquer(c, true);
+      }),
+    );
+
+    confirmation.querySelector('[data-recommencer]')!.addEventListener('click', () => {
+      formulaire.reset();
+      confirmation.hidden = true;
+      formulaire.hidden = false;
+      formulaire.querySelector<HTMLInputElement>('input')!.focus();
+    });
+  });
+</script>
+
+<style>
+  .carte-formulaire {
+    padding: var(--space-300);
+    border-radius: var(--radius-xl);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+  }
+
+  .formulaire,
+  .confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-300);
+  }
+
+  .formulaire[hidden],
+  .confirmation[hidden] {
+    display: none;
+  }
+
+  .confirmation {
+    gap: var(--space-150);
+    align-items: flex-start;
+  }
+
+  .confirmation:focus {
+    outline: none;
+  }
+
+  .champ {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+
+  label {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+  }
+
+  input,
+  select {
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--space-200);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-surface);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+  }
+
+  input:hover,
+  select:hover {
+    border-color: var(--color-text-primary);
+  }
+
+  input[aria-invalid] {
+    border: 2px solid var(--color-state-refused-text);
+  }
+
+  .liste {
+    position: relative;
+  }
+
+  select {
+    appearance: none;
+    padding-right: var(--space-500);
+    cursor: pointer;
+  }
+
+  .liste :global(svg) {
+    position: absolute;
+    right: var(--space-200);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .erreur {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-050);
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    color: var(--color-state-refused-text);
+  }
+
+  .erreur[hidden] {
+    display: none;
+  }
+
+  .formulaire .bouton {
+    margin-top: calc(-1 * var(--space-100));
+  }
+
+  .mention {
+    margin-top: calc(-1 * var(--space-100));
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    font-weight: 400;
+    color: var(--color-text-secondary);
+  }
+</style>

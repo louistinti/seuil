@@ -1,0 +1,179 @@
+---
+import Bouton from '../Bouton.astro';
+import Capture from '../Capture.astro';
+import Etiquette from '../Etiquette.astro';
+import Simulateur from '../Simulateur.astro';
+import { typo } from '../../lib/typo';
+import type { SectionHero } from '../../lib/types';
+
+interface Props {
+  section: SectionHero;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+const Titre = niveau === 1 ? 'h1' : 'h2';
+const avecCapture = s.visuel === 'capture' && s.capture;
+---
+
+<section class="hero conteneur" id={s.ancre}>
+  <div class:list={['grille-hero', `grille-hero--${avecCapture ? 'capture' : s.visuel}`]}>
+    <div class="texte">
+      {s.etiquette ? <Etiquette>{typo(s.etiquette)}</Etiquette> : s.surtitre && <span class="surtitre">{typo(s.surtitre)}</span>}
+      <Titre class:list={['titre', { 'titre--accueil': s.visuel === 'simulateur' }]}>{typo(s.titre)}</Titre>
+      <p class="accroche">{typo(s.texte)}</p>
+      {
+        s.boutons?.length ? (
+          <div class="boutons">
+            {s.boutons.map((b, i) => (
+              <Bouton lien={b} variante={i === 0 ? 'principal' : 'secondaire'} pleineLargeurMobile />
+            ))}
+          </div>
+        ) : null
+      }
+      {
+        s.sousNavigation?.length ? (
+          <nav class="sous-navigation" aria-label="Sections de la page">
+            {s.sousNavigation.map((l) => (
+              <a href={l.href}>{typo(l.libelle)}</a>
+            ))}
+          </nav>
+        ) : null
+      }
+      {s.note && <p class="note">{typo(s.note)}</p>}
+    </div>
+    {s.visuel === 'simulateur' && <Simulateur />}
+    {avecCapture && <Capture image={s.capture!} chargement="eager" />}
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: var(--space-800);
+  }
+
+  .grille-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-800);
+    align-items: center;
+  }
+
+  .grille-hero--simulateur {
+    grid-template-columns: minmax(0, 1fr) 520px;
+  }
+
+  .grille-hero--capture {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+  }
+
+  .texte {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-300);
+  }
+
+  .titre {
+    max-width: 960px;
+    font-family: var(--display-md-family);
+    font-size: var(--display-md-size);
+    line-height: var(--display-md-line);
+    font-weight: var(--display-md-weight);
+    letter-spacing: var(--display-md-tracking);
+    text-wrap: balance;
+  }
+
+  .titre--accueil {
+    font-size: var(--display-lg-size);
+    line-height: var(--display-lg-line);
+  }
+
+  .accroche {
+    max-width: 680px;
+    font-size: var(--text-lg-size);
+    line-height: var(--text-lg-line);
+    color: var(--color-text-secondary);
+  }
+
+  .boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-150);
+  }
+
+  .sous-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-100);
+  }
+
+  .sous-navigation a {
+    display: inline-flex;
+    align-items: center;
+    height: var(--target-min);
+    padding: 0 var(--space-200);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .sous-navigation a:hover {
+    background: var(--color-bg-subtle);
+  }
+
+  .note {
+    color: var(--color-text-secondary);
+  }
+
+  .grille-hero--capture :global(.capture) {
+    justify-self: center;
+    width: 100%;
+  }
+
+  @media (max-width: 1279px) {
+    .grille-hero--simulateur {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .grille-hero--simulateur :global(.sim-cadre) {
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      padding-top: var(--space-500);
+    }
+
+    .grille-hero,
+    .grille-hero--capture {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-500);
+    }
+
+    .texte {
+      gap: var(--space-250);
+    }
+
+    .titre,
+    .titre--accueil {
+      font-size: var(--title-lg-size);
+      line-height: var(--title-lg-line);
+      letter-spacing: var(--display-md-tracking);
+    }
+
+    .accroche {
+      font-size: var(--text-md-size);
+      line-height: var(--text-md-line);
+    }
+
+    .boutons {
+      flex-direction: column;
+      align-self: stretch;
+    }
+  }
+</style>

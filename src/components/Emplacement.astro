@@ -1,0 +1,60 @@
+---
+// Emplacement : réserve la place d'un contenu réel et sourcé. Jamais remplacé par un chiffre inventé.
+import { typo } from '../lib/typo';
+
+interface Props {
+  libelle: string;
+  taille?: 'temoignage' | 'bloc' | 'logo' | 'pastille' | 'prix';
+  class?: string;
+}
+const { libelle, taille = 'bloc', class: classe } = Astro.props;
+---
+
+<div class:list={['emplacement', `emplacement--${taille}`, classe]}>{typo(libelle)}</div>
+
+<style is:global>
+  .emplacement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-150) var(--space-200);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    text-align: center;
+  }
+
+  .emplacement--bloc {
+    min-height: 72px;
+  }
+
+  .emplacement--temoignage {
+    min-height: 240px;
+    padding: var(--space-300);
+    border-radius: var(--radius-xl);
+    font-size: var(--text-lg-size);
+    line-height: var(--text-lg-line);
+  }
+
+  .emplacement--logo {
+    height: 96px;
+    padding: 0 var(--space-150);
+  }
+
+  .emplacement--prix {
+    min-height: 56px;
+    padding: var(--space-100) var(--space-150);
+    border-radius: var(--radius-md);
+  }
+
+  .emplacement--pastille {
+    display: inline-flex;
+    align-self: flex-start;
+    min-height: 32px;
+    padding: var(--space-050) var(--space-150);
+    border-radius: var(--radius-sm);
+    text-align: left;
+  }
+</style>

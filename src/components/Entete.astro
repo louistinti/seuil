@@ -1,0 +1,32 @@
+---
+// Entête de section : surtitre, titre, chapeau. Le premier titre de la page est un h1.
+import { typo } from '../lib/typo';
+
+interface Props {
+  surtitre?: string;
+  titre?: string;
+  texte?: string;
+  niveau?: 1 | 2;
+  class?: string;
+  sansMarge?: boolean;
+}
+const { surtitre, titre, texte, niveau = 2, class: classe, sansMarge = false } = Astro.props;
+const Titre = niveau === 1 ? 'h1' : 'h2';
+---
+
+{
+  (surtitre || titre || texte) && (
+    <div class:list={['entete', { 'entete--sans-marge': sansMarge }, classe]}>
+      {surtitre && <span class="surtitre">{typo(surtitre)}</span>}
+      {titre && <Titre class="titre-section">{typo(titre)}</Titre>}
+      {texte && <p class="chapeau">{typo(texte)}</p>}
+      <slot />
+    </div>
+  )
+}
+
+<style is:global>
+  .entete--sans-marge {
+    margin-bottom: 0;
+  }
+</style>

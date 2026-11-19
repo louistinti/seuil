@@ -1,0 +1,42 @@
+---
+// FAQ : question et réponse toujours visibles. Aucune version repliable n'est dessinée.
+import Entete from '../Entete.astro';
+import { typo } from '../../lib/typo';
+import type { SectionFaq } from '../../lib/types';
+
+interface Props {
+  section: SectionFaq;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+---
+
+<section class="conteneur" id={s.ancre}>
+  <Entete surtitre={s.surtitre} titre={s.titre} niveau={niveau} />
+  <div class="questions">
+    {
+      s.questions.map((q) => (
+        <div class="question">
+          <h3 class="titre-carte">{typo(q.question)}</h3>
+          <p class="texte-secondaire">{typo(q.reponse)}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .questions {
+    display: flex;
+    flex-direction: column;
+    max-width: var(--mesure-titre);
+  }
+
+  .question {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+    padding: var(--space-300) 0;
+    border-top: 1px solid var(--color-border-default);
+  }
+</style>

@@ -1,0 +1,208 @@
+---
+// Navigation du site. Desktop : logo, pilule de 4 liens, bouton principal.
+// Mobile : logo, bouton « Démo », bouton menu. Le menu ouvert n'est pas dessiné : panneau dérivé de la pilule.
+import Icone from './Icone.astro';
+import { typo } from '../lib/typo';
+import type { Reglages } from '../lib/types';
+
+interface Props {
+  reglages: Reglages;
+  cheminCourant: string;
+}
+const { reglages, cheminCourant } = Astro.props;
+const courant = (href: string) => href === cheminCourant;
+---
+
+<header class="navigation conteneur">
+  <a class="logo" href="/">Seuil</a>
+  <nav aria-label="Navigation principale" class="pilule">
+    {
+      reglages.navigation.map((l) => (
+        <a href={l.href} aria-current={courant(l.href) ? 'page' : undefined}>
+          {typo(l.libelle)}
+        </a>
+      ))
+    }
+  </nav>
+  <a class="bouton bouton--principal bouton-desktop" href={reglages.bouton.href} aria-current={courant(reglages.bouton.href) ? 'page' : undefined}>
+    {typo(reglages.bouton.libelle)}<Icone nom="fleche" />
+  </a>
+  <div class="actions-mobile">
+    <a class="bouton bouton--principal bouton-mobile" href={reglages.bouton.href} aria-label={reglages.bouton.libelle}>
+      {typo(reglages.boutonMobile)}<Icone nom="fleche" />
+    </a>
+    <button type="button" class="bouton-menu" aria-expanded="false" aria-controls="menu-mobile" aria-label="Ouvrir le menu">
+      <span class="icone-ouvrir"><Icone nom="menu" taille={20} /></span>
+      <span class="icone-fermer"><Icone nom="fermer" taille={20} /></span>
+    </button>
+  </div>
+  <nav id="menu-mobile" class="menu-mobile" aria-label="Menu" hidden>
+    {
+      reglages.navigation.map((l) => (
+        <a href={l.href} aria-current={courant(l.href) ? 'page' : undefined}>
+          {typo(l.libelle)}
+        </a>
+      ))
+    }
+  </nav>
+</header>
+
+<script>
+  const bouton = document.querySelector<HTMLButtonElement>('.bouton-menu');
+  const menu = document.getElementById('menu-mobile');
+  if (bouton && menu) {
+    const basculer = (ouvert: boolean) => {
+      bouton.setAttribute('aria-expanded', String(ouvert));
+      bouton.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+      menu.hidden = !ouvert;
+    };
+    bouton.addEventListener('click', () => basculer(Boolean(menu.hidden)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        basculer(false);
+        bouton.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .navigation {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-200);
+    padding-top: var(--space-300);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    font-family: var(--title-sm-family);
+    font-size: var(--title-sm-size);
+    line-height: var(--title-sm-line);
+    font-weight: var(--title-sm-weight);
+    letter-spacing: var(--title-xl-tracking);
+    text-decoration: none;
+  }
+
+  .pilule {
+    display: flex;
+    align-items: center;
+    gap: var(--space-050);
+    height: 56px;
+    padding: 0 var(--space-100);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+  }
+
+  .pilule a,
+  .menu-mobile a {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 var(--space-200);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .pilule a:hover,
+  .menu-mobile a:hover {
+    background: var(--color-bg-subtle);
+  }
+
+  .pilule a[aria-current='page'],
+  .menu-mobile a[aria-current='page'] {
+    background: var(--neutral-900);
+    color: var(--neutral-50);
+  }
+
+  .actions-mobile {
+    display: none;
+    align-items: center;
+    gap: var(--space-100);
+  }
+
+  .bouton-mobile {
+    height: var(--target-min);
+    padding: 0 var(--space-200);
+    font-size: var(--text-sm-size);
+  }
+
+  .bouton-menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--target-min);
+    height: var(--target-min);
+    padding: 0;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-glass);
+    border: 1px solid var(--color-border-glass);
+    backdrop-filter: blur(var(--blur-glass));
+    cursor: pointer;
+  }
+
+  .bouton-menu .icone-fermer,
+  .bouton-menu[aria-expanded='true'] .icone-ouvrir {
+    display: none;
+  }
+
+  .bouton-menu[aria-expanded='true'] .icone-fermer {
+    display: inline-flex;
+  }
+
+  .menu-mobile {
+    position: absolute;
+    top: calc(100% + var(--space-100));
+    left: var(--grid-mobile-margin);
+    right: var(--grid-mobile-margin);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+    padding: var(--space-100);
+    border-radius: var(--radius-xl);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  .menu-mobile[hidden] {
+    display: none;
+  }
+
+  .menu-mobile a {
+    height: var(--target-min);
+    font-size: var(--text-md-size);
+  }
+
+  @media (max-width: 1023px) {
+    .pilule,
+    .bouton-desktop {
+      display: none;
+    }
+
+    .actions-mobile {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .navigation {
+      padding-top: var(--space-200);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .menu-mobile {
+      display: none !important;
+    }
+  }
+</style>

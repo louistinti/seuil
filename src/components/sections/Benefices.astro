@@ -1,0 +1,43 @@
+---
+import Badge from '../Badge.astro';
+import Entete from '../Entete.astro';
+import LienFleche from '../LienFleche.astro';
+import { typo } from '../../lib/typo';
+import type { SectionBenefices } from '../../lib/types';
+
+interface Props {
+  section: SectionBenefices;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+---
+
+<section class="conteneur" id={s.ancre}>
+  <Entete surtitre={s.surtitre} titre={s.titre} niveau={niveau} />
+  <div class="grille" style={`--colonnes: ${s.cartes.length}`}>
+    {
+      s.cartes.map((c) => (
+        <div class="carte carte-role">
+          <div class="haut">
+            {c.resultat ? <Badge resultat={c.resultat} /> : c.role && <span class="surtitre">{typo(c.role)}</span>}
+            <h3 class="titre-carte">{typo(c.titre)}</h3>
+            <p class="texte-secondaire">{typo(c.texte)}</p>
+          </div>
+          {c.lien && <LienFleche lien={c.lien} />}
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .carte-role {
+    justify-content: space-between;
+  }
+
+  .haut {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-150);
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Sections from '../components/Sections.astro';
+import { chargerContenu, route } from '../lib/contenu';
+import type { Page } from '../lib/types';
+
+export async function getStaticPaths() {
+  const { pages, reglages } = await chargerContenu();
+  return pages.map((page) => ({
+    params: { slug: page.slug === 'accueil' ? undefined : page.slug },
+    props: { page, reglages },
+  }));
+}
+
+const { page, reglages } = Astro.props as { page: Page; reglages: Awaited<ReturnType<typeof chargerContenu>>['reglages'] };
+const chemin = route(page.slug);
+const titre = page.slug === 'accueil' ? 'Seuil, décisions de crédit client' : `${page.titre} | Seuil`;
+---
+
+<Base titre={titre} description={page.description} reglages={reglages} chemin={chemin}>
+  <Sections sections={page.sections} />
+</Base>

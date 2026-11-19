@@ -1,0 +1,105 @@
+---
+// Capture produit. Écran d'ordinateur en pleine largeur, ou téléphone si l'image est en portrait.
+// Sur mobile, `mobile` la remplace : recadrage d'un panneau (crop Sanity) ou vue téléphone.
+import { src, srcset, stylesRecadrage } from '../lib/images';
+import type { Image } from '../lib/types';
+
+interface Props {
+  image: Image;
+  mobile?: Image | null;
+  /** Largeur maximale d'affichage, pour le choix des tailles d'image. */
+  largeur?: number;
+  chargement?: 'lazy' | 'eager';
+}
+const { image, mobile, largeur = 1296, chargement = 'lazy' } = Astro.props;
+const telephone = (i: Image) => i.hauteur > i.largeur;
+---
+
+<figure class:list={['capture', { 'capture--avec-mobile': mobile }]} data-theme="produit">
+  <div class:list={['cadre', { 'cadre--telephone': telephone(image) }]}>
+    <img
+      src={src(image, telephone(image) ? 780 : 1440)}
+      srcset={srcset(image)}
+      sizes={telephone(image) ? '(max-width: 767px) 100vw, 320px' : `(max-width: 1440px) 100vw, ${largeur}px`}
+      width={image.largeur}
+      height={image.hauteur}
+      alt={image.alt}
+      loading={chargement}
+      decoding="async"
+    />
+  </div>
+  {
+    mobile && (
+      <div class:list={['cadre', 'cadre--mobile', { 'cadre--telephone': telephone(mobile) && !mobile.crop }]} style={mobile.crop ? stylesRecadrage(mobile) : undefined}>
+        <img
+          class:list={{ recadre: mobile.crop }}
+          src={src(mobile, mobile.crop ? 1440 : 780)}
+          srcset={srcset(mobile)}
+          sizes={mobile.crop ? '300vw' : '100vw'}
+          width={mobile.largeur}
+          height={mobile.hauteur}
+          alt={mobile.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )
+  }
+</figure>
+
+<style>
+  .capture {
+    margin: 0;
+    background: transparent;
+  }
+
+  .cadre {
+    width: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    background: var(--color-bg-page);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cadre img {
+    width: 100%;
+  }
+
+  .cadre--telephone {
+    max-width: 320px;
+  }
+
+  .cadre--mobile {
+    display: none;
+  }
+
+  /* Recadrage : la fenêtre a les proportions du crop, l'image est agrandie et décalée. */
+  .cadre--mobile[style] {
+    position: relative;
+    aspect-ratio: var(--ratio);
+  }
+
+  .cadre .recadre {
+    position: absolute;
+    left: var(--decalage-x);
+    top: var(--decalage-y);
+    width: var(--echelle);
+    max-width: none;
+  }
+
+  @media (max-width: 767px) {
+    .cadre--telephone {
+      max-width: 100%;
+    }
+
+    .capture--avec-mobile .cadre:not(.cadre--mobile) {
+      display: none;
+    }
+
+    .capture--avec-mobile .cadre--mobile {
+      display: block;
+    }
+  }
+</style>

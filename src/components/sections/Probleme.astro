@@ -1,0 +1,36 @@
+---
+import Emplacement from '../Emplacement.astro';
+import Entete from '../Entete.astro';
+import { typo } from '../../lib/typo';
+import type { SectionProbleme } from '../../lib/types';
+
+interface Props {
+  section: SectionProbleme;
+  niveau: 1 | 2;
+}
+const { section: s, niveau } = Astro.props;
+const cartes = s.cartes ?? [];
+---
+
+<section class="conteneur" id={s.ancre}>
+  <Entete surtitre={s.surtitre} titre={s.titre} niveau={niveau} />
+  {
+    cartes.length > 0 && (
+      <div class="grille" style={`--colonnes: ${cartes.length}`}>
+        {cartes.map((c) => (
+          <div class="carte">
+            <h3 class="titre-carte">{typo(c.titre)}</h3>
+            <p class="texte-secondaire">{typo(c.texte)}</p>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {s.emplacement && <Emplacement libelle={s.emplacement.libelle} class={cartes.length ? 'apres-cartes' : undefined} />}
+</section>
+
+<style>
+  .conteneur :global(.apres-cartes) {
+    margin-top: var(--space-300);
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+// Panneau de données Alertes : liste client, message, étiquette de type. Données fictives (donnees-produit.json).
+import Etiquette from './Etiquette.astro';
+import donnees from '../data/donnees-produit.json';
+import { typo } from '../lib/typo';
+---
+
+<div class="panneau" data-theme="produit">
+  <div class="panneau-entete">
+    <h3 class="panneau-titre">Alertes</h3>
+    <Etiquette>Données fictives</Etiquette>
+  </div>
+  <ul class="alertes">
+    {
+      donnees.alertes.map((a) => (
+        <li>
+          <div class="alerte-texte">
+            <span class="alerte-client">{a.client}</span>
+            <span class="chiffres texte-secondaire">{typo(a.message)}</span>
+          </div>
+          <Etiquette>{a.type}</Etiquette>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .panneau {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+    padding: var(--space-350);
+    border-radius: var(--radius-2xl);
+    background: var(--neutral-900);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text-primary);
+  }
+
+  .panneau-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-150);
+  }
+
+  .panneau-titre {
+    font-family: var(--font-text);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 500;
+  }
+
+  .alertes {
+    padding: 0;
+    list-style: none;
+  }
+
+  .alertes li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-150);
+    padding: var(--space-150) 0;
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+  }
+
+  .alertes li + li {
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .alerte-texte {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .alerte-client {
+    font-weight: 500;
+  }
+
+  .alertes :global(.etiquette) {
+    align-self: center;
+  }
+
+  @media (max-width: 767px) {
+    .panneau {
+      padding: var(--space-250);
+    }
+  }
+</style>

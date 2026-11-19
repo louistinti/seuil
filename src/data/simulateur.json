@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "note": "Données fictives. Seuil est une entreprise fictive, conçue comme démonstration.",
+    "devise": "EUR",
+    "montants_en": "euros entiers",
+    "evaluation": "Les règles s'appliquent dans l'ordre. La première dont la condition est vraie décide.",
+    "arithmetique": "Comparer en entiers pour éviter les erreurs de virgule flottante : total × 100 > limite × 110, et non total > limite × 1,10.",
+    "definitions": {
+      "total": "encours + montant de la commande",
+      "retard_en_cours": "jours de retard d'une facture échue et non payée aujourd'hui",
+      "pire_retard_12_mois": "pire retard constaté sur les factures réglées au cours des 12 derniers mois"
+    },
+    "libelles_resultats": [
+      "Acceptée",
+      "Refusée",
+      "Envoyée à l'analyste"
+    ],
+    "saisie_libre": {
+      "champ": "Autre montant",
+      "valide": "entier strictement positif, espaces et symbole € ignorés",
+      "erreur": "Saisissez un montant en chiffres."
+    },
+    "affichage": {
+      "dans_la_limite": "usage de la limite en pourcentage, une décimale (88,2 %)",
+      "au_dela_de_la_limite": "plus de pourcentage : « Dépasse la limite de X € », avec X = total − limite",
+      "bloc_regle": "le bloc règle cite la règle et, quand une condition a échoué, la liste des conditions en cause",
+      "conditions": {
+        "regle_1_depassement": "Encours après commande de {total} supérieur à {plafond} (limite + 10 %)",
+        "regle_1_retard": "Retard en cours de {jours} jours, au-delà de 60 jours",
+        "regle_3_limite": "Encours après commande de {total} supérieur à la limite de {limite}",
+        "regle_4_couverture": "Couverture de {couverture} inférieure à {total}",
+        "regle_4_retard": "Retard en cours de {jours} jours",
+        "regle_4_pire_retard": "Pire retard sur 12 mois de {jours} jours, au-delà de 30 jours"
+      }
+    }
+  },
+  "seuils": {
+    "depassement_max_pct": 10,
+    "retard_en_cours_refus_jours": 60,
+    "pire_retard_12_mois_max_jours": 30
+  },
+  "clients": [
+    {
+      "id": "valdorre",
+      "nom": "Menuiseries Valdorre",
+      "encours": 182400,
+      "limite": 250000,
+      "retard_en_cours_jours": 0,
+      "pire_retard_12_mois_jours": 8,
+      "couverture_assurance_credit": 200000
+    },
+    {
+      "id": "trehault",
+      "nom": "Négoce Tréhault",
+      "encours": 96750,
+      "limite": 90000,
+      "retard_en_cours_jours": 18,
+      "pire_retard_12_mois_jours": 41,
+      "couverture_assurance_credit": 60000
+    },
+    {
+      "id": "orvelle",
+      "nom": "Groupe Orvelle",
+      "encours": 412000,
+      "limite": 450000,
+      "retard_en_cours_jours": 0,
+      "pire_retard_12_mois_jours": 22,
+      "couverture_assurance_credit": 480000
+    }
+  ],
+  "regles": [
+    {
+      "ordre": 1,
+      "nom": "Refuser",
+      "resultat": "Refusée",
+      "condition": "total > limite × 1,10 OU retard_en_cours > 60 jours",
+      "libelle": "Encours + commande > limite × 1,10, ou retard en cours de plus de 60 jours.",
+      "seuils": {
+        "depassement_strictement_superieur_pct": 10,
+        "retard_en_cours_strictement_superieur_jours": 60
+      }
+    },
+    {
+      "ordre": 2,
+      "nom": "Accepter",
+      "resultat": "Acceptée",
+      "condition": "total ≤ limite ET retard_en_cours = 0 ET pire_retard_12_mois ≤ 30 jours",
+      "libelle": "Encours + commande ≤ limite, aucun retard en cours, aucun retard de plus de 30 jours sur 12 mois.",
+      "seuils": {
+        "pire_retard_12_mois_max_jours": 30
+      }
+    },
+    {
+      "ordre": 3,
+      "nom": "Envoyer à l'analyste",
+      "resultat": "Envoyée à l'analyste",
+      "priorite": "normale",
+      "condition": "total > limite ET total ≤ limite × 1,10 ET couverture_assurance_credit ≥ total ET retard_en_cours = 0",
+      "libelle": "Dépassement de 10 % au plus, couverture d'assurance-crédit suffisante et aucun retard en cours : la décision revient à l'analyste.",
+      "seuils": {
+        "depassement_max_pct": 10
+      }
+    },
+    {
+      "ordre": 4,
+      "nom": "Par défaut",
+      "resultat": "Envoyée à l'analyste",
+      "priorite": "haute",
+      "condition": "tous les autres cas",
+      "libelle": "Aucune règle ne tranche : la demande part chez l'analyste en priorité haute.",
+      "seuils": {}
+    }
+  ],
+  "montants_chips": [
+    12500,
+    38000,
+    60000,
+    75000,
+    90000
+  ],
+  "montant_par_defaut": 38000,
+  "cas_attendus": [
+    {
+      "client": "valdorre",
+      "montant": 12500,
+      "encours_apres_commande": 194900,
+      "usage_limite_pct": 78,
+      "resultat": "Acceptée",
+      "regle": 2
+    },
+    {
+      "client": "valdorre",
+      "montant": 38000,
+      "encours_apres_commande": 220400,
+      "usage_limite_pct": 88.2,
+      "resultat": "Acceptée",
+      "regle": 2
+    },
+    {
+      "client": "valdorre",
+      "montant": 60000,
+      "encours_apres_commande": 242400,
+      "usage_limite_pct": 97,
+      "resultat": "Acceptée",
+      "regle": 2
+    },
+    {
+      "client": "valdorre",
+      "montant": 75000,
+      "encours_apres_commande": 257400,
+      "usage_limite_pct": 103,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute"
+    },
+    {
+      "client": "valdorre",
+      "montant": 90000,
+      "encours_apres_commande": 272400,
+      "usage_limite_pct": 109,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute"
+    },
+    {
+      "client": "trehault",
+      "montant": 12500,
+      "encours_apres_commande": 109250,
+      "usage_limite_pct": 121.4,
+      "resultat": "Refusée",
+      "regle": 1
+    },
+    {
+      "client": "trehault",
+      "montant": 38000,
+      "encours_apres_commande": 134750,
+      "usage_limite_pct": 149.7,
+      "resultat": "Refusée",
+      "regle": 1
+    },
+    {
+      "client": "trehault",
+      "montant": 60000,
+      "encours_apres_commande": 156750,
+      "usage_limite_pct": 174.2,
+      "resultat": "Refusée",
+      "regle": 1
+    },
+    {
+      "client": "trehault",
+      "montant": 75000,
+      "encours_apres_commande": 171750,
+      "usage_limite_pct": 190.8,
+      "resultat": "Refusée",
+      "regle": 1
+    },
+    {
+      "client": "trehault",
+      "montant": 90000,
+      "encours_apres_commande": 186750,
+      "usage_limite_pct": 207.5,
+      "resultat": "Refusée",
+      "regle": 1
+    },
+    {
+      "client": "orvelle",
+      "montant": 12500,
+      "encours_apres_commande": 424500,
+      "usage_limite_pct": 94.3,
+      "resultat": "Acceptée",
+      "regle": 2
+    },
+    {
+      "client": "orvelle",
+      "montant": 38000,
+      "encours_apres_commande": 450000,
+      "usage_limite_pct": 100,
+      "resultat": "Acceptée",
+      "regle": 2
+    },
+    {
+      "client": "orvelle",
+      "montant": 60000,
+      "encours_apres_commande": 472000,
+      "usage_limite_pct": 104.9,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 3,
+      "priorite": "normale"
+    },
+    {
+      "client": "orvelle",
+      "montant": 75000,
+      "encours_apres_commande": 487000,
+      "usage_limite_pct": 108.2,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute"
+    },
+    {
+      "client": "orvelle",
+      "montant": 90000,
+      "encours_apres_commande": 502000,
+      "usage_limite_pct": 111.6,
+      "resultat": "Refusée",
+      "regle": 1
+    }
+  ],
+  "cas_aux_bornes": [
+    {
+      "client": "orvelle",
+      "montant": 38000,
+      "encours_apres_commande": 450000,
+      "usage_limite_pct": 100,
+      "resultat": "Acceptée",
+      "regle": 2,
+      "affichage": "100,0 %",
+      "conditions_echouees": []
+    },
+    {
+      "client": "orvelle",
+      "montant": 38001,
+      "encours_apres_commande": 450001,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 3,
+      "priorite": "normale",
+      "affichage": "Dépasse la limite de 1 €",
+      "conditions_echouees": [
+        "Encours après commande de 450 001 € supérieur à la limite de 450 000 €"
+      ]
+    },
+    {
+      "client": "orvelle",
+      "montant": 68000,
+      "encours_apres_commande": 480000,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 3,
+      "priorite": "normale",
+      "affichage": "Dépasse la limite de 30 000 €",
+      "conditions_echouees": [
+        "Encours après commande de 480 000 € supérieur à la limite de 450 000 €"
+      ]
+    },
+    {
+      "client": "orvelle",
+      "montant": 68001,
+      "encours_apres_commande": 480001,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute",
+      "affichage": "Dépasse la limite de 30 001 €",
+      "conditions_echouees": [
+        "Couverture de 480 000 € inférieure à 480 001 €"
+      ]
+    },
+    {
+      "client": "orvelle",
+      "montant": 83000,
+      "encours_apres_commande": 495000,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute",
+      "affichage": "Dépasse la limite de 45 000 €",
+      "conditions_echouees": [
+        "Couverture de 480 000 € inférieure à 495 000 €"
+      ]
+    },
+    {
+      "client": "orvelle",
+      "montant": 83001,
+      "encours_apres_commande": 495001,
+      "resultat": "Refusée",
+      "regle": 1,
+      "affichage": "Dépasse la limite de 45 001 €",
+      "conditions_echouees": [
+        "Encours après commande de 495 001 € supérieur à 495 000 € (limite + 10 %)"
+      ]
+    },
+    {
+      "client": "valdorre",
+      "montant": 67600,
+      "encours_apres_commande": 250000,
+      "usage_limite_pct": 100,
+      "resultat": "Acceptée",
+      "regle": 2,
+      "affichage": "100,0 %",
+      "conditions_echouees": []
+    },
+    {
+      "client": "valdorre",
+      "montant": 67601,
+      "encours_apres_commande": 250001,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute",
+      "affichage": "Dépasse la limite de 1 €",
+      "conditions_echouees": [
+        "Couverture de 200 000 € inférieure à 250 001 €"
+      ]
+    },
+    {
+      "client": "trehault",
+      "montant": 2250,
+      "encours_apres_commande": 99000,
+      "resultat": "Envoyée à l'analyste",
+      "regle": 4,
+      "priorite": "haute",
+      "affichage": "Dépasse la limite de 9 000 €",
+      "conditions_echouees": [
+        "Couverture de 60 000 € inférieure à 99 000 €",
+        "Retard en cours de 18 jours"
+      ]
+    },
+    {
+      "client": "trehault",
+      "montant": 2251,
+      "encours_apres_commande": 99001,
+      "resultat": "Refusée",
+      "regle": 1,
+      "affichage": "Dépasse la limite de 9 001 €",
+      "conditions_echouees": [
+        "Encours après commande de 99 001 € supérieur à 99 000 € (limite + 10 %)"
+      ]
+    }
+  ]
+}
