@@ -7,5 +7,6 @@ export default defineCliConfig({
   },
   // Nom du Studio en ligne : https://<studioHost>.sanity.studio
   studioHost: process.env.SANITY_STUDIO_HOSTNAME,
-  deployment: {autoUpdates: true},
+  // appId : le Studio déployé sur seuil-demo.sanity.studio (évite la question à chaque `sanity deploy`).
+  deployment: {autoUpdates: true, appId: 'qyld3lk21ddnuz0xr9mmvtfp'},
 })
