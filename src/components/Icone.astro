@@ -1,12 +1,13 @@
 ---
 // Icônes en trait, 16 px par défaut. Toujours décoratives : le sens est porté par le texte voisin.
 interface Props {
-  nom: 'fleche' | 'coche' | 'croix' | 'horloge' | 'menu' | 'alerte' | 'chevron' | 'fermer';
+  nom: 'fleche' | 'haut' | 'coche' | 'croix' | 'horloge' | 'menu' | 'alerte' | 'chevron' | 'fermer';
   taille?: number;
 }
 const { nom, taille = 16 } = Astro.props;
 const traces: Record<Props['nom'], string> = {
   fleche: 'M3 8h10M9 4l4 4-4 4',
+  haut: 'M8 13V3M4 7l4-4 4 4',
   coche: 'M3 8.5l3.2 3.2L13 5',
   croix: 'M4.5 4.5l7 7M11.5 4.5l-7 7',
   horloge: 'M8 2.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11zM8 5v3.2l2.2 1.4',

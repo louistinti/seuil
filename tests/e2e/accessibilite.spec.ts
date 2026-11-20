@@ -100,6 +100,35 @@ test.describe('formulaire de démo', () => {
   });
 });
 
+test.describe('retour en haut', () => {
+  test('absent au premier écran, visible après défilement, remonte et rend le focus au logo', async ({ page }) => {
+    await page.goto('/produit');
+    const bouton = page.getByRole('button', { name: 'Revenir en haut de la page' });
+    await expect(bouton).toBeHidden();
+    await page.evaluate(() => window.scrollTo({ top: window.innerHeight * 2, behavior: 'instant' }));
+    await expect(bouton).toBeVisible();
+    await bouton.click();
+    await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 5000 }).toBe(0);
+    await expect(page.locator('.navigation .logo')).toBeFocused();
+    await expect(bouton).toBeHidden();
+  });
+
+  test('ne recouvre aucun lien du pied de page', async ({ page }) => {
+    for (const chemin of PAGES) {
+      await page.goto(chemin);
+      await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+      const recouverts = await page.evaluate(() => {
+        const b = document.querySelector('.retour-haut')!.getBoundingClientRect();
+        return [...document.querySelectorAll('footer a')]
+          .map((e) => ({ e, r: e.getBoundingClientRect() }))
+          .filter(({ r }) => !(r.right <= b.left || r.left >= b.right || r.bottom <= b.top || r.top >= b.bottom))
+          .map(({ e }) => e.textContent?.trim());
+      });
+      expect(recouverts, chemin).toEqual([]);
+    }
+  });
+});
+
 test.describe('mobile', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) > 500, 'propre au mobile');
 

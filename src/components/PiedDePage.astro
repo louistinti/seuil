@@ -24,7 +24,8 @@ const { reglages } = Astro.props;
     justify-content: space-between;
     gap: var(--space-300);
     padding-top: var(--space-400);
-    padding-bottom: var(--space-600);
+    /* Dégage le bouton « revenir en haut » (48 px, à 24 px du bord) : le dernier lien reste cliquable. */
+    padding-bottom: calc(48px + 2 * var(--space-300));
     border-top: 1px solid var(--color-border-default);
   }
 
@@ -76,6 +77,12 @@ const { reglages } = Astro.props;
   @media (max-width: 1023px) {
     .pied {
       flex-direction: column;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pied {
+      padding-bottom: calc(48px + 2 * var(--space-200));
     }
   }
 </style>

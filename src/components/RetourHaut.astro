@@ -1,0 +1,100 @@
+---
+// Bouton icône « revenir en haut » (variante icône du Bouton : rond, 48 px, verre, aria-label).
+// Non dessiné, dérivé. N'existe que sur les pages longues (plus de deux écrans) et n'apparaît
+// qu'une fois le premier écran dépassé. Défilement doux sauf si prefers-reduced-motion (base.css).
+import Icone from './Icone.astro';
+---
+
+<button type="button" class="retour-haut" aria-label="Revenir en haut de la page" hidden>
+  <Icone nom="haut" taille={20} />
+</button>
+
+<script>
+  const bouton = document.querySelector<HTMLButtonElement>('.retour-haut');
+  if (bouton) {
+    const racine = document.documentElement;
+    let attente = 0;
+
+    const mettreAJour = () => {
+      attente = 0;
+      const longue = racine.scrollHeight > window.innerHeight * 2;
+      bouton.hidden = !longue;
+      const visible = longue && window.scrollY > window.innerHeight;
+      bouton.toggleAttribute('data-visible', visible);
+      // Masqué : ni cliquable, ni atteignable au clavier, ni lu.
+      bouton.inert = !visible;
+    };
+    const planifier = () => {
+      if (!attente) attente = requestAnimationFrame(mettreAJour);
+    };
+
+    window.addEventListener('scroll', planifier, { passive: true });
+    window.addEventListener('resize', planifier);
+    new ResizeObserver(planifier).observe(document.body);
+    mettreAJour();
+
+    bouton.addEventListener('click', () => {
+      window.scrollTo({ top: 0 });
+      // Le focus suit : la tabulation suivante repart du haut de la page.
+      document.querySelector<HTMLElement>('.navigation .logo')?.focus({ preventScroll: true });
+    });
+  }
+</script>
+
+<style>
+  .retour-haut {
+    position: fixed;
+    right: var(--space-300);
+    bottom: calc(var(--space-300) + env(safe-area-inset-bottom, 0px));
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-glass);
+    border: 1px solid var(--color-border-glass);
+    backdrop-filter: blur(var(--blur-glass));
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    box-shadow: var(--shadow-md);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--space-100));
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .retour-haut[hidden] {
+    display: none;
+  }
+
+  .retour-haut[data-visible] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .retour-haut:hover {
+    background: var(--color-bg-subtle);
+  }
+
+  @media (max-width: 767px) {
+    .retour-haut {
+      right: var(--space-200);
+      bottom: calc(var(--space-200) + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .retour-haut {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

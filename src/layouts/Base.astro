@@ -8,6 +8,7 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import Navigation from '../components/Navigation.astro';
 import PiedDePage from '../components/PiedDePage.astro';
+import RetourHaut from '../components/RetourHaut.astro';
 import type { Reglages } from '../lib/types';
 
 interface Props {
@@ -44,5 +45,6 @@ const canonique = new URL(chemin, Astro.site);
       </main>
       <PiedDePage reglages={reglages} />
     </div>
+    <RetourHaut />
   </body>
 </html>
