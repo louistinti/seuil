@@ -18,6 +18,14 @@ for (const chemin of PAGES) {
     await expect(page.locator('footer')).toContainText('Seuil est une entreprise fictive, conçue comme démonstration.');
   });
 
+  test(`hiérarchie des titres sans niveau sauté sur ${chemin}`, async ({ page }) => {
+    await page.goto(chemin);
+    const niveaux = await page.evaluate(() => [...document.querySelectorAll('h1, h2, h3, h4, h5, h6')].map((h) => Number(h.tagName[1])));
+    expect(niveaux[0], 'le premier titre est le h1').toBe(1);
+    const sauts = niveaux.flatMap((n, i) => (i > 0 && n > niveaux[i - 1] + 1 ? [`h${niveaux[i - 1]} puis h${n}`] : []));
+    expect(sauts).toEqual([]);
+  });
+
   test(`aucun défilement horizontal sur ${chemin}`, async ({ page }) => {
     await page.goto(chemin);
     const debord = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

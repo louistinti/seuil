@@ -245,6 +245,11 @@ select {
   .grille {
     grid-template-columns: repeat(min(var(--colonnes, 3), 2), minmax(0, 1fr));
   }
+
+  /* Grille sur 2 colonnes avec un nombre impair de cartes : la dernière prend toute la ligne, pas de trou. */
+  .grille:not(.tuiles) > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Badge d’état (aussi utilisé par le simulateur). */

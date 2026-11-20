@@ -99,7 +99,14 @@ const { section: s, niveau } = Astro.props;
     min-height: 56px;
   }
 
-  @media (max-width: 1023px) {
+  /* Tablette : les colonnes restent (textes courts), avec un écart réduit. Empilées sous 768 px. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .etapes--colonnes {
+      gap: var(--space-300);
+    }
+  }
+
+  @media (max-width: 767px) {
     .etapes--colonnes {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-200);

@@ -144,6 +144,24 @@ const avecCapture = s.visuel === 'capture' && s.capture;
     }
   }
 
+  /* Tablette (768 à 1023 px), non dessinée : le simulateur prend toute la largeur (variante mobile, faits sur
+     2 colonnes) ; à côté du téléphone, le titre passe en title-xl pour ne pas tenir sur 7 lignes. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .grille-hero--simulateur :global(.sim-cadre) {
+      max-width: none;
+    }
+
+    .grille-hero--capture {
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: var(--space-500);
+    }
+
+    .grille-hero--capture .titre {
+      font-size: var(--title-xl-size);
+      line-height: var(--title-xl-line);
+    }
+  }
+
   @media (max-width: 767px) {
     .hero {
       padding-top: var(--space-500);

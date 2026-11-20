@@ -15,7 +15,9 @@ interface Props {
 const { section: s } = Astro.props;
 ---
 
-<section class="conteneur" id={s.ancre} aria-label="Formules">
+<section class="conteneur" id={s.ancre} aria-labelledby={`formules-${s._key}`}>
+  <!-- Titre de structure : la maquette n'en montre pas, il est masqué visuellement. Les h3 des formules ne suivent plus le h1. -->
+  <h2 id={`formules-${s._key}`} class="sr-only">Formules</h2>
   <div class="formules">
     {
       s.formules.map((f) => (
@@ -131,6 +133,28 @@ const { section: s } = Astro.props;
     .formules {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-200);
+    }
+  }
+
+  /* Tablette (768 à 1023 px), non dessinée : une formule par ligne, en deux colonnes. À gauche nom, chiffre
+     d'affaires, description, prix et bouton ; à droite la liste à coches. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .formule {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--space-400);
+      row-gap: var(--space-200);
+      align-content: start;
+    }
+
+    .formule > :global(*) {
+      grid-column: 1;
+    }
+
+    .formule > :global(.coches-formule) {
+      grid-column: 2;
+      grid-row: 1 / span 5;
+      align-self: center;
     }
   }
 

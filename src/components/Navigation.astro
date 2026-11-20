@@ -205,4 +205,22 @@ const courant = (href: string) => href === cheminCourant;
       display: none !important;
     }
   }
+
+  /* Tablette (768 à 1023 px), non dessinée : la pilule de 4 liens tient, le bouton reste « Démo ».
+     Plus de bouton menu. Liens de 44 px et 8 px d'écart : cibles tactiles. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .pilule {
+      display: flex;
+      gap: var(--space-100);
+    }
+
+    .pilule a {
+      height: var(--target-min);
+    }
+
+    .bouton-menu,
+    .menu-mobile {
+      display: none !important;
+    }
+  }
 </style>
