@@ -6,6 +6,7 @@ export function typo(texte?: string | null): string {
   if (!texte) return '';
   return texte
     .replace(/ ([?!:;»%€])/g, `${INSECABLE}$1`)
+    .replace(/(d) (k€|M€|Md€)/g, `$1${INSECABLE}$2`)
     .replace(/« /g, `«${INSECABLE}`)
     .replace(/(\w)-t-(elle|il|on|ils|elles)\b/g, `$1${TRAIT_INSECABLE}t${TRAIT_INSECABLE}$2`);
 }

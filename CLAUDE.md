@@ -46,8 +46,10 @@ Chaque page est une suite de sections typées : hero, problème, bénéfices par
 ## Règles de contenu
 
 - Tous les textes en français. Jamais de tiret cadratin.
-- Aucun chiffre de marché, témoignage ou logo client inventé : conserver les emplacements tels quels (« donnée sourcée à venir », « emplacement témoignage client », « emplacement logo client », prix et seuils des formules).
-- Aucun nom d'entreprise réelle dans les données fictives.
+- Aucun chiffre de marché, témoignage ou logo client inventé : conserver les emplacements tels quels (« donnée sourcée à venir », « emplacement témoignage client », « emplacement logo client »).
+- Les prix et seuils des formules ne sont plus des emplacements : ils sont remplis et sourcés sur la page Tarifs, avec une ligne de source liée sous les cartes (prix calés sur ceux de LeanPay publiés par le comparateur logiciels.pro, LeanPay ne les affichant pas sur son site ; seuil de 50 M€ selon la définition de la PME par l'INSEE). Toute modification future d'un prix ou d'un seuil doit garder sa ligne de source, à jour (source, date du relevé) ; Sanity refuse la publication d'un prix sans ligne de source.
+- Les faits internes à l'entreprise fictive (délai de réponse, durée de démonstration, hébergement, SSO, audit de sécurité) sont remplis dans Sanity. Aucune certification réelle n'est citée.
+- Aucun nom d'entreprise réelle dans les données fictives. Seule exception : une ligne de source, qui nomme et lie la source citée.
 - Toute capture ou tout panneau de données porte l'étiquette « Données fictives ».
 - Pied de page, sur toutes les pages : « Seuil est une entreprise fictive, conçue comme démonstration. »
 - Le formulaire de démo n'envoie rien et l'indique : « Formulaire de démonstration : rien n'est envoyé. »

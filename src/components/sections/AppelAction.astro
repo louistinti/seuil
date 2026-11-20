@@ -3,6 +3,7 @@ import Bouton from '../Bouton.astro';
 import Emplacement from '../Emplacement.astro';
 import Entete from '../Entete.astro';
 import FormulaireDemo from '../FormulaireDemo.astro';
+import Precision from '../Precision.astro';
 import { typo } from '../../lib/typo';
 import type { SectionAppelAction } from '../../lib/types';
 
@@ -27,7 +28,7 @@ const Titre = niveau === 1 ? 'h1' : 'h2';
     <section class="conteneur formulaire-section" id={s.ancre}>
       <div class="colonne-texte">
         <Entete surtitre={s.surtitre} titre={s.titre} texte={s.texte} niveau={niveau} sansMarge class:list={{ 'entete-h1': niveau === 1 }} />
-        {s.delai && <Emplacement libelle={s.delai.libelle} taille="prix" />}
+        {s.delaiReponse ? <Precision texte={s.delaiReponse} icone="horloge" /> : s.delai && <Emplacement libelle={s.delai.libelle} taille="prix" />}
       </div>
       <FormulaireDemo roles={s.roles ?? []} libelleEnvoi={s.libelleEnvoi ?? 'Demander une démo'} mention={s.mention ?? "Formulaire de démonstration : rien n'est envoyé."} />
     </section>

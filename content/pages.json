@@ -437,19 +437,13 @@
               "_type": "element",
               "titre": "Hébergement",
               "texte": "Région d'hébergement, sous-traitants et plan de reprise sont documentés et remis avant signature.",
-              "emplacement": {
-                "_type": "emplacement",
-                "libelle": "région d'hébergement à préciser"
-              }
+              "precision": "Données hébergées en France, sauvegardes dans un second centre de données en France."
             },
             {
               "_type": "element",
               "titre": "Sécurité",
               "texte": "Données chiffrées en transit et au repos, journal des accès et des décisions consultable.",
-              "emplacement": {
-                "_type": "emplacement",
-                "libelle": "certifications à préciser"
-              }
+              "precision": "Audit de sécurité annuel par un cabinet indépendant, rapport remis sur demande."
             },
             {
               "_type": "element",
@@ -460,10 +454,7 @@
               "_type": "element",
               "titre": "SSO",
               "texte": "Connexion par le fournisseur d'identité de l'entreprise, comptes créés et retirés automatiquement.",
-              "emplacement": {
-                "_type": "emplacement",
-                "libelle": "protocoles à préciser"
-              }
+              "precision": "Connexion par SAML 2.0 ou OpenID Connect."
             }
           ]
         },
@@ -796,13 +787,13 @@
         "current": "tarifs"
       },
       "ordre": 5,
-      "description": "Trois formules Seuil, distinguées par le nombre de clients actifs suivis. Prix à caler sur des tarifs publics sourcés.",
+      "description": "Trois formules Seuil selon le chiffre d'affaires annuel, avec des prix de démonstration calés sur un tarif public.",
       "sections": [
         {
           "_type": "sectionHero",
           "surtitre": "Tarifs",
-          "titre": "Trois formules, selon le nombre de clients actifs.",
-          "texte": "Ce qui distingue d'abord les formules, c'est le nombre de clients actifs que vous suivez. Les seuils et les prix ci-dessous sont des emplacements : les prix seront calés sur des tarifs publics sourcés.",
+          "titre": "Trois formules, selon votre chiffre d'affaires.",
+          "texte": "Le prix dépend du chiffre d'affaires annuel de votre entreprise, pas du nombre d'utilisateurs. Les prix affichés sont des prix de démonstration, calés sur un tarif public.",
           "visuel": "aucun"
         },
         {
@@ -811,14 +802,10 @@
             {
               "_type": "formule",
               "nom": "Départ",
-              "clientsActifs": {
-                "_type": "valeurOuEmplacement",
-                "emplacement": "jusqu'à [seuil 1]"
-              },
               "description": "Pour structurer la décision de crédit d'une première équipe.",
               "prix": {
                 "_type": "valeurOuEmplacement",
-                "emplacement": "prix à caler sur un tarif public sourcé"
+                "valeur": "245 €"
               },
               "coches": [
                 "Vue des encours par client",
@@ -831,19 +818,20 @@
                 "libelle": "Demander une démo",
                 "href": "/demo"
               },
-              "miseEnAvant": false
+              "miseEnAvant": false,
+              "chiffreAffaires": {
+                "_type": "valeurOuEmplacement",
+                "valeur": "moins de 15 M€"
+              },
+              "precisionPrix": "HT par mois"
             },
             {
               "_type": "formule",
               "nom": "Équipe",
-              "clientsActifs": {
-                "_type": "valeurOuEmplacement",
-                "emplacement": "de [seuil 1] à [seuil 2]"
-              },
               "description": "Pour une finance qui traite des exceptions tous les jours.",
               "prix": {
                 "_type": "valeurOuEmplacement",
-                "emplacement": "prix à caler sur un tarif public sourcé"
+                "valeur": "345 €"
               },
               "coches": [
                 "Tout le contenu de Départ",
@@ -857,19 +845,20 @@
                 "libelle": "Demander une démo",
                 "href": "/demo"
               },
-              "miseEnAvant": true
+              "miseEnAvant": true,
+              "chiffreAffaires": {
+                "_type": "valeurOuEmplacement",
+                "valeur": "de 15 à 50 M€"
+              },
+              "precisionPrix": "HT par mois"
             },
             {
               "_type": "formule",
               "nom": "Groupe",
-              "clientsActifs": {
-                "_type": "valeurOuEmplacement",
-                "emplacement": "au-delà de [seuil 2]"
-              },
               "description": "Pour plusieurs entités et une DSI exigeante.",
               "prix": {
                 "_type": "valeurOuEmplacement",
-                "emplacement": "prix à caler sur un tarif public sourcé"
+                "valeur": "Sur devis"
               },
               "coches": [
                 "Tout le contenu d'Équipe",
@@ -882,7 +871,66 @@
                 "libelle": "Demander une démo",
                 "href": "/demo"
               },
-              "miseEnAvant": false
+              "miseEnAvant": false,
+              "chiffreAffaires": {
+                "_type": "valeurOuEmplacement",
+                "valeur": "plus de 50 M€"
+              }
+            }
+          ],
+          "source": [
+            {
+              "_key": "source-tarifs",
+              "_type": "block",
+              "style": "normal",
+              "markDefs": [
+                {
+                  "_key": "lien-prix",
+                  "_type": "link",
+                  "href": "https://www.logiciels.pro/leanpay/"
+                },
+                {
+                  "_key": "lien-insee",
+                  "_type": "link",
+                  "href": "https://www.insee.fr/fr/metadonnees/definition/c1962"
+                }
+              ],
+              "children": [
+                {
+                  "_key": "s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Prix de démonstration calés sur ceux de LeanPay, logiciel de relance et de recouvrement (formules PME et PME+, sans engagement), publiés par le "
+                },
+                {
+                  "_key": "s2",
+                  "_type": "span",
+                  "marks": [
+                    "lien-prix"
+                  ],
+                  "text": "comparateur logiciels.pro"
+                },
+                {
+                  "_key": "s3",
+                  "_type": "span",
+                  "marks": [],
+                  "text": " et relevés en novembre 2026. Seuil de 50 M€ : "
+                },
+                {
+                  "_key": "s4",
+                  "_type": "span",
+                  "marks": [
+                    "lien-insee"
+                  ],
+                  "text": "définition de la PME par l'INSEE"
+                },
+                {
+                  "_key": "s5",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "."
+                }
+              ]
             }
           ]
         },
@@ -893,18 +941,18 @@
           "questions": [
             {
               "_type": "question",
-              "question": "Qu'est-ce qu'un client actif ?",
-              "reponse": "Un client qui a au moins une facture ouverte ou une commande sur les 12 derniers mois."
+              "question": "Comment le prix est-il calculé ?",
+              "reponse": "Selon le chiffre d'affaires annuel de votre entreprise. Le nombre d'utilisateurs et le nombre de clients suivis ne changent pas le prix."
             },
             {
               "_type": "question",
               "question": "Le nombre d'utilisateurs change‑t‑il le prix ?",
-              "reponse": "Non : les formules dépendent du nombre de clients actifs, pas du nombre de personnes qui utilisent Seuil."
+              "reponse": "Non : les formules dépendent du chiffre d'affaires, pas du nombre de personnes qui utilisent Seuil."
             },
             {
               "_type": "question",
               "question": "Peut-on changer de formule en cours d'année ?",
-              "reponse": "Modalités à préciser."
+              "reponse": "Oui. Vous passez à la formule supérieure à tout moment. Le passage à une formule inférieure se fait à la date anniversaire du contrat."
             }
           ]
         },
@@ -938,10 +986,6 @@
           "surtitre": "Demande de démo",
           "titre": "Voyez Seuil décider sur vos propres cas.",
           "texte": "Quatre champs suffisent. Nous revenons vers vous pour préparer une démonstration sur vos règles et vos demandes d'exception.",
-          "delai": {
-            "_type": "emplacement",
-            "libelle": "délai de réponse à préciser"
-          },
           "roles": [
             "Direction financière",
             "Credit management",
@@ -949,7 +993,8 @@
             "DSI"
           ],
           "libelleEnvoi": "Demander une démo",
-          "mention": "Formulaire de démonstration : rien n'est envoyé."
+          "mention": "Formulaire de démonstration : rien n'est envoyé.",
+          "delaiReponse": "Réponse sous 2 jours ouvrés."
         },
         {
           "_type": "sectionEtapes",
@@ -973,10 +1018,7 @@
               "texte": "Vous repartez avec les règles écrites pendant la démonstration et une proposition d'intégration."
             }
           ],
-          "emplacement": {
-            "_type": "emplacement",
-            "libelle": "durée de la démonstration à préciser"
-          }
+          "precision": "45 minutes, en visio."
         }
       ]
     }

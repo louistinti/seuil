@@ -1,8 +1,10 @@
 ---
-// Cartes de formule. Elles se distinguent d'abord par le nombre de clients actifs. Prix et seuils : emplacements.
+// Cartes de formule. Elles se distinguent d'abord par la tranche de chiffre d'affaires.
+// Prix et seuils remplis : la ligne de source sous les cartes est obligatoire (validation Sanity).
 import Bouton from '../Bouton.astro';
 import Coches from '../Coches.astro';
 import Emplacement from '../Emplacement.astro';
+import LigneSource from '../LigneSource.astro';
 import { typo } from '../../lib/typo';
 import type { SectionTarifs } from '../../lib/types';
 
@@ -20,19 +22,27 @@ const { section: s } = Astro.props;
         <div class:list={['formule', { 'formule--avant': f.miseEnAvant }]} data-theme={f.miseEnAvant ? 'produit' : undefined}>
           <h3 class="titre-carte">{typo(f.nom)}</h3>
           <div class="clients">
-            <span class="libelle-clients">Clients actifs</span>
-            <div class:list={['valeur-clients', { 'valeur-clients--emplacement': !f.clientsActifs.valeur }]}>
-              {typo(f.clientsActifs.valeur || f.clientsActifs.emplacement)}
+            <span class="libelle-clients">Chiffre d'affaires</span>
+            <div class:list={['valeur-clients', { 'valeur-clients--emplacement': !f.chiffreAffaires.valeur }]}>
+              {typo(f.chiffreAffaires.valeur || f.chiffreAffaires.emplacement)}
             </div>
           </div>
           <p class="texte-secondaire">{typo(f.description)}</p>
-          {f.prix.valeur ? <p class="prix chiffres">{typo(f.prix.valeur)}</p> : <Emplacement libelle={f.prix.emplacement ?? 'prix'} taille="prix" />}
+          {f.prix.valeur ? (
+            <p class="prix">
+              <span class="montant chiffres">{typo(f.prix.valeur)}</span>
+              {f.precisionPrix && <span class="periode">{typo(f.precisionPrix)}</span>}
+            </p>
+          ) : (
+            <Emplacement libelle={f.prix.emplacement ?? 'prix'} taille="prix" />
+          )}
           <Coches elements={f.coches} class="coches-formule" />
           <Bouton lien={f.bouton} pleineLargeur />
         </div>
       ))
     }
   </div>
+  {s.source?.length ? <LigneSource blocs={s.source} class="source-tarifs" /> : null}
 </section>
 
 <style>
@@ -90,10 +100,27 @@ const { section: s } = Astro.props;
   }
 
   .prix {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-100);
+  }
+
+  .montant {
     font-size: var(--figure-lg-size);
     line-height: var(--figure-lg-line);
     font-weight: var(--figure-lg-weight);
     letter-spacing: var(--figure-lg-tracking);
+  }
+
+  .periode {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .conteneur :global(.source-tarifs) {
+    margin-top: var(--space-300);
   }
 
   .formule :global(.coches-formule) {

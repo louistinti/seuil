@@ -196,10 +196,10 @@ Seuil est une entreprise fictive, conçue comme démonstration. Ce document acco
 - **Sections.** problème, témoignage, tarifs, intégrations, appel à l'action.
 
 ### Carte de formule
-- **Variantes.** Claire, mise en avant (thème produit). Ordre du contenu : nom, clients actifs, description, prix, liste à coches, bouton.
+- **Variantes.** Claire, mise en avant (thème produit). Ordre du contenu : nom, chiffre d'affaires, description, prix (montant et précision, par exemple « HT par mois »), liste à coches, bouton. Sous les cartes : la ligne de source.
 - **États.** Défaut : dessiné. La carte n'est pas cliquable.
-- **Tokens.** Ceux de Carte de contenu, `--title-sm-*` pour le seuil de clients actifs.
-- **Règle d'usage.** Les formules se distinguent d'abord par le nombre de clients actifs. Prix et seuils sont des emplacements.
+- **Tokens.** Ceux de Carte de contenu, `--title-sm-*` pour la tranche de chiffre d'affaires. Ligne de source : `--text-sm-*`, `--color-text-secondary`.
+- **Règle d'usage.** Les formules se distinguent d'abord par la tranche de chiffre d'affaires annuel. Prix et seuils sont remplis et sourcés : la ligne de source les accompagne toujours.
 - **Sections.** tarifs.
 
 ### Item de FAQ

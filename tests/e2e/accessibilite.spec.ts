@@ -132,12 +132,13 @@ test.describe('retour en haut', () => {
 test.describe('mobile', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) > 500, 'propre au mobile');
 
+  // Exception WCAG 2.5.8 : les liens dans une phrase (ligne de source) suivent la hauteur du texte.
   test('cibles tactiles d’au moins 44 px', async ({ page }) => {
     for (const chemin of PAGES) {
       await page.goto(chemin);
       const petites = await page.evaluate(() =>
         [...document.querySelectorAll<HTMLElement>('a, button, input, select')]
-          .filter((e) => e.offsetParent !== null && !e.closest('.sr-only, .lien-evitement'))
+          .filter((e) => e.offsetParent !== null && !e.closest('.sr-only, .lien-evitement, .ligne-source'))
           .map((e) => ({ e, r: e.getBoundingClientRect() }))
           .filter(({ r }) => r.height < 44)
           .map(({ e, r }) => `${e.tagName} « ${e.textContent?.trim().slice(0, 30)} » ${Math.round(r.height)} px`),

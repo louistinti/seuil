@@ -1,6 +1,7 @@
 ---
 import Emplacement from '../Emplacement.astro';
 import Entete from '../Entete.astro';
+import Precision from '../Precision.astro';
 import { typo } from '../../lib/typo';
 import type { SectionEtapes } from '../../lib/types';
 
@@ -29,7 +30,7 @@ const { section: s, niveau } = Astro.props;
       ))
     }
   </ol>
-  {s.emplacement && <Emplacement libelle={s.emplacement.libelle} class="emplacement-etapes" />}
+  {s.precision ? <Precision texte={s.precision} icone="horloge" class="precision-etapes" /> : s.emplacement && <Emplacement libelle={s.emplacement.libelle} class="emplacement-etapes" />}
 </section>
 
 <style>
@@ -86,6 +87,10 @@ const { section: s, niveau } = Astro.props;
 
   .etapes--liste .corps {
     gap: var(--space-050);
+  }
+
+  .conteneur :global(.precision-etapes) {
+    margin-top: var(--space-300);
   }
 
   .conteneur :global(.emplacement-etapes) {

@@ -1,0 +1,48 @@
+---
+// Ligne de source : d'où vient chaque prix ou seuil affiché. Texte secondaire, liens soulignés.
+// Rend le texte riche réduit de Sanity (paragraphes et liens seulement).
+import { typo } from '../lib/typo';
+import type { BlocSource } from '../lib/types';
+
+interface Props {
+  blocs: BlocSource[];
+  class?: string;
+}
+const { blocs, class: classe } = Astro.props;
+const lien = (bloc: BlocSource, marques: string[] = []) =>
+  bloc.markDefs?.find((d) => d._type === 'link' && marques.includes(d._key))?.href;
+---
+
+<div class:list={['ligne-source', classe]}>
+  {
+    blocs.map((bloc) => (
+      <p>
+        {bloc.children.map((morceau) => {
+          const href = lien(bloc, morceau.marks);
+          return href ? <a href={href}>{typo(morceau.text)}</a> : typo(morceau.text);
+        })}
+      </p>
+    ))
+  }
+</div>
+
+<style>
+  .ligne-source {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-100);
+    max-width: var(--mesure-titre);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  a:hover {
+    color: var(--color-text-primary);
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+// Précision : un fait de l'entreprise fictive qui remplace un emplacement (délai, durée, hébergement…).
+// Icône décorative, texte porté par la phrase. Non dessiné : dérivé des lignes à coches.
+import Icone from './Icone.astro';
+import { typo } from '../lib/typo';
+
+interface Props {
+  texte: string;
+  icone?: 'coche' | 'horloge';
+  class?: string;
+}
+const { texte, icone = 'coche', class: classe } = Astro.props;
+---
+
+<p class:list={['precision', classe]}>
+  <Icone nom={icone} />
+  <span>{typo(texte)}</span>
+</p>
+
+<style>
+  .precision {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-100);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .precision :global(svg) {
+    flex-shrink: 0;
+    /* Centre l'icône de 16 px sur la première ligne de texte. */
+    margin-top: calc((var(--text-sm-line) - 16px) / 2);
+    color: var(--color-accent-text);
+  }
+</style>

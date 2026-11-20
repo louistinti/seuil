@@ -28,7 +28,53 @@ const ancre = defineField({
   validation: (r) => r.regex(/^[a-z0-9-]+$/, {name: 'ancre'}).error('Minuscules, chiffres et tirets seulement, sans espace ni accent.'),
 })
 
-const visuelRequisSi = (valeurAttendue: string, message: string) =>
+/** Un fait rempli remplace l'emplacement : les deux ensemble se contrediraient. */
+const pasLesDeux = (champ: string) => (r: any) =>
+  r.custom((valeur: unknown, context: {parent?: Record<string, unknown>}) =>
+    valeur && context.parent?.[champ] ? 'Videz l’emplacement : la précision le remplace.' : true,
+  )
+
+/** Ajoute une règle à un champ sans perdre ses règles de rédaction (cadratin, longueur). */
+const avecRegle = <T extends {validation?: unknown}>(champ: T, regle: (r: any) => unknown) => ({
+  ...champ,
+  validation: (r: any) => [(champ.validation as (r: any) => unknown)?.(r), regle(r)].flat().filter(Boolean),
+})
+
+/** Ligne de source : texte simple, seuls des liens sont possibles (pas de titre, de liste ni de gras). */
+const ligneDeSource = defineField({
+  name: 'source',
+  title: 'Ligne de source',
+  description:
+    'Obligatoire dès qu’un prix ou un seuil est rempli : dites d’où vient chaque chiffre et liez la source. Sélectionnez un mot puis cliquez sur l’icône lien.',
+  type: 'array',
+  of: [
+    defineArrayMember({
+      type: 'block',
+      styles: [{title: 'Normal', value: 'normal'}],
+      lists: [],
+      marks: {
+        decorators: [],
+        annotations: [
+          {
+            name: 'link',
+            title: 'Lien',
+            type: 'object',
+            fields: [
+              defineField({
+                name: 'href',
+                title: 'Adresse',
+                type: 'url',
+                validation: (r) => r.required().uri({scheme: ['https']}).error('Une adresse https:// complète.'),
+              }),
+            ],
+          },
+        ],
+      },
+    }),
+  ],
+})
+
+const visuelRequisSi =(valeurAttendue: string, message: string) =>
   (r: any) =>
     r.custom((valeur: unknown, context: {parent?: {visuel?: string}}) =>
       context.parent?.visuel === valeurAttendue && !valeur ? message : true,
@@ -194,6 +240,10 @@ export const sectionEtapes = defineType({
       validation: bornes(2, 5),
     }),
     defineField({name: 'emplacement', title: 'Emplacement sous les étapes (facultatif)', type: 'emplacement'}),
+    avecRegle(
+      texte('precision', 'Précision sous les étapes (facultatif)', {max: 80, description: 'Un fait sur le déroulé, par exemple la durée de la démonstration. Remplace l’emplacement.'}),
+      pasLesDeux('emplacement'),
+    ),
     ancre,
   ],
   preview: {
@@ -278,7 +328,7 @@ export const sectionIntegrations = defineType({
       options: {
         list: [
           {title: 'Tuiles d’intégration (titre et description courte)', value: 'tuiles'},
-          {title: 'Cartes DSI (titre, texte, emplacement)', value: 'cartes'},
+          {title: 'Cartes DSI (titre, texte, précision)', value: 'cartes'},
         ],
         layout: 'radio',
       },
@@ -301,6 +351,10 @@ export const sectionIntegrations = defineType({
             texte('titre', 'Titre', {requis: true, max: 40}),
             texte('texte', 'Texte', {requis: true, lignes: 2, max: 200}),
             defineField({name: 'emplacement', title: 'Précision à venir (cartes DSI seulement)', type: 'emplacement'}),
+            avecRegle(
+              texte('precision', 'Précision (cartes DSI seulement)', {max: 110, description: 'Le fait qui répond à la question du DSI. Remplace l’emplacement.'}),
+              pasLesDeux('emplacement'),
+            ),
           ],
           preview: {select: {title: 'titre', subtitle: 'texte'}},
         }),
@@ -363,9 +417,9 @@ export const sectionTarifs = defineType({
           fields: [
             texte('nom', 'Nom', {requis: true, max: 30}),
             defineField({
-              name: 'clientsActifs',
-              title: 'Clients actifs',
-              description: 'Ce qui distingue d’abord les formules.',
+              name: 'chiffreAffaires',
+              title: 'Chiffre d’affaires',
+              description: 'Ce qui distingue d’abord les formules : la tranche de chiffre d’affaires annuel, par exemple « moins de 15 M€ ».',
               type: 'valeurOuEmplacement',
               validation: (r) => r.required(),
             }),
@@ -373,24 +427,33 @@ export const sectionTarifs = defineType({
             defineField({
               name: 'prix',
               title: 'Prix',
-              description: 'Calé sur des tarifs publics sourcés. D’ici là, un emplacement.',
+              description: 'Montant seul, par exemple « 245 € » ou « Sur devis ». Calé sur un tarif public, cité dans la ligne de source.',
               type: 'valeurOuEmplacement',
               validation: (r) => r.required(),
             }),
+            texte('precisionPrix', 'Précision du prix', {max: 30, description: 'Affichée à côté du montant, par exemple « HT par mois ». Vide pour « Sur devis ».'}),
             defineField({name: 'coches', title: 'Liste à coches', type: 'array', of: [defineArrayMember({type: 'string'})], validation: bornes(1, 8)}),
             defineField({name: 'bouton', title: 'Bouton', type: 'lien', validation: (r) => r.required()}),
             defineField({name: 'miseEnAvant', title: 'Mise en avant (fond sombre)', type: 'boolean', initialValue: false}),
           ],
           preview: {
-            select: {title: 'nom', clients: 'clientsActifs', miseEnAvant: 'miseEnAvant'},
-            prepare: ({title, clients, miseEnAvant}) => ({
+            select: {title: 'nom', ca: 'chiffreAffaires', prix: 'prix', precision: 'precisionPrix', miseEnAvant: 'miseEnAvant'},
+            prepare: ({title, ca, prix, precision, miseEnAvant}) => ({
               title: `${title ?? 'Formule'}${miseEnAvant ? ' (mise en avant)' : ''}`,
-              subtitle: clients?.valeur || clients?.emplacement,
+              subtitle: [ca?.valeur || ca?.emplacement, [prix?.valeur, precision].filter(Boolean).join(' ')].filter(Boolean).join(' · '),
             }),
           },
         }),
       ],
     }),
+    {
+      ...ligneDeSource,
+      validation: (r: any) =>
+        r.custom((source: unknown[] | undefined, context: {parent?: {formules?: {prix?: {valeur?: string}; chiffreAffaires?: {valeur?: string}}[]}}) => {
+          const rempli = (context.parent?.formules ?? []).some((f) => f.prix?.valeur || f.chiffreAffaires?.valeur)
+          return rempli && !source?.length ? 'Un prix ou un seuil est rempli : la ligne de source est obligatoire.' : true
+        }),
+    },
     ancre,
   ],
   preview: {
@@ -473,6 +536,14 @@ export const sectionAppelAction = defineType({
       type: 'emplacement',
       hidden: ({parent}) => parent?.variante !== 'formulaire',
     }),
+    avecRegle(
+      texte('delaiReponse', 'Délai de réponse', {
+        max: 60,
+        description: 'Par exemple « Réponse sous 2 jours ouvrés. ». Remplace l’emplacement.',
+        hidden: ({parent}) => parent?.variante !== 'formulaire',
+      }),
+      pasLesDeux('delai'),
+    ),
     defineField({
       name: 'roles',
       title: 'Choix du champ « Votre rôle »',

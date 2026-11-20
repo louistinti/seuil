@@ -1,6 +1,7 @@
 ---
 import Emplacement from '../Emplacement.astro';
 import Entete from '../Entete.astro';
+import Precision from '../Precision.astro';
 import { typo } from '../../lib/typo';
 import type { SectionIntegrations } from '../../lib/types';
 
@@ -29,7 +30,7 @@ const { section: s, niveau } = Astro.props;
           <div class="carte">
             <h3 class="titre-carte">{typo(e.titre)}</h3>
             <p class="texte-secondaire">{typo(e.texte)}</p>
-            {e.emplacement && <Emplacement libelle={e.emplacement.libelle} taille="pastille" />}
+            {e.precision ? <Precision texte={e.precision} /> : e.emplacement && <Emplacement libelle={e.emplacement.libelle} taille="pastille" />}
           </div>
         ))}
       </div>

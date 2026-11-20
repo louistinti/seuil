@@ -26,6 +26,14 @@ export interface Emplacement {
   libelle: string;
 }
 
+/** Texte riche réduit (Portable Text) : paragraphes et liens seulement. Sert aux lignes de source. */
+export interface BlocSource {
+  _key: string;
+  _type: 'block';
+  children: { _key: string; _type: 'span'; text: string; marks?: string[] }[];
+  markDefs?: { _key: string; _type: 'link'; href: string }[];
+}
+
 export interface ValeurOuEmplacement {
   valeur?: string;
   emplacement?: string;
@@ -73,6 +81,7 @@ export interface SectionEtapes extends Base {
   disposition: 'colonnes' | 'liste';
   etapes: Carte[];
   emplacement?: Emplacement | null;
+  precision?: string | null;
 }
 
 export interface SectionFonctionnalite extends Base {
@@ -89,7 +98,7 @@ export interface SectionIntegrations extends Base {
   _type: 'sectionIntegrations';
   titre: string;
   variante: 'tuiles' | 'cartes';
-  elements: (Carte & { emplacement?: Emplacement | null })[];
+  elements: (Carte & { emplacement?: Emplacement | null; precision?: string | null })[];
 }
 
 export interface SectionTemoignage extends Base {
@@ -99,9 +108,10 @@ export interface SectionTemoignage extends Base {
 
 export interface Formule {
   nom: string;
-  clientsActifs: ValeurOuEmplacement;
+  chiffreAffaires: ValeurOuEmplacement;
   description: string;
   prix: ValeurOuEmplacement;
+  precisionPrix?: string | null;
   coches: string[];
   bouton: Lien;
   miseEnAvant?: boolean;
@@ -110,6 +120,7 @@ export interface Formule {
 export interface SectionTarifs extends Base {
   _type: 'sectionTarifs';
   formules: Formule[];
+  source?: BlocSource[] | null;
 }
 
 export interface SectionFaq extends Base {
@@ -125,6 +136,7 @@ export interface SectionAppelAction extends Base {
   texte?: string;
   bouton?: Lien | null;
   delai?: Emplacement | null;
+  delaiReponse?: string | null;
   roles?: string[];
   libelleEnvoi?: string;
   mention?: string;
