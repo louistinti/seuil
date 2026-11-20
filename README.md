@@ -51,6 +51,9 @@ Studio en local : `npm --prefix studio install`, puis `npm run studio` (http://l
 4. **Studio.** `cd studio && npx sanity deploy`. Le Studio est en ligne sur `https://<nom>.sanity.studio`.
 5. **Vercel.** Importez le repo, ajoutez `SANITY_PROJECT_ID`, `SANITY_DATASET` et `SITE_URL` dans Settings > Environment Variables. Sans `SANITY_PROJECT_ID`, le build échoue exprès : le site en ligne ne doit jamais être construit sur le contenu local.
 6. **Publication automatique.** Vercel > Settings > Git > Deploy Hooks : créez un hook sur `main`, collez son URL dans `VERCEL_DEPLOY_HOOK`, ajoutez `SANITY_AUTH_TOKEN` (`npx sanity debug --secrets`), puis `npm run webhook`. Chaque publication dans le Studio relance un build (environ 30 s pour l'installation et 1 s pour Astro).
+7. **Domaine `seuil.louistdesign.me`.** Vercel > Settings > Domains : ajoutez `seuil.louistdesign.me`. Chez l'hébergeur DNS de `louistdesign.me`, créez l'enregistrement CNAME `seuil` vers la valeur affichée par Vercel. Une fois le domaine en « Valid Configuration », passez `SITE_URL` à `https://seuil.louistdesign.me` (c'est aussi la valeur par défaut) et redéployez. Sur `seuil-beta.vercel.app`, choisissez « Redirect to » `seuil.louistdesign.me` en 308 (permanente). Enfin, `SANITY_STUDIO_SITE_URL` suit dans `studio/.env`, puis `sanity deploy`.
+
+Partage : chaque page a son image `/partage/<page>.png` (1200 × 630), générée au build à partir de son titre H1 dans Sanity. Plan du site : `/sitemap.xml`.
 
 ## Règles
 

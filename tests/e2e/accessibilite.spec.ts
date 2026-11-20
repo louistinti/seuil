@@ -26,6 +26,18 @@ for (const chemin of PAGES) {
     expect(sauts).toEqual([]);
   });
 
+  test(`image de partage et carte large déclarées sur ${chemin}`, async ({ page, request }) => {
+    await page.goto(chemin);
+    const image = await page.locator('meta[property="og:image"]').getAttribute('content');
+    expect(image).toMatch(/\/partage\/[a-z]+\.png$/);
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', /^Seuil : .+ Données fictives\.$/);
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    const reponse = await request.get(new URL(image!).pathname);
+    expect(reponse.headers()['content-type']).toBe('image/png');
+    const png = await reponse.body();
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+  });
+
   test(`aucun défilement horizontal sur ${chemin}`, async ({ page }) => {
     await page.goto(chemin);
     const debord = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

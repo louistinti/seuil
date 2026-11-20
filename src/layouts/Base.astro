@@ -9,6 +9,7 @@ import '../styles/base.css';
 import Navigation from '../components/Navigation.astro';
 import PiedDePage from '../components/PiedDePage.astro';
 import RetourHaut from '../components/RetourHaut.astro';
+import { HAUTEUR_PARTAGE, LARGEUR_PARTAGE } from '../lib/partage';
 import type { Reglages } from '../lib/types';
 
 interface Props {
@@ -16,9 +17,13 @@ interface Props {
   description: string;
   reglages: Reglages;
   chemin: string;
+  /** Image de partage (chemin du site) et son texte alternatif. */
+  image: string;
+  imageAlt: string;
 }
-const { titre, description, reglages, chemin } = Astro.props;
+const { titre, description, reglages, chemin, image, imageAlt } = Astro.props;
 const canonique = new URL(chemin, Astro.site);
+const imagePartage = new URL(image, Astro.site);
 ---
 
 <!doctype html>
@@ -33,6 +38,15 @@ const canonique = new URL(chemin, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:site_name" content="Seuil" />
+    <meta property="og:image" content={imagePartage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content={String(LARGEUR_PARTAGE)} />
+    <meta property="og:image:height" content={String(HAUTEUR_PARTAGE)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="theme-color" content="#F3F4F4" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>

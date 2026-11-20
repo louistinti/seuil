@@ -25,9 +25,11 @@
     "@fontsource/geist": "^5.3.0",
     "@fontsource/geist-mono": "^5.3.0",
     "@fontsource/urbanist": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@sanity/client": "^8.16.0",
     "@sanity/image-url": "^2.2.0",
-    "astro": "^7.4.13"
+    "astro": "^7.4.13",
+    "satori": "^0.63.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

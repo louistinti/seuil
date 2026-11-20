@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Sections from '../components/Sections.astro';
 import { chargerContenu, route } from '../lib/contenu';
+import { altPartage } from '../lib/partage';
 import type { Page } from '../lib/types';
 
 export async function getStaticPaths() {
@@ -17,6 +18,6 @@ const chemin = route(page.slug);
 const titre = page.slug === 'accueil' ? 'Seuil, décisions de crédit client' : `${page.titre} | Seuil`;
 ---
 
-<Base titre={titre} description={page.description} reglages={reglages} chemin={chemin}>
+<Base titre={titre} description={page.description} reglages={reglages} chemin={chemin} image={`/partage/${page.slug}.png`} imageAlt={altPartage(page)}>
   <Sections sections={page.sections} />
 </Base>
