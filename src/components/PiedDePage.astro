@@ -12,6 +12,13 @@ const { reglages } = Astro.props;
   <div class="marque">
     <a class="logo" href="/">Seuil</a>
     <p class="mention">{reglages.mention}</p>
+    {
+      reglages.credit?.lien && (
+        <p class="credit">
+          {typo(reglages.credit.texte)} <a href={reglages.credit.lien.href}>{typo(reglages.credit.lien.libelle)}</a>
+        </p>
+      )
+    }
   </div>
   <nav aria-label="Pied de page">
     {reglages.piedDePage.map((l) => <a href={l.href}>{typo(l.libelle)}</a>)}
@@ -46,6 +53,21 @@ const { reglages } = Astro.props;
     font-weight: var(--title-sm-weight);
     letter-spacing: var(--title-xl-tracking);
     text-decoration: none;
+  }
+
+  .credit {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  /* Lien de 44 px de haut : cible tactile, sans changer la ligne de texte. */
+  .credit a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--color-text-primary);
+    text-underline-offset: 2px;
   }
 
   .mention {

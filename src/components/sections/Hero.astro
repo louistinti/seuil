@@ -134,6 +134,18 @@ const avecCapture = s.visuel === 'capture' && s.capture;
     width: 100%;
   }
 
+  /* Ancrage posé par le simulateur (voir Simulateur.astro) : même rendu qu'un centrage, mais stable. */
+  @media (min-width: 1280px) {
+    .grille-hero--simulateur[data-ancre] {
+      align-items: start;
+    }
+
+    .grille-hero--simulateur[data-ancre] .texte {
+      min-height: var(--hauteur-simulateur);
+      justify-content: center;
+    }
+  }
+
   @media (max-width: 1279px) {
     .grille-hero--simulateur {
       grid-template-columns: minmax(0, 1fr);

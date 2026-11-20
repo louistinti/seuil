@@ -84,7 +84,16 @@ const Titre = niveau === 1 ? 'h1' : 'h2';
     }
   }
 
+  /* Même écart surtitre, titre, chapeau que le hero des autres pages : le titre ne saute pas d'une page à l'autre. */
+  .colonne-texte :global(.entete-h1) {
+    gap: var(--space-300);
+  }
+
   @media (max-width: 767px) {
+    .colonne-texte :global(.entete-h1) {
+      gap: var(--space-250);
+    }
+
     .bandeau {
       padding: var(--space-400) var(--space-300);
     }

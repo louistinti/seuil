@@ -71,6 +71,16 @@ export const reglages = defineType({
     texte('boutonMobile', 'Libellé court du bouton sur mobile', {requis: true, max: 12, description: 'Par exemple « Démo ».'}),
     defineField({name: 'piedDePage', title: 'Liens du pied de page', type: 'array', of: [defineArrayMember({type: 'lien'})], validation: bornes(1, 8)}),
     defineField({
+      name: 'credit',
+      title: 'Crédit (pied de page)',
+      description: 'Qui a conçu et réalisé le site. Affiché sous la mention, par exemple « Créé par » suivi du nom lié au portfolio.',
+      type: 'object',
+      fields: [
+        texte('texte', 'Texte avant le nom', {requis: true, max: 30, initialValue: 'Créé par'}),
+        defineField({name: 'lien', title: 'Nom et lien', type: 'lien', validation: (r) => r.required()}),
+      ],
+    }),
+    defineField({
       name: 'mention',
       title: 'Mention obligatoire',
       type: 'string',

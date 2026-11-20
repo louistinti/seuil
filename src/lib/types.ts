@@ -168,4 +168,5 @@ export interface Reglages {
   boutonMobile: string;
   piedDePage: Lien[];
   mention: string;
+  credit?: { texte: string; lien: Lien } | null;
 }

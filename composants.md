@@ -11,7 +11,7 @@ Seuil est une entreprise fictive, conçue comme démonstration. Ce document acco
 - **Mobile.** Cible tactile de 44 px minimum (`--target-min`), 8 px entre deux cibles, bouton principal en pleine largeur.
 - **Chiffres.** Tous les montants et pourcentages en Geist avec `font-variant-numeric: tabular-nums`. Urbanist n'a pas de chiffres tabulaires : ne pas l'utiliser pour un montant. Pourcentages calculés avec une décimale (88,2 %).
 - **Libellés de résultat.** Acceptée, Refusée, Envoyée à l'analyste. Jamais d'autre formulation.
-- **Halo.** Le halo flou (`--color-halo`, flou `--blur-halo`) n'existe que derrière une carte de verre, jamais seul en fond. Un seul par écran.
+- **Halo.** Retiré du simulateur (audit du 20 novembre 2026) : vu à travers la carte de verre, il teintait le fond sous le texte. Les tokens `--color-halo` et `--blur-halo` restent, sans usage.
 - **Texte.** Français, sans tiret cadratin. Trait d'union insécable dans « passe‑t‑elle » et « change‑t‑il ».
 
 ## Sections du CMS
@@ -146,7 +146,7 @@ Seuil est une entreprise fictive, conçue comme démonstration. Ce document acco
 - **Variantes.** Desktop (520 px de large, faits du client sur 2 colonnes), mobile (pleine largeur, faits sur 1 colonne).
 - **Contenu.** Chips client, faits du client (encours, limite, retard en cours, pire retard 12 mois, assurance-crédit), chips montant, champ « Autre montant », résultat (`aria-live="polite"`), encours après commande, jauge, bloc règle.
 - **États.** Trois résultats et la priorité haute : dessinés. Erreur de saisie : dessinée. Survol et focus : ceux de Chip et de Champ.
-- **Tokens.** Fond `--neutral-900` à 92 %, `--color-border-glass`, `--blur-glass`, `--radius-2xl`, `--shadow-lg`, `--color-halo` derrière la carte.
+- **Tokens.** Fond `--neutral-900` à 92 %, `--color-border-glass`, `--blur-glass`, `--radius-2xl`, `--shadow-lg`. Pas de halo derrière la carte.
 - **Logique.** Voir `simulateur.json` : clients, règles, seuils et cas attendus.
 - **Sections.** hero (accueil).
 

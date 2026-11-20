@@ -74,6 +74,23 @@ test.describe('simulateur au clavier', () => {
     await expect(sim.locator('[data-sim="regle"]')).toHaveText('Règle 1');
   });
 
+  test('le titre du hero ne bouge pas quand la décision change', async ({ page, viewport }) => {
+    test.skip((viewport?.width ?? 0) < 1280, 'hero en deux colonnes seulement');
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator('.grille-hero[data-ancre]')).toHaveCount(1);
+    const titre = page.locator('h1');
+    const depart = await titre.boundingBox();
+    const sim = page.locator('#simulateur');
+    for (const client of ['Négoce Tréhault', 'Groupe Orvelle', 'Menuiseries Valdorre']) {
+      await sim.getByRole('button', { name: client }).click();
+      for (const montant of ['1', '67 601', '999999999']) {
+        await sim.getByLabel('Autre montant').fill(montant);
+        expect((await titre.boundingBox())?.y, `${client}, ${montant}`).toBe(depart?.y);
+      }
+    }
+  });
+
   test('Valdorre à 67 601 € : dépassement en euros et condition en cause', async ({ page }) => {
     await page.goto('/');
     const sim = page.locator('#simulateur');

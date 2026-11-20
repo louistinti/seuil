@@ -23,7 +23,6 @@ const ligneUsage = affichageUsage(d);
 ---
 
 <div class="sim-cadre">
-  <div class="halo" aria-hidden="true"></div>
   <section id="simulateur" class="simulateur" data-theme="produit" aria-labelledby="sim-titre">
     <div class="sim-entete">
       <h2 id="sim-titre" class="sim-titre">Simulateur de décision</h2>
@@ -124,6 +123,17 @@ const ligneUsage = affichageUsage(d);
 
   const racine = document.getElementById('simulateur');
   if (racine) {
+    // Hero en deux colonnes : la colonne de texte est centrée sur la hauteur initiale de la carte, mesurée une fois.
+    // Quand la décision change, la carte grandit ou rétrécit vers le bas sans faire bouger le titre.
+    const grille = racine.closest<HTMLElement>('.grille-hero');
+    if (grille) {
+      // Après le chargement des polices : avant, la hauteur mesurée serait fausse. D'ici là, le centrage CSS s'applique.
+      document.fonts.ready.then(() => {
+        grille.style.setProperty('--hauteur-simulateur', `${racine.offsetHeight}px`);
+        grille.dataset.ancre = '';
+      });
+    }
+
     const $ = <T extends HTMLElement>(sel: string) => racine.querySelector<T>(sel)!;
     const chipsClients = [...racine.querySelectorAll<HTMLButtonElement>('[data-client]')];
     const chipsMontants = [...racine.querySelectorAll<HTMLButtonElement>('[data-montant]')];
@@ -225,18 +235,6 @@ const ligneUsage = affichageUsage(d);
   .sim-cadre {
     position: relative;
     width: 100%;
-  }
-
-  /* Halo : uniquement derrière la carte de verre, un seul par écran. Hors du thème produit pour garder la valeur claire. */
-  .halo {
-    position: absolute;
-    top: var(--space-600);
-    right: var(--space-400);
-    width: 70%;
-    height: 50%;
-    border-radius: var(--radius-full);
-    background: var(--color-halo);
-    filter: blur(var(--blur-halo));
   }
 
   .simulateur {

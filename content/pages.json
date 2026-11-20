@@ -58,7 +58,16 @@
         "href": "/demo"
       }
     ],
-    "mention": "Seuil est une entreprise fictive, conçue comme démonstration."
+    "mention": "Seuil est une entreprise fictive, conçue comme démonstration.",
+    "credit": {
+      "_type": "object",
+      "texte": "Créé par",
+      "lien": {
+        "_type": "lien",
+        "libelle": "Louis Tinti",
+        "href": "https://louistdesign.me"
+      }
+    }
   },
   "pages": [
     {
