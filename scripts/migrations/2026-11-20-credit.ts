@@ -36,8 +36,12 @@ async function main() {
   const reglages = await client.getDocument<{ _rev: string; credit?: unknown }>('reglages');
   if (!reglages) throw new Error('Le document « Réglages du site » est absent de Sanity.');
   if (await client.getDocument('drafts.reglages')) throw new Error('Les réglages ont un brouillon non publié : publiez-le ou supprimez-le d’abord.');
-  const { _type, ...attendu } = CREDIT;
-  const aJour = JSON.stringify(reglages.credit && { ...(reglages.credit as object), _type: undefined }) === JSON.stringify({ ...attendu, _type: undefined });
+  // Comparaison indépendante de l'ordre des clés : Sanity les range par ordre alphabétique.
+  const trier = (o: unknown): unknown =>
+    o && typeof o === 'object'
+      ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, trier((o as Record<string, unknown>)[k])]))
+      : o;
+  const aJour = JSON.stringify(trier(reglages.credit)) === JSON.stringify(trier(CREDIT));
   console.log(`reglages : ${aJour ? 'déjà à jour' : 'crédit ajouté'}`);
   if (essai || aJour) return;
   await client.patch('reglages').ifRevisionId(reglages._rev).set({ credit: CREDIT }).commit();
