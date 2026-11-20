@@ -131,6 +131,14 @@ export function migrer<T extends Doc>(doc: T): T {
   return copie;
 }
 
+/** Comparaison indépendante de l'ordre des clés : Sanity ne garde pas l'ordre des champs. */
+const trier = (o: unknown): unknown =>
+  Array.isArray(o)
+    ? o.map(trier)
+    : o && typeof o === 'object'
+      ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, trier((o as Record<string, unknown>)[k])]))
+      : o;
+
 async function main() {
   const arguments_ = process.argv.slice(2);
   const essai = arguments_.includes('--essai');
@@ -159,8 +167,8 @@ async function main() {
     const brouillon = await client.getDocument(`drafts.${id}`);
     if (brouillon) throw new Error(`${id} a un brouillon non publié dans le Studio : publiez-le ou supprimez-le d'abord.`);
     const migre = migrer(actuel);
-    const avant = JSON.stringify({ d: actuel.description, s: actuel.sections });
-    const apres = JSON.stringify({ d: migre.description, s: migre.sections });
+    const avant = JSON.stringify(trier({ d: actuel.description, s: actuel.sections }));
+    const apres = JSON.stringify(trier({ d: migre.description, s: migre.sections }));
     console.log(`${id} : ${avant === apres ? 'déjà à jour' : 'modifié'}`);
     if (avant !== apres) {
       transaction.patch(id, (p) => p.ifRevisionId(actuel._rev!).set({ description: migre.description, sections: migre.sections }));
