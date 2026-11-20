@@ -58,7 +58,8 @@ const champs = [
     const valide = (champ: HTMLInputElement) =>
       champ.type === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(champ.value.trim()) : champ.value.trim().length > 0;
     const marquer = (champ: HTMLInputElement, ok: boolean) => {
-      champ.toggleAttribute('aria-invalid', !ok);
+      if (ok) champ.removeAttribute('aria-invalid');
+      else champ.setAttribute('aria-invalid', 'true');
       document.getElementById(`${champ.id}-erreur`)!.hidden = ok;
     };
 
@@ -78,7 +79,7 @@ const champs = [
 
     formulaire.querySelectorAll<HTMLInputElement>('input[required]').forEach((c) =>
       c.addEventListener('input', () => {
-        if (c.hasAttribute('aria-invalid') && valide(c)) marquer(c, true);
+        if (c.getAttribute('aria-invalid') === 'true' && valide(c)) marquer(c, true);
       }),
     );
 
@@ -149,7 +150,7 @@ const champs = [
     border-color: var(--color-text-primary);
   }
 
-  input[aria-invalid] {
+  input[aria-invalid='true'] {
     border: 2px solid var(--color-state-refused-text);
   }
 

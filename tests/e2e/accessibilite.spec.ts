@@ -82,7 +82,46 @@ test.describe('simulateur au clavier', () => {
     const champ = page.getByLabel('Autre montant');
     await champ.fill('38,5');
     await expect(page.getByRole('alert').filter({ hasText: 'Saisissez un montant en chiffres.' })).toBeVisible();
-    await expect(champ).toHaveAttribute('aria-invalid', '');
+    await expect(champ).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  test('saisie invalide : la décision laisse place à un état neutre, puis revient', async ({ page }) => {
+    await page.goto('/');
+    const sim = page.locator('#simulateur');
+    const champ = sim.getByLabel('Autre montant');
+    const decision = sim.locator('[data-sim="decision"]');
+    const neutre = sim.getByText('Saisissez un montant pour voir la décision.');
+
+    await expect(decision).toBeVisible();
+    await expect(neutre).toBeHidden();
+
+    // Invalide : plus de décision visible ni lue, état neutre à la place, aucune chip de montant active.
+    await champ.fill('abc');
+    await expect(champ).toHaveAttribute('aria-invalid', 'true');
+    await expect(decision).toBeHidden();
+    await expect(neutre).toBeVisible();
+    await expect(sim.locator('[data-montant][aria-pressed="true"]')).toHaveCount(0);
+
+    // Champ vidé : l'erreur part, la décision attend un montant.
+    await champ.fill('');
+    await expect(champ).not.toHaveAttribute('aria-invalid');
+    await expect(neutre).toBeVisible();
+
+    // Saisie valide : la décision revient, calculée sur ce montant.
+    await champ.fill('12 500');
+    await expect(champ).not.toHaveAttribute('aria-invalid');
+    await expect(neutre).toBeHidden();
+    await expect(decision).toBeVisible();
+    await expect(sim.locator('[data-sim="total"]')).toHaveText(/^194\s900\s€$/);
+
+    // Invalide puis chip : la décision revient, le champ est vidé et n'est plus en erreur.
+    await champ.fill('38,5');
+    await expect(neutre).toBeVisible();
+    await sim.getByRole('button', { name: /^38\s000\s€$/ }).click();
+    await expect(champ).toHaveValue('');
+    await expect(champ).not.toHaveAttribute('aria-invalid');
+    await expect(decision).toBeVisible();
+    await expect(neutre).toBeHidden();
   });
 });
 
@@ -92,7 +131,13 @@ test.describe('formulaire de démo', () => {
     await page.getByRole('button', { name: 'Demander une démo' }).click();
     await expect(page.getByLabel('Prénom et nom')).toBeFocused();
     await expect(page.getByText('Indiquez votre prénom et votre nom.')).toBeVisible();
+    for (const libelle of ['Prénom et nom', 'E-mail professionnel', 'Entreprise']) {
+      await expect(page.getByLabel(libelle)).toHaveAttribute('aria-invalid', 'true');
+    }
     await page.getByLabel('Prénom et nom').fill('Camille Martin');
+    await expect(page.getByLabel('Prénom et nom')).not.toHaveAttribute('aria-invalid');
+    await page.getByLabel('E-mail professionnel').fill('camille@');
+    await expect(page.getByLabel('E-mail professionnel')).toHaveAttribute('aria-invalid', 'true');
     await page.getByLabel('E-mail professionnel').fill('camille@exemple.fr');
     await page.getByLabel('Entreprise').fill('Exemple SAS');
     await page.getByRole('button', { name: 'Demander une démo' }).click();

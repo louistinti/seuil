@@ -75,6 +75,9 @@ const ligneUsage = affichageUsage(d);
     </div>
 
     <div class="resultat" aria-live="polite" aria-atomic="true">
+      <!-- État neutre (non dessiné, dérivé) : remplace la décision tant que la saisie est invalide. -->
+      <p class="resultat-neutre" data-sim="neutre" hidden>Saisissez un montant pour voir la décision.</p>
+      <div class="decision" data-sim="decision">
       <div class="verdict">
         <span class="badge" data-etat={etat} data-sim="badge">
           <span class="icone-etat icone-accepted"><Icone nom="coche" taille={14} /></span>
@@ -110,6 +113,7 @@ const ligneUsage = affichageUsage(d);
           </ul>
         </div>
       </div>
+      </div>
     </div>
   </section>
 </div>
@@ -127,7 +131,8 @@ const ligneUsage = affichageUsage(d);
     const erreur = $('#sim-erreur');
 
     let clientId = chipsClients.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.client ?? chipsClients[0].dataset.client!;
-    let montant = Number(chipsMontants.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.montant ?? chipsMontants[0].dataset.montant);
+    // null : la saisie « Autre montant » est invalide, aucune décision n'est affichée.
+    let montantValide: number | null = Number(chipsMontants.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.montant ?? chipsMontants[0].dataset.montant);
 
     const presser = (boutons: HTMLButtonElement[], actif?: HTMLButtonElement) =>
       boutons.forEach((b) => b.setAttribute('aria-pressed', String(b === actif)));
@@ -162,11 +167,17 @@ const ligneUsage = affichageUsage(d);
       }
     };
 
-    const recalculer = () => afficher(decider(clientParId(clientId), montant));
+    const recalculer = () => {
+      const masquer = montantValide === null;
+      $('[data-sim="decision"]').toggleAttribute('data-masque', masquer);
+      $('[data-sim="neutre"]').hidden = !masquer;
+      if (montantValide !== null) afficher(decider(clientParId(clientId), montantValide));
+    };
 
     const signalerErreur = (enErreur: boolean) => {
       erreur.hidden = !enErreur;
-      champ.toggleAttribute('aria-invalid', enErreur);
+      if (enErreur) champ.setAttribute('aria-invalid', 'true');
+      else champ.removeAttribute('aria-invalid');
     };
 
     chipsClients.forEach((b) =>
@@ -180,7 +191,7 @@ const ligneUsage = affichageUsage(d);
 
     chipsMontants.forEach((b) =>
       b.addEventListener('click', () => {
-        montant = Number(b.dataset.montant);
+        montantValide = Number(b.dataset.montant);
         presser(chipsMontants, b);
         champ.value = '';
         signalerErreur(false);
@@ -190,16 +201,20 @@ const ligneUsage = affichageUsage(d);
 
     champ.addEventListener('input', () => {
       if (champ.value.trim() === '') {
+        // Champ vidé : plus d'erreur, mais la décision ne revient qu'avec un montant valide ou une chip.
         signalerErreur(false);
         return;
       }
       const lu = lireMontant(champ.value);
       if (lu === null) {
         signalerErreur(true);
+        montantValide = null;
+        presser(chipsMontants);
+        recalculer();
         return;
       }
       signalerErreur(false);
-      montant = lu;
+      montantValide = lu;
       presser(chipsMontants, chipsMontants.find((b) => Number(b.dataset.montant) === lu));
       recalculer();
     });
@@ -363,7 +378,7 @@ const ligneUsage = affichageUsage(d);
     border-color: var(--color-text-primary);
   }
 
-  .champ input[aria-invalid] {
+  .champ input[aria-invalid='true'] {
     border: 2px solid var(--color-state-refused-text);
   }
 
@@ -381,11 +396,39 @@ const ligneUsage = affichageUsage(d);
   }
 
   .resultat {
+    position: relative;
+    padding-top: var(--space-200);
+    border-top: 1px solid var(--color-border-glass);
+  }
+
+  .decision {
     display: flex;
     flex-direction: column;
     gap: var(--space-200);
-    padding-top: var(--space-200);
-    border-top: 1px solid var(--color-border-glass);
+  }
+
+  /* La décision garde sa place (pas de saut de mise en page) mais n'est ni vue ni lue. */
+  .decision[data-masque] {
+    visibility: hidden;
+  }
+
+  .resultat-neutre {
+    position: absolute;
+    inset: var(--space-200) 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-300);
+    border-radius: var(--radius-xl);
+    border: 1px dashed var(--color-border-glass);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .resultat-neutre[hidden] {
+    display: none;
   }
 
   .verdict {
