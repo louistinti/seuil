@@ -12,6 +12,7 @@ Six pages (Accueil, Produit, Finance et credit management, Commerciaux et ADV, T
 | Styles | CSS natif, variables de `src/styles/tokens.css`, sans Tailwind |
 | Contenu | Sanity : schémas dans `studio/`, Studio déployé à part |
 | Simulateur | TypeScript sans framework, logique et données dans `src/data/simulateur.json`, hors CMS |
+| Règle en langage naturel | Démo de la page Produit, TypeScript sans framework, données dans `src/data/regles-langage-naturel.json`, évaluée par le moteur du simulateur ; traduction simulée |
 | Tests | Vitest (moteur de décision, contenu) ; Playwright et axe (WCAG AA, clavier, focus, 390 et 1440 px) |
 | Polices | Urbanist et Geist via @fontsource, auto-hébergées |
 | Hébergement | Vercel, reconstruit par un webhook Sanity à chaque publication |

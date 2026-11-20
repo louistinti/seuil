@@ -214,6 +214,36 @@ Seuil est une entreprise fictive, conçue comme démonstration. Ce document acco
 - **Tokens.** Fond `--neutral-900`, `--radius-2xl`, `--title-xl-*` (desktop) ou `--title-md-*` (mobile), thème produit pour le contenu.
 - **Sections.** appel à l'action.
 
+## Règle en langage naturel
+
+### Rédacteur de règle en langage naturel
+- **Rôle.** La personne de la finance écrit une règle en français, Seuil la traduit en règle structurée avec les blocs de l'éditeur de règles. L'IA aide à rédiger, elle ne décide jamais : la règle est testée, puis publiée après validation de la direction financière.
+- **Maquettes.** `NL-Etat-1` à `NL-Etat-6`, en 1440 et en 390. Textes et règles traduites dans `contenu/regle-langage-naturel.json`.
+- **Structure.** En-tête (titre « Nouvelle règle », étiquettes « Données fictives » et « Traduction simulée sur ce site »), indicateur d'étapes, zone de phrase, zone de résultat (`aria-live="polite"`), mention de bas de panneau.
+- **Variantes.** Desktop : zone de phrase et zone de résultat côte à côte (5 et 7 colonnes). Mobile : empilées, boutons en pleine largeur, blocs de règle de 44 px de haut.
+- **États du composant.**
+  1. Vide : champ vide, bouton « Traduire en règle » désactivé, 3 phrases d'exemple cliquables, zone de résultat en attente.
+  2. Saisie en cours : champ en focus, bouton actif, exemples masqués.
+  3. Traduction réussie : phrase d'origine rappelée, statut « Règle traduite, à vérifier », règle en blocs modifiables, badge de résultat, boutons « Tester le brouillon » et « Recommencer ».
+  4. Ambiguïté : mot « retard » souligné et en gras dans la phrase, statut « Une précision est nécessaire », bloc « retard à préciser » en pointillé, question et deux choix (Retard en cours, Pire retard sur 12 mois). Un choix ramène à l'état 3.
+  5. Phrase non comprise : statut « Seuil n'a pas compris cette phrase », message, champ conservé avec la phrase, retour aux 3 exemples.
+  6. Test du brouillon : statut « Brouillon testé, non publié », règle en blocs non modifiables, résultat sur les 3 clients de démonstration avec badges Acceptée, Refusée et Envoyée à l'analyste, étiquette « Votre règle » sur le client qu'elle a tranché, boutons « Demander la validation » et « Modifier la règle ».
+- **États des contrôles.** Défaut, focus (champ) et désactivé (bouton « Traduire en règle ») : dessinés. Survol : à dériver (`--color-bg-subtle` pour les exemples, les choix et les blocs, `--color-accent-hover` pour le bouton principal). Erreur : l'état 5 en tient lieu, il n'y a pas d'erreur de champ.
+- **Sous-éléments.**
+  - Indicateur d'étapes : Écrire, Vérifier, Tester, Valider. Étape faite : pastille à contour avec coche. Étape en cours : pastille pleine, libellé en gras et étiquette « En cours ». Étape à venir : pastille à contour et texte secondaire.
+  - Bloc de règle : modifiable (bouton avec chevron, `aria-label`), lecture seule (état 6), à préciser (contour pointillé et icône point d'interrogation).
+  - Ligne de statut : icône et libellé, jamais la couleur seule.
+- **Tokens.** Panneau : `--color-bg-page` du thème produit, `--radius-2xl`, `--shadow-lg`, `--space-400` (desktop) ou `--space-200` (mobile). Carte de résultat : `--color-bg-glass`, `--color-border-glass`, `--radius-xl`, `--space-300`. Champ : `--color-bg-subtle`, `--color-border-strong`, `--radius-md`, `--text-md-*`, `--color-focus-ring`. Blocs : `--color-bg-subtle`, `--color-border-strong`, `--radius-sm`, `--text-md-*`. Exemples et choix : `--color-bg-glass`, `--color-border-glass`, `--color-border-strong`, `--radius-md`, `--radius-lg`. Bouton : `--color-accent-default`, `--color-text-on-accent`, `--color-disabled-bg`, `--color-disabled-text`, `--radius-full`. Statuts : `--color-text-primary`, `--color-state-refused-text` pour la phrase non comprise. Badges : `--color-state-*`. Textes : `--color-text-primary`, `--color-text-secondary`, `--color-accent-text`, `--title-sm-*`, `--text-sm-*`, `--text-xs-*`. Espacements : `--space-050`, `--space-100`, `--space-200`, `--space-300`, `--space-400`.
+- **Écarts avec les composants existants.** Dans ce panneau, le Badge d'état fait 32 px de haut avec 16 px de marge intérieure (28 px et 12 px ailleurs), pour ne sortir d'aucun token d'espacement.
+- **Règles d'usage.** Aucun halo derrière le panneau. Sur le site, la traduction est simulée : seules les 3 phrases d'exemple sont reconnues, toute autre phrase mène à l'état 5. Le bouton « Demander la validation » ne publie rien.
+- **Sections.** bloc fonctionnalité (page Produit, ancre `#langage-naturel`).
+- **Intégration (20 novembre 2026).**
+  - Test du brouillon : la règle est testée **en première position**, avant les règles en vigueur, par le moteur du simulateur (`simulateur.json`). Le client qu'elle tranche porte l'étiquette « Votre règle », sa ligne indique « votre règle » à la place du numéro, et quand la décision change, une ligne de plus la rappelle : « Sans votre règle : refusée, règle 1. » (dérivé, `--color-state-pending-text`). Exemple : « Pire retard sur 12 mois » fait passer Négoce Tréhault (41 jours) de Refusée à Envoyée à l'analyste.
+  - Blocs modifiables : chaque bloc est une liste native habillée en bloc (mesure, comparaison, seuil ou condition), étiquetée pour les lecteurs d'écran. Changer de mesure entre euros et jours remet le seuil dans la bonne unité. Le résultat de la règle ne se modifie pas.
+  - « Demander la validation » : rien n'est envoyé. Un message le dit (`role="status"`) et l'étape Valider passe en cours, avec l'étiquette « Direction financière » (dérivé).
+  - Focus : il suit le contenu qui apparaît (ligne de statut après une traduction, un choix ou un test ; champ après « Modifier la phrase » ou « Recommencer » ; premier bloc après « Modifier la règle »). Ctrl + Entrée lance la traduction.
+  - Données et textes du panneau : `src/data/regles-langage-naturel.json`, hors CMS, comme le simulateur. Une phrase d'exemple et sa traduction vont ensemble. Les textes de la section (surtitre, titre, phrase, coches) sont dans Sanity : bloc fonctionnalité, visuel « langage-naturel ».
+
 ## Ce qui n'est pas dessiné
 
 - Menu mobile ouvert.

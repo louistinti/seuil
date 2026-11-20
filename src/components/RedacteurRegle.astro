@@ -1,0 +1,912 @@
+---
+// Rédacteur de règle en langage naturel (composants.md, maquettes NL-Etat-1 à 6).
+// Rendu serveur de l'état 1, puis machine à états côté client, en TypeScript sans framework.
+// L'IA aide à rédiger, elle ne décide jamais. Sur le site, la traduction est simulée (src/data/regles-langage-naturel.json).
+import Etiquette from './Etiquette.astro';
+import Icone from './Icone.astro';
+import { exemples, textes as t } from '../lib/regle-langage-naturel';
+import { typo } from '../lib/typo';
+
+const choix = Object.entries(t.choix);
+---
+
+<div class="redacteur" data-theme="produit" data-redacteur data-etat="1">
+  <div class="entete-panneau">
+    <p class="titre-panneau">{typo(t.titre)}</p>
+    <div class="etiquettes">{t.etiquettes.map((e) => <Etiquette>{typo(e)}</Etiquette>)}</div>
+  </div>
+
+  <ol class="etapes" aria-label="Étapes de création d'une règle">
+    {
+      t.etapes.map((libelle, i) => (
+        <li data-etape={i + 1} data-statut={i === 0 ? 'cours' : 'avenir'} aria-current={i === 0 ? 'step' : undefined}>
+          <span class="pastille" aria-hidden="true">
+            <span class="numero">{i + 1}</span>
+            <Icone nom="coche" taille={14} />
+          </span>
+          <span class="libelle-etape">{typo(libelle)}</span>
+          <span class="sr-only statut-etape">{i === 0 ? ', en cours' : ', à venir'}</span>
+          <Etiquette class="en-cours">{typo(i === 3 ? t.etape_valider_precision : t.etape_en_cours)}</Etiquette>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="corps">
+    <div class="colonne-phrase">
+      <div class="saisie" data-zone="saisie">
+        <div class="champ">
+          <label for="nl-phrase">{typo(t.champ_libelle)}</label>
+          <textarea id="nl-phrase" rows="3" placeholder={t.champ_exemple} autocomplete="off" spellcheck="true"></textarea>
+        </div>
+        <button type="button" class="bouton bouton--principal bouton-traduire" data-action="traduire" disabled>
+          {typo(t.bouton_traduire)}<Icone nom="fleche" />
+        </button>
+        <div class="exemples" data-zone="exemples">
+          <p class="petit-titre" id="nl-exemples">{typo(t.exemples_titre)}</p>
+          <ul aria-labelledby="nl-exemples">
+            {
+              exemples.map((e) => (
+                <li>
+                  <button type="button" class="exemple" data-exemple={e.cle}>
+                    <span>{typo(e.phrase)}</span>
+                    <Icone nom="fleche" />
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="rappel" data-zone="rappel" hidden>
+        <p class="petit-titre">{typo(t.rappel_libelle)}</p>
+        <p class="phrase-rappel" data-rappel></p>
+        <button type="button" class="lien-action" data-action="modifier-phrase">{typo(t.rappel_lien)}</button>
+      </div>
+    </div>
+
+    <div class="resultat">
+      <div class="aide" data-zone="aide">{typo(t.aide_vide)}</div>
+
+      <div class="etat" data-zone="traduite" hidden>
+        <p class="statut" tabindex="-1"><Icone nom="coche" />{typo(t.statut_traduite)}</p>
+        <div class="regle" data-blocs></div>
+        <p class="note">{typo(t.note_traduite)}</p>
+        <div class="actions">
+          <button type="button" class="bouton bouton--principal" data-action="tester">{typo(t.bouton_tester)}<Icone nom="fleche" /></button>
+          <button type="button" class="bouton bouton--verre" data-action="recommencer">{typo(t.bouton_recommencer)}</button>
+        </div>
+      </div>
+
+      <div class="etat" data-zone="ambigue" hidden>
+        <p class="statut" tabindex="-1"><Icone nom="question" />{typo(t.statut_ambiguite)}</p>
+        <div class="regle" data-blocs></div>
+        <p class="question" id="nl-question">{typo(t.question_ambiguite)}</p>
+        <ul class="choix" aria-labelledby="nl-question">
+          {
+            choix.map(([cle, c]) => (
+              <li>
+                <button type="button" class="choix-bouton" data-choix={cle}>
+                  <span class="choix-texte">
+                    <span class="choix-titre">{typo(c.titre)}</span>
+                    <span class="choix-definition">{typo(c.definition)}</span>
+                  </span>
+                  <Icone nom="fleche" />
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="etat" data-zone="non-comprise" hidden>
+        <p class="statut statut--erreur" tabindex="-1"><Icone nom="alerte" />{typo(t.statut_non_comprise)}</p>
+        <p class="texte-etat">{typo(t.texte_non_comprise)}</p>
+      </div>
+
+      <div class="etat" data-zone="teste" hidden>
+        <p class="statut" tabindex="-1"><Icone nom="coche" />{typo(t.statut_teste)}</p>
+        <div class="regle" data-blocs></div>
+        <div class="test">
+          <p class="petit-titre" id="nl-test">{typo(t.titre_test)}</p>
+          <ul class="lignes" aria-labelledby="nl-test" data-lignes></ul>
+        </div>
+        <p class="note">{typo(t.note_teste)}</p>
+        <div class="actions">
+          <button type="button" class="bouton bouton--principal" data-action="valider">{typo(t.bouton_validation)}<Icone nom="fleche" /></button>
+          <button type="button" class="bouton bouton--verre" data-action="modifier-regle">{typo(t.bouton_modifier_regle)}</button>
+        </div>
+        <p class="validation" role="status" data-validation></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pied-panneau">
+    <Icone nom="info" />
+    <span class="pied-textes">
+      <span>{typo(t.principe)}</span>
+      <span>{typo(t.mention)}</span>
+    </span>
+  </div>
+</div>
+
+<script>
+  import { svgIcone } from '../lib/icones';
+  import { blocs, modifier, precision, tester, textes as t, traduire, type RegleBrouillon } from '../lib/regle-langage-naturel';
+  import type { Resultat } from '../lib/simulateur';
+  import { typo } from '../lib/typo';
+
+  type Etat = 1 | 2 | 3 | 4 | 5 | 6;
+
+  document.querySelectorAll<HTMLElement>('[data-redacteur]').forEach((racine) => {
+    const $ = <T extends HTMLElement = HTMLElement>(s: string) => racine.querySelector<T>(s)!;
+    const zone = (nom: string) => $(`[data-zone="${nom}"]`);
+    const champ = $<HTMLTextAreaElement>('#nl-phrase');
+    const boutonTraduire = $<HTMLButtonElement>('[data-action="traduire"]');
+
+    let etat: Etat = 1;
+    let regle: RegleBrouillon | null = null;
+    let phrase = '';
+    let motAmbigu: string | null = null;
+    let validationDemandee = false;
+
+    const etatBadge = (r: Resultat) => (r === 'Acceptée' ? 'accepted' : r === 'Refusée' ? 'refused' : 'pending');
+    const iconeBadge = (r: Resultat) => (r === 'Acceptée' ? 'coche' : r === 'Refusée' ? 'croix' : 'horloge');
+    const badge = (r: Resultat) => {
+      const b = document.createElement('span');
+      b.className = 'badge badge--panneau';
+      b.dataset.etat = etatBadge(r);
+      b.innerHTML = svgIcone(iconeBadge(r), 14);
+      const libelle = document.createElement('span');
+      libelle.textContent = r;
+      b.append(libelle);
+      return b;
+    };
+
+    /** La règle en blocs. Modifiable (état 3) : chaque bloc est une liste native, habillée en bloc. */
+    const dessinerRegle = (conteneur: HTMLElement, modifiable: boolean) => {
+      if (!regle) return;
+      conteneur.replaceChildren();
+      for (const b of blocs(regle)) {
+        if (b.type === 'mot') {
+          const mot = document.createElement('span');
+          mot.className = 'mot';
+          mot.textContent = b.texte;
+          conteneur.append(mot);
+        } else if (b.type === 'a_preciser') {
+          const s = document.createElement('span');
+          s.className = 'bloc bloc--a-preciser';
+          s.innerHTML = svgIcone('question');
+          s.append(Object.assign(document.createElement('span'), { textContent: b.texte }));
+          conteneur.append(s);
+        } else if (modifiable) {
+          const habillage = document.createElement('span');
+          habillage.className = 'bloc bloc--modifiable';
+          const visible = Object.assign(document.createElement('span'), { textContent: typo(b.libelle) });
+          visible.setAttribute('aria-hidden', 'true');
+          const liste = document.createElement('select');
+          liste.setAttribute('aria-label', (t.libelles_blocs as Record<string, string>)[b.role]);
+          liste.dataset.role = b.role;
+          liste.dataset.index = String(b.index);
+          for (const o of b.options) liste.append(new Option(o.libelle, o.valeur, false, o.valeur === b.valeur));
+          habillage.append(visible, liste);
+          habillage.insertAdjacentHTML('beforeend', svgIcone('chevron'));
+          conteneur.append(habillage);
+        } else {
+          conteneur.append(Object.assign(document.createElement('span'), { className: 'bloc', textContent: typo(b.libelle) }));
+        }
+      }
+      conteneur.append(badge(regle.resultat));
+    };
+
+    const dessinerLignes = () => {
+      const liste = $('[data-lignes]');
+      liste.replaceChildren(
+        ...tester(regle!).map((l) => {
+          const li = document.createElement('li');
+          li.className = 'ligne';
+          const infos = document.createElement('div');
+          infos.className = 'ligne-infos';
+          const nom = document.createElement('p');
+          nom.className = 'ligne-client';
+          nom.append(Object.assign(document.createElement('span'), { textContent: l.client }));
+          if (l.appliquee) nom.append(Object.assign(document.createElement('span'), { className: 'etiquette', textContent: t.etiquette_votre_regle }));
+          const detail = Object.assign(document.createElement('p'), { className: 'ligne-detail', textContent: `${l.commande}, ${l.regle}` });
+          infos.append(nom, detail);
+          if (l.change) {
+            const avant = t.ligne_changement.replace('{resultat}', l.avant.resultat.toLowerCase()).replace('{regle}', l.avant.regle);
+            infos.append(Object.assign(document.createElement('p'), { className: 'ligne-changement', textContent: typo(avant) }));
+          }
+          li.append(infos, badge(l.resultat));
+          return li;
+        }),
+      );
+    };
+
+    const dessinerRappel = () => {
+      const p = $('[data-rappel]');
+      p.replaceChildren();
+      const i = motAmbigu ? phrase.toLowerCase().indexOf(motAmbigu.toLowerCase()) : -1;
+      if (etat === 4 && i >= 0) {
+        const fort = Object.assign(document.createElement('strong'), { textContent: phrase.slice(i, i + motAmbigu!.length) });
+        p.append(phrase.slice(0, i), fort, phrase.slice(i + motAmbigu!.length));
+      } else p.textContent = phrase;
+    };
+
+    const dessinerEtapes = () => {
+      const enCours = validationDemandee ? 4 : etat === 6 ? 3 : etat === 3 || etat === 4 ? 2 : 1;
+      racine.querySelectorAll<HTMLElement>('[data-etape]').forEach((li) => {
+        const n = Number(li.dataset.etape);
+        const statut = n < enCours ? 'fait' : n === enCours ? 'cours' : 'avenir';
+        li.dataset.statut = statut;
+        if (statut === 'cours') li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+        li.querySelector('.statut-etape')!.textContent = statut === 'fait' ? ', fait' : statut === 'cours' ? ', en cours' : ', à venir';
+      });
+    };
+
+    /** Affiche l'état demandé. `focus` : où placer le focus clavier, pour suivre le contenu qui vient d'apparaître. */
+    const afficher = (nouvel: Etat, focus?: 'statut' | 'champ' | 'bloc') => {
+      etat = nouvel;
+      racine.dataset.etat = String(etat);
+      zone('saisie').hidden = !(etat === 1 || etat === 2 || etat === 5);
+      zone('exemples').hidden = etat === 2;
+      zone('rappel').hidden = !(etat === 3 || etat === 4 || etat === 6);
+      zone('aide').hidden = !(etat === 1 || etat === 2);
+      zone('aide').textContent = typo(etat === 2 ? t.aide_saisie : t.aide_vide);
+      zone('traduite').hidden = etat !== 3;
+      zone('ambigue').hidden = etat !== 4;
+      zone('non-comprise').hidden = etat !== 5;
+      zone('teste').hidden = etat !== 6;
+      boutonTraduire.disabled = champ.value.trim() === '';
+      if (etat === 3) dessinerRegle(zone('traduite').querySelector('[data-blocs]')!, true);
+      if (etat === 4) dessinerRegle(zone('ambigue').querySelector('[data-blocs]')!, false);
+      if (etat === 6) {
+        dessinerRegle(zone('teste').querySelector('[data-blocs]')!, false);
+        dessinerLignes();
+      }
+      if (etat !== 6) validationDemandee = false;
+      $('[data-validation]').textContent = validationDemandee ? typo(t.validation_simulee) : '';
+      if (etat === 3 || etat === 4 || etat === 6) dessinerRappel();
+      dessinerEtapes();
+
+      const visible = racine.querySelector<HTMLElement>('.etat:not([hidden])');
+      if (focus === 'statut') visible?.querySelector<HTMLElement>('.statut')?.focus();
+      if (focus === 'champ') champ.focus();
+      if (focus === 'bloc') visible?.querySelector<HTMLElement>('select')?.focus();
+    };
+
+    const lancer = (texte: string) => {
+      phrase = texte.trim();
+      const r = traduire(phrase);
+      if (r.etat === 'non_comprise') {
+        regle = null;
+        afficher(5, 'statut');
+        return;
+      }
+      phrase = r.exemple.phrase;
+      regle = r.regle;
+      motAmbigu = r.exemple.ambiguite?.mot ?? null;
+      afficher(r.etat === 'ambigue' ? 4 : 3, 'statut');
+    };
+
+    champ.addEventListener('input', () => {
+      afficher(champ.value.trim() === '' ? 1 : 2);
+    });
+    champ.addEventListener('keydown', (e) => {
+      // Ctrl + Entrée (ou Cmd + Entrée) lance la traduction, Entrée seule passe à la ligne.
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && champ.value.trim()) {
+        e.preventDefault();
+        lancer(champ.value);
+      }
+    });
+
+    racine.addEventListener('click', (e) => {
+      const cible = (e.target as HTMLElement).closest<HTMLElement>('[data-action], [data-exemple], [data-choix]');
+      if (!cible) return;
+      if (cible.dataset.exemple) {
+        const ex = racine.querySelector<HTMLElement>(`[data-exemple="${cible.dataset.exemple}"] span`)!.textContent ?? '';
+        champ.value = ex;
+        lancer(ex);
+        return;
+      }
+      if (cible.dataset.choix) {
+        regle = precision(cible.dataset.choix);
+        motAmbigu = null;
+        afficher(3, 'statut');
+        return;
+      }
+      switch (cible.dataset.action) {
+        case 'traduire':
+          lancer(champ.value);
+          break;
+        case 'tester':
+          afficher(6, 'statut');
+          break;
+        case 'recommencer':
+          champ.value = '';
+          regle = null;
+          phrase = '';
+          afficher(1, 'champ');
+          break;
+        case 'modifier-phrase':
+          champ.value = phrase;
+          afficher(2, 'champ');
+          break;
+        case 'modifier-regle':
+          afficher(3, 'bloc');
+          break;
+        case 'valider':
+          validationDemandee = true;
+          $('[data-validation]').textContent = typo(t.validation_simulee);
+          dessinerEtapes();
+          break;
+      }
+    });
+
+    racine.addEventListener('change', (e) => {
+      const liste = e.target as HTMLSelectElement;
+      if (liste.tagName !== 'SELECT' || !regle) return;
+      regle = modifier(regle, Number(liste.dataset.index), liste.dataset.role!, liste.value);
+      const role = liste.dataset.role;
+      const index = liste.dataset.index;
+      dessinerRegle(zone('traduite').querySelector('[data-blocs]')!, true);
+      racine.querySelector<HTMLElement>(`select[data-role="${role}"][data-index="${index}"]`)?.focus();
+    });
+
+    // Le navigateur peut restaurer le texte du champ (retour arrière) : l'état suit.
+    afficher(champ.value.trim() === '' ? 1 : 2);
+  });
+</script>
+
+<style>
+  .redacteur {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-300);
+    padding: var(--space-400);
+    border-radius: var(--radius-2xl);
+    background: var(--color-bg-page);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text-primary);
+    font-family: var(--font-text);
+  }
+
+  .entete-panneau {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-100) var(--space-200);
+  }
+
+  .titre-panneau {
+    font-family: var(--title-sm-family);
+    font-size: var(--title-sm-size);
+    line-height: var(--title-sm-line);
+    font-weight: var(--title-sm-weight);
+  }
+
+  .etiquettes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-100);
+  }
+
+  /* Indicateur d'étapes */
+  .etapes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-100) var(--space-400);
+    margin: 0;
+    padding: 0 0 var(--space-300);
+    list-style: none;
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .etapes li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-100);
+    white-space: nowrap;
+  }
+
+  .pastille {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-300);
+    height: var(--space-300);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pastille :global(svg),
+  .etapes li :global(.en-cours) {
+    display: none;
+  }
+
+  .libelle-etape {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .etapes li[data-statut='fait'] .pastille {
+    color: var(--color-text-primary);
+  }
+
+  .etapes li[data-statut='fait'] .numero {
+    display: none;
+  }
+
+  .etapes li[data-statut='fait'] .pastille :global(svg) {
+    display: block;
+  }
+
+  .etapes li[data-statut='fait'] .libelle-etape {
+    color: var(--color-text-primary);
+  }
+
+  .etapes li[data-statut='cours'] .pastille {
+    border: 0;
+    background: var(--color-text-primary);
+    color: var(--color-bg-page);
+  }
+
+  .etapes li[data-statut='cours'] .libelle-etape {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .etapes li[data-statut='cours'] :global(.en-cours) {
+    display: inline-flex;
+  }
+
+  /* Corps : phrase (5 colonnes) et résultat (7 colonnes) */
+  .corps {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-400);
+    align-items: start;
+  }
+
+  .colonne-phrase,
+  .saisie,
+  .rappel,
+  .exemples,
+  .champ {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .colonne-phrase,
+  .saisie {
+    gap: var(--space-200);
+  }
+
+  .rappel,
+  .exemples,
+  .champ {
+    gap: var(--space-100);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  label {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 500;
+  }
+
+  textarea {
+    width: 100%;
+    height: 96px;
+    padding: var(--space-200);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-subtle);
+    color: var(--color-text-primary);
+    font-family: var(--text-md-family);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    resize: none;
+  }
+
+  textarea::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 1;
+  }
+
+  .bouton-traduire {
+    align-self: flex-start;
+  }
+
+  .petit-titre {
+    font-size: var(--text-xs-size);
+    line-height: var(--text-xs-line);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .exemples ul,
+  .choix,
+  .lignes {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .exemples ul {
+    gap: var(--space-100);
+  }
+
+  .exemple,
+  .choix-bouton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-200);
+    width: 100%;
+    border: 1px solid var(--color-border-glass);
+    background: var(--color-bg-glass);
+    color: var(--color-text-primary);
+    font-family: var(--text-sm-family);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .exemple {
+    min-height: 48px;
+    padding: var(--space-100) var(--space-200);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+  }
+
+  .exemple :global(svg),
+  .choix-bouton :global(svg) {
+    flex-shrink: 0;
+  }
+
+  .exemple:hover,
+  .choix-bouton:hover {
+    background: var(--color-bg-subtle);
+  }
+
+  .phrase-rappel {
+    padding: var(--space-200);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-default);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+  }
+
+  .phrase-rappel :global(strong) {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  .lien-action {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: var(--target-min);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-accent-text);
+    font-family: var(--text-sm-family);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .lien-action:hover {
+    text-decoration: underline;
+  }
+
+  /* Zone de résultat */
+  .resultat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-200);
+    min-width: 0;
+    padding: var(--space-300);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-glass);
+    background: var(--color-bg-glass);
+  }
+
+  .aide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 96px;
+    padding: var(--space-300);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    text-align: center;
+  }
+
+  .etat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-200);
+  }
+
+  .statut {
+    display: flex;
+    align-items: center;
+    gap: var(--space-100);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 600;
+  }
+
+  .statut:focus {
+    outline: none;
+  }
+
+  .statut :global(svg) {
+    flex-shrink: 0;
+  }
+
+  .statut--erreur {
+    color: var(--color-state-refused-text);
+  }
+
+  .regle {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-100);
+  }
+
+  .regle :global(.mot) {
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    color: var(--color-text-secondary);
+  }
+
+  .regle :global(.bloc) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-050);
+    height: 32px;
+    padding: 0 var(--space-100);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-subtle);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .regle :global(.bloc--modifiable) {
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .regle :global(.bloc--modifiable:hover) {
+    border-color: var(--color-text-primary);
+  }
+
+  /* La liste native couvre le bloc : clic, clavier et lecteur d'écran passent par elle. */
+  .regle :global(.bloc--modifiable select) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    font-size: var(--text-md-size);
+  }
+
+  .regle :global(.bloc--modifiable:focus-within) {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .regle :global(.bloc--a-preciser) {
+    border: 1px dashed var(--color-border-strong);
+    background: transparent;
+  }
+
+  .regle :global(.badge--panneau),
+  .lignes :global(.badge--panneau) {
+    height: 32px;
+    padding: 0 var(--space-200);
+  }
+
+  .note,
+  .texte-etat,
+  .question {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .texte-etat,
+  .question {
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    color: var(--color-text-primary);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-100);
+  }
+
+  :global(.bouton--verre) {
+    border: 1px solid var(--color-border-glass);
+    background: var(--color-bg-glass);
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  :global(.bouton--verre:hover) {
+    background: var(--color-bg-subtle);
+  }
+
+  .choix {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-100);
+  }
+
+  .choix-bouton {
+    min-height: 64px;
+    height: 100%;
+    padding: var(--space-200);
+    border-radius: var(--radius-lg);
+    border-color: var(--color-border-strong);
+  }
+
+  .choix-texte {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+  }
+
+  .choix-titre {
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 600;
+  }
+
+  .choix-definition {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .test {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lignes :global(.ligne) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-100) var(--space-200);
+    padding: var(--space-200) 0;
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .lignes :global(.ligne:last-child) {
+    border-bottom: 0;
+  }
+
+  .lignes :global(.ligne-infos) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+    min-width: 0;
+  }
+
+  .lignes :global(.ligne-client) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-100);
+    font-size: var(--text-md-size);
+    line-height: var(--text-md-line);
+    font-weight: 500;
+  }
+
+  .lignes :global(.ligne-detail),
+  .lignes :global(.ligne-changement) {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .lignes :global(.ligne-changement) {
+    color: var(--color-state-pending-text);
+  }
+
+  .validation {
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .validation:empty {
+    display: none;
+  }
+
+  .pied-panneau {
+    display: flex;
+    gap: var(--space-100);
+    padding-top: var(--space-300);
+    border-top: 1px solid var(--color-border-default);
+    font-size: var(--text-sm-size);
+    line-height: var(--text-sm-line);
+    color: var(--color-text-secondary);
+  }
+
+  .pied-panneau :global(svg) {
+    flex-shrink: 0;
+    margin-top: var(--space-050);
+  }
+
+  .pied-textes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+  }
+
+  @media (max-width: 1023px) {
+    .corps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .redacteur {
+      padding: var(--space-200);
+    }
+
+    .resultat {
+      padding: var(--space-200);
+    }
+
+    .regle :global(.bloc) {
+      height: var(--target-min);
+    }
+
+    .choix {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bouton-traduire,
+    .actions :global(.bouton) {
+      width: 100%;
+    }
+
+    .lignes :global(.ligne) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

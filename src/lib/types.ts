@@ -89,7 +89,7 @@ export interface SectionFonctionnalite extends Base {
   titre: string;
   texte?: string;
   coches?: string[];
-  visuel: 'aucun' | 'capture' | 'alertes' | 'portefeuille';
+  visuel: 'aucun' | 'capture' | 'alertes' | 'portefeuille' | 'langage-naturel';
   capture?: Image | null;
   captureMobile?: Image | null;
 }

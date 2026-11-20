@@ -4,6 +4,7 @@ import Coches from '../Coches.astro';
 import Entete from '../Entete.astro';
 import PanneauAlertes from '../PanneauAlertes.astro';
 import PanneauPortefeuille from '../PanneauPortefeuille.astro';
+import RedacteurRegle from '../RedacteurRegle.astro';
 import type { SectionFonctionnalite } from '../../lib/types';
 
 interface Props {
@@ -12,7 +13,7 @@ interface Props {
 }
 const { section: s, niveau } = Astro.props;
 const coches = s.coches ?? [];
-const pleineLargeur = (s.visuel === 'capture' && s.capture) || s.visuel === 'portefeuille';
+const pleineLargeur = (s.visuel === 'capture' && s.capture) || s.visuel === 'portefeuille' || s.visuel === 'langage-naturel';
 ---
 
 <section class="conteneur" id={s.ancre}>
@@ -32,6 +33,7 @@ const pleineLargeur = (s.visuel === 'capture' && s.capture) || s.visuel === 'por
         </div>
         {s.visuel === 'capture' && s.capture && <Capture image={s.capture} mobile={s.captureMobile} />}
         {s.visuel === 'portefeuille' && <PanneauPortefeuille />}
+        {s.visuel === 'langage-naturel' && <RedacteurRegle />}
       </>
     )
   }

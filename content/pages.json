@@ -296,6 +296,12 @@
             },
             {
               "_type": "lien",
+              "_key": "lien-langage-naturel",
+              "libelle": "Langage naturel",
+              "href": "#langage-naturel"
+            },
+            {
+              "_type": "lien",
               "libelle": "Exceptions",
               "href": "#exceptions"
             },
@@ -389,6 +395,20 @@
         },
         {
           "_type": "sectionFonctionnalite",
+          "_key": "langage-naturel",
+          "ancre": "langage-naturel",
+          "surtitre": "Moteur de règles",
+          "titre": "Écrire une règle en langage naturel.",
+          "texte": "Écrivez la règle comme vous la diriez. Seuil la traduit en blocs, les mêmes que ceux de l'éditeur de règles, et vous corrigez chaque bloc. L'IA aide à rédiger, elle ne décide jamais : la règle est testée, puis publiée après validation de la direction financière.",
+          "coches": [
+            "Les mêmes blocs que l'éditeur de règles",
+            "Une question quand la phrase est ambiguë",
+            "Aucune publication sans validation"
+          ],
+          "visuel": "langage-naturel"
+        },
+        {
+          "_type": "sectionFonctionnalite",
           "ancre": "exceptions",
           "surtitre": "3. File des exceptions",
           "titre": "L'analyste ne voit que les cas qui le méritent.",
@@ -457,7 +477,7 @@
             {
               "_type": "element",
               "titre": "Droits par rôle",
-              "texte": "Finance, credit management, commerciaux, consultation seule : chaque rôle voit et modifie ce qui le concerne."
+              "texte": "Finance, credit management, commerciaux, lecture seule : chaque rôle voit et modifie ce qui le concerne."
             },
             {
               "_type": "element",

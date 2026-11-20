@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "source": "contenu/regle-langage-naturel.json de l'export Claude Design du 20 novembre 2026",
+    "note": "Données fictives. Sur le site, la traduction est simulée : seules les 3 phrases d'exemple sont reconnues. Les règles traduites sont évaluées par le moteur du simulateur (simulateur.json), en première position, sur les 3 clients de démonstration.",
+    "mention": "Seuil est une entreprise fictive, conçue comme démonstration."
+  },
+  "commandes_test": { "valdorre": 38000, "trehault": 12500, "orvelle": 60000 },
+  "exemples": [
+    { "cle": "A", "phrase": "Refuser si l'encours et la commande dépassent la limite de plus de 10 %.", "regle": "A" },
+    {
+      "cle": "B",
+      "phrase": "Envoyer à l'analyste si le retard dépasse 30 jours.",
+      "ambiguite": { "mot": "retard", "choix": ["B_retard_en_cours", "B_pire_retard_12_mois"], "regle_a_preciser": "B" }
+    },
+    { "cle": "C", "phrase": "Accepter si l'encours et la commande restent sous la limite, sans retard en cours.", "regle": "C" }
+  ],
+  "regles": {
+    "A": { "resultat": "Refusée", "conditions": [{ "mesure": "total", "comparaison": "depasse", "seuil": "limite_110" }] },
+    "B": { "resultat": "Envoyée à l'analyste", "conditions": [{ "mesure": "a_preciser", "comparaison": "depasse", "seuil": "j30" }] },
+    "B_retard_en_cours": { "resultat": "Envoyée à l'analyste", "conditions": [{ "mesure": "retard_en_cours", "comparaison": "depasse", "seuil": "j30" }] },
+    "B_pire_retard_12_mois": { "resultat": "Envoyée à l'analyste", "conditions": [{ "mesure": "pire_retard_12_mois", "comparaison": "depasse", "seuil": "j30" }] },
+    "C": {
+      "resultat": "Acceptée",
+      "conditions": [
+        { "mesure": "total", "comparaison": "au_plus", "seuil": "limite" },
+        { "mesure": "retard_en_cours", "comparaison": "nul" }
+      ]
+    }
+  },
+  "vocabulaire": {
+    "mesures": {
+      "total": { "libelle": "encours + commande", "unite": "euros" },
+      "retard_en_cours": { "libelle": "un retard en cours", "unite": "jours" },
+      "pire_retard_12_mois": { "libelle": "le pire retard sur 12 mois", "unite": "jours" },
+      "a_preciser": { "libelle": "retard à préciser", "unite": "jours" }
+    },
+    "comparaisons": { "depasse": "dépasse", "au_plus": "reste inférieur ou égal à" },
+    "seuils": {
+      "euros": { "limite": "la limite", "limite_110": "la limite × 1,10" },
+      "jours": { "j30": "30 jours", "j60": "60 jours" }
+    },
+    "conditions_nulles": { "retard_en_cours": "aucun retard n'est en cours", "pire_retard_12_mois": "aucun retard sur 12 mois" },
+    "mots": { "si": "Si", "et_si": "et si", "alors": "alors" }
+  },
+  "textes": {
+    "titre": "Nouvelle règle",
+    "etiquettes": ["Données fictives", "Traduction simulée sur ce site"],
+    "etapes": ["Écrire", "Vérifier", "Tester", "Valider"],
+    "etape_en_cours": "En cours",
+    "etape_valider_precision": "Direction financière",
+    "champ_libelle": "Votre règle, en français",
+    "champ_exemple": "Par exemple : refuser si un retard en cours dépasse 60 jours",
+    "bouton_traduire": "Traduire en règle",
+    "exemples_titre": "Ou partez d'un exemple",
+    "rappel_libelle": "Votre phrase",
+    "rappel_lien": "Modifier la phrase",
+    "aide_vide": "La règle en blocs apparaîtra ici. Vous pourrez corriger chaque bloc avant de tester.",
+    "aide_saisie": "Quand votre phrase est prête, lancez la traduction. Rien n'est enregistré avant le test.",
+    "statut_traduite": "Règle traduite, à vérifier",
+    "note_traduite": "Chaque bloc est modifiable. Seuil propose une rédaction, la décision reste la vôtre.",
+    "bouton_tester": "Tester le brouillon",
+    "bouton_recommencer": "Recommencer",
+    "statut_ambiguite": "Une précision est nécessaire",
+    "question_ambiguite": "« Retard » peut désigner deux mesures. Laquelle voulez-vous utiliser ?",
+    "choix": {
+      "B_retard_en_cours": { "titre": "Retard en cours", "definition": "Jours de retard d'une facture échue et non payée aujourd'hui." },
+      "B_pire_retard_12_mois": { "titre": "Pire retard sur 12 mois", "definition": "Pire retard constaté sur les factures réglées des 12 derniers mois." }
+    },
+    "statut_non_comprise": "Seuil n'a pas compris cette phrase",
+    "texte_non_comprise": "Aucune règle n'a été créée. Formulez une condition sur l'encours, la limite, un retard ou l'assurance-crédit, ou repartez d'un exemple.",
+    "statut_teste": "Brouillon testé, non publié",
+    "titre_test": "Test sur les 3 clients de démonstration",
+    "etiquette_votre_regle": "Votre règle",
+    "ligne_commande": "Commande de {montant}",
+    "ligne_votre_regle": "votre règle",
+    "ligne_changement": "Sans votre règle : {resultat}, {regle}.",
+    "note_teste": "La règle ne s'appliquera qu'après validation de la direction financière.",
+    "bouton_validation": "Demander la validation",
+    "bouton_modifier_regle": "Modifier la règle",
+    "validation_simulee": "Sur ce site, rien n'est envoyé : la demande de validation est simulée.",
+    "principe": "L'IA aide à rédiger, elle ne décide jamais : toute règle est testée, puis validée par la direction financière avant publication.",
+    "mention": "Sur ce site, la traduction est simulée : seules les phrases d'exemple sont reconnues.",
+    "libelles_blocs": { "mesure": "Mesure", "comparaison": "Comparaison", "seuil": "Seuil", "condition": "Condition" }
+  }
+}

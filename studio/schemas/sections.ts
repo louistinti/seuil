@@ -260,6 +260,7 @@ export const VISUELS_FONCTIONNALITE = [
   {title: 'Capture produit, en pleine largeur', value: 'capture'},
   {title: 'Panneau Alertes, à droite', value: 'alertes'},
   {title: 'Panneau Portefeuille clients, en pleine largeur', value: 'portefeuille'},
+  {title: 'Démo « Écrire une règle en langage naturel », en pleine largeur (textes du panneau dans le code)', value: 'langage-naturel'},
 ]
 
 export const sectionFonctionnalite = defineType({

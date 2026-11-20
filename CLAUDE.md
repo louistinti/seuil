@@ -9,7 +9,7 @@ Site marketing d'un SaaS B2B fictif, réalisé pour un portfolio de Product Desi
 - Styles : CSS natif avec les variables de `tokens.css`, sans Tailwind
 - Contenu : Sanity. Schémas calqués sur le tableau « Sections du CMS » de `composants.md`, champs obligatoires validés. Studio déployé séparément (`sanity deploy`), avec des aperçus lisibles par une personne non technique. Un script remplit Sanity à partir de `contenu/`.
 - Publication : webhook Sanity vers le hook de déploiement. Une publication est en ligne en moins de 2 minutes.
-- Simulateur : un seul composant interactif côté client, en TypeScript sans framework. Sa logique et ses données restent dans `simulateur.json`, hors CMS.
+- Composants interactifs côté client, en TypeScript sans framework : le simulateur de décision (logique et données dans `simulateur.json`, hors CMS) et le rédacteur de règle en langage naturel de la page Produit (phrases d'exemple, règles traduites et textes du panneau dans `regles-langage-naturel.json`, hors CMS ; ses règles sont évaluées par le moteur du simulateur, en première position). Sur le site, la traduction est simulée : seules les phrases d'exemple sont reconnues, et le dire.
 - Tests : Vitest pour le moteur de décision, Playwright avec axe pour le clavier, le focus et les contrastes, dans les deux thèmes, à 390 et 1440 px.
 - Polices : auto-hébergées via @fontsource (Urbanist, Geist, Geist Mono), aucun appel à Google Fonts.
 - Gestionnaire de paquets : npm

@@ -162,6 +162,94 @@ test.describe('simulateur au clavier', () => {
   });
 });
 
+test.describe('règle en langage naturel (Produit)', () => {
+  const axe = async (page: import('@playwright/test').Page) => {
+    const r = await new AxeBuilder({ page }).include('[data-redacteur]').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+    return r.violations.map((v) => `${v.id} : ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`);
+  };
+
+  test('au clavier : exemple, règle en blocs modifiables, test sur les 3 clients, validation simulée', async ({ page }) => {
+    await page.goto('/produit');
+    const panneau = page.locator('[data-redacteur]');
+    await expect(panneau.getByRole('button', { name: 'Traduire en règle' })).toBeDisabled();
+    await panneau.getByRole('button', { name: /^Refuser si l'encours/ }).focus();
+    await page.keyboard.press('Enter');
+    await expect(panneau.getByText('Règle traduite, à vérifier')).toBeFocused();
+    await expect(panneau.locator('[aria-current="step"]')).toContainText('Vérifier');
+    await expect(panneau.getByRole('combobox', { name: 'Seuil' })).toHaveValue('limite_110');
+    expect(await axe(page)).toEqual([]);
+
+    await panneau.getByRole('button', { name: 'Tester le brouillon' }).click();
+    await expect(panneau.getByText('Brouillon testé, non publié')).toBeFocused();
+    const trehault = panneau.locator('.ligne', { hasText: 'Négoce Tréhault' });
+    await expect(trehault).toContainText('Votre règle');
+    await expect(trehault).toContainText('Refusée');
+    await expect(panneau.locator('.ligne', { hasText: 'Menuiseries Valdorre' })).toContainText('règle 2');
+    expect(await axe(page)).toEqual([]);
+
+    await panneau.getByRole('button', { name: 'Demander la validation' }).click();
+    await expect(panneau.getByRole('status')).toContainText('rien n’est envoyé'.replace('’', "'"));
+    await expect(panneau.locator('[aria-current="step"]')).toContainText('Valider');
+  });
+
+  test('un bloc modifié change le test : sans la marge de 10 %, Groupe Orvelle est refusé', async ({ page }) => {
+    await page.goto('/produit');
+    const panneau = page.locator('[data-redacteur]');
+    await panneau.getByRole('button', { name: /^Refuser si l'encours/ }).click();
+    await panneau.getByRole('combobox', { name: 'Seuil' }).selectOption('limite');
+    await expect(panneau.getByRole('combobox', { name: 'Seuil' })).toBeFocused();
+    await panneau.getByRole('button', { name: 'Tester le brouillon' }).click();
+    const orvelle = panneau.locator('.ligne', { hasText: 'Groupe Orvelle' });
+    await expect(orvelle).toContainText('Refusée');
+    await expect(orvelle).toContainText(/Sans votre règle\s:\senvoyée à l'analyste, règle 3/);
+  });
+
+  test('ambiguïté sur « retard » : une question, puis le pire retard sur 12 mois change la décision de Tréhault', async ({ page }) => {
+    await page.goto('/produit');
+    const panneau = page.locator('[data-redacteur]');
+    await panneau.getByRole('button', { name: /^Envoyer à l'analyste si le retard/ }).click();
+    await expect(panneau.getByText('Une précision est nécessaire')).toBeFocused();
+    await expect(panneau.locator('.phrase-rappel strong')).toHaveText('retard');
+    expect(await axe(page)).toEqual([]);
+    await panneau.getByRole('button', { name: /Pire retard sur 12 mois/ }).click();
+    await expect(panneau.getByText('Règle traduite, à vérifier')).toBeFocused();
+    await panneau.getByRole('button', { name: 'Tester le brouillon' }).click();
+    const trehault = panneau.locator('.ligne', { hasText: 'Négoce Tréhault' });
+    await expect(trehault).toContainText("Envoyée à l'analyste");
+    await expect(trehault).toContainText(/Sans votre règle\s:\srefusée, règle 1\./);
+  });
+
+  test('phrase non comprise : message, phrase conservée, exemples proposés', async ({ page }) => {
+    await page.goto('/produit');
+    const panneau = page.locator('[data-redacteur]');
+    const champ = panneau.getByLabel('Votre règle, en français');
+    await champ.fill('Faire attention aux clients un peu fragiles.');
+    await expect(panneau.getByText(/Quand votre phrase est prête/)).toBeVisible();
+    await expect(panneau.getByText("Ou partez d'un exemple")).toBeHidden();
+    await panneau.getByRole('button', { name: 'Traduire en règle' }).click();
+    await expect(panneau.getByText("Seuil n'a pas compris cette phrase")).toBeFocused();
+    await expect(champ).toHaveValue('Faire attention aux clients un peu fragiles.');
+    await expect(panneau.getByText("Ou partez d'un exemple")).toBeVisible();
+    expect(await axe(page)).toEqual([]);
+    await champ.fill('');
+    await expect(panneau.getByRole('button', { name: 'Traduire en règle' })).toBeDisabled();
+  });
+
+  test('Modifier la phrase et Recommencer rendent le focus au champ', async ({ page }) => {
+    await page.goto('/produit');
+    const panneau = page.locator('[data-redacteur]');
+    await panneau.getByRole('button', { name: /^Accepter si l'encours/ }).click();
+    await panneau.getByRole('button', { name: 'Modifier la phrase' }).click();
+    const champ = panneau.getByLabel('Votre règle, en français');
+    await expect(champ).toBeFocused();
+    await expect(champ).toHaveValue(/^Accepter si l'encours/);
+    await champ.press('Control+Enter');
+    await panneau.getByRole('button', { name: 'Recommencer' }).click();
+    await expect(champ).toBeFocused();
+    await expect(champ).toHaveValue('');
+  });
+});
+
 test.describe('formulaire de démo', () => {
   test('erreurs par champ, puis confirmation sans envoi', async ({ page }) => {
     await page.goto('/demo');
