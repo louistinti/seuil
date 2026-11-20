@@ -1,7 +1,7 @@
 ---
 // Capture produit. Écran d'ordinateur en pleine largeur, ou téléphone si l'image est en portrait.
 // Sur mobile, `mobile` la remplace : recadrage d'un panneau (crop Sanity) ou vue téléphone.
-import { src, srcset, stylesRecadrage } from '../lib/images';
+import { src, srcset, stylesRecadrage, zoneRecadree } from '../lib/images';
 import type { Image } from '../lib/types';
 
 interface Props {
@@ -13,6 +13,18 @@ interface Props {
 }
 const { image, mobile, largeur = 1296, chargement = 'lazy' } = Astro.props;
 const telephone = (i: Image) => i.hauteur > i.largeur;
+
+// Largeur réellement affichée, selon les marges du conteneur (16, 32 puis 64 px) et le plafond de 1296 px.
+const TAILLES_ECRAN = `(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) calc(100vw - 64px), (max-width: ${largeur + 127}px) calc(100vw - 128px), ${largeur}px`;
+const TAILLES_TELEPHONE = '(max-width: 767px) calc(100vw - 32px), (max-width: 1023px) 300px, 320px';
+// Variante mobile, affichée sous 768 px seulement, sur toute la largeur du conteneur.
+const TAILLES_MOBILE = 'calc(100vw - 32px)';
+
+// Recadrage : avec Sanity, le CDN ne renvoie que la zone recadrée (paramètre rect), affichée telle quelle.
+// En local, sans CDN, l'image entière est agrandie et décalée en CSS.
+const zone = mobile ? zoneRecadree(mobile) : null;
+const recadrageCdn = Boolean(mobile?.sanity && zone);
+const recadrageCss = Boolean(mobile?.crop && !recadrageCdn);
 ---
 
 <figure class:list={['capture', { 'capture--avec-mobile': mobile }]} data-theme="produit">
@@ -20,7 +32,7 @@ const telephone = (i: Image) => i.hauteur > i.largeur;
     <img
       src={src(image, telephone(image) ? 780 : 1440)}
       srcset={srcset(image)}
-      sizes={telephone(image) ? '(max-width: 767px) 100vw, 320px' : `(max-width: 1440px) 100vw, ${largeur}px`}
+      sizes={telephone(image) ? TAILLES_TELEPHONE : TAILLES_ECRAN}
       width={image.largeur}
       height={image.hauteur}
       alt={image.alt}
@@ -30,14 +42,14 @@ const telephone = (i: Image) => i.hauteur > i.largeur;
   </div>
   {
     mobile && (
-      <div class:list={['cadre', 'cadre--mobile', { 'cadre--telephone': telephone(mobile) && !mobile.crop }]} style={mobile.crop ? stylesRecadrage(mobile) : undefined}>
+      <div class:list={['cadre', 'cadre--mobile', { 'cadre--telephone': telephone(mobile) && !mobile.crop }]} style={recadrageCss ? stylesRecadrage(mobile) : undefined}>
         <img
-          class:list={{ recadre: mobile.crop }}
-          src={src(mobile, mobile.crop ? 1440 : 780)}
-          srcset={srcset(mobile)}
-          sizes={mobile.crop ? '300vw' : '100vw'}
-          width={mobile.largeur}
-          height={mobile.hauteur}
+          class:list={{ recadre: recadrageCss }}
+          src={src(mobile, 1080, recadrageCdn)}
+          srcset={srcset(mobile, recadrageCdn)}
+          sizes={TAILLES_MOBILE}
+          width={recadrageCdn ? zone!.largeur : mobile.largeur}
+          height={recadrageCdn ? zone!.hauteur : mobile.hauteur}
           alt={mobile.alt}
           loading="lazy"
           decoding="async"
