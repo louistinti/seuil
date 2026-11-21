@@ -25,8 +25,9 @@ function url(image: Image, largeur: number, recadrer: boolean): string {
   return `${image.url}?${rect}w=${largeur}&auto=format&q=80`;
 }
 
-/** Largeur maximale utile : celle de la zone recadrée, ou de l'image entière. */
-const largeurMax = (image: Image, recadrer: boolean) => (recadrer && zoneRecadree(image)?.largeur) || image.largeur;
+/** Largeur maximale utile : celle de la zone recadrée, ou de l'image entière, plafonnée à 2592 px (1296 px en 2x). */
+const largeurMax = (image: Image, recadrer: boolean) =>
+  Math.min((recadrer && zoneRecadree(image)?.largeur) || image.largeur, LARGEURS[LARGEURS.length - 1]);
 
 /** srcset : le CDN Sanity redimensionne (et recadre si demandé) ; en local, l'image d'origine seule. */
 export function srcset(image: Image, recadrer = false): string | undefined {

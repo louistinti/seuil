@@ -14,7 +14,7 @@ const largeurs = (s?: string) => (s ?? '').split(', ').map((e) => Number(e.split
 
 describe('srcset des captures', () => {
   it('propose jusqu’à 2592 px (1296 px en 2x) quand l’export fait 2880 px', () => {
-    expect(largeurs(srcset(capture(2880, 2000)))).toEqual([480, 768, 1080, 1296, 1440, 1944, 2160, 2592, 2880]);
+    expect(largeurs(srcset(capture(2880, 2000)))).toEqual([480, 768, 1080, 1296, 1440, 1944, 2160, 2592]);
   });
 
   it('ne propose jamais une largeur plus grande que l’image d’origine', () => {
