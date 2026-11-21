@@ -341,21 +341,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-Fiche-client.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6885,
-              "right": 0.0117,
-              "top": 0.1939,
-              "bottom": 0.4061
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8384,
-              "y": 0.3939,
-              "width": 0.2998,
-              "height": 0.4
-            }
+            "fichier": "App-Fiche-client-recadrage-mobile.png"
           }
         },
         {
@@ -376,21 +362,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-Editeur-regles.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6885,
-              "right": 0.0117,
-              "top": 0.1915,
-              "bottom": 0.2841
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8384,
-              "y": 0.4537,
-              "width": 0.2998,
-              "height": 0.5244
-            }
+            "fichier": "App-Editeur-regles-recadrage-mobile.png"
           }
         },
         {
@@ -425,21 +397,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-File-exceptions.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6722,
-              "right": 0.0109,
-              "top": 0.1923,
-              "bottom": 0.0833
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8307,
-              "y": 0.5545,
-              "width": 0.3169,
-              "height": 0.7244
-            }
+            "fichier": "App-File-exceptions-recadrage-mobile.png"
           }
         },
         {
@@ -576,21 +534,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-Fiche-client.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6885,
-              "right": 0.0117,
-              "top": 0.1939,
-              "bottom": 0.4061
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8384,
-              "y": 0.3939,
-              "width": 0.2998,
-              "height": 0.4
-            }
+            "fichier": "App-Fiche-client-recadrage-mobile.png"
           }
         },
         {
@@ -611,21 +555,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-File-exceptions.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6722,
-              "right": 0.0109,
-              "top": 0.1923,
-              "bottom": 0.0833
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8307,
-              "y": 0.5545,
-              "width": 0.3169,
-              "height": 0.7244
-            }
+            "fichier": "App-File-exceptions-recadrage-mobile.png"
           }
         },
         {
@@ -659,21 +589,7 @@
           },
           "captureMobile": {
             "_type": "imageCommentee",
-            "fichier": "App-Editeur-regles.png",
-            "crop": {
-              "_type": "sanity.imageCrop",
-              "left": 0.6885,
-              "right": 0.0117,
-              "top": 0.1915,
-              "bottom": 0.2841
-            },
-            "hotspot": {
-              "_type": "sanity.imageHotspot",
-              "x": 0.8384,
-              "y": 0.4537,
-              "width": 0.2998,
-              "height": 0.5244
-            }
+            "fichier": "App-Editeur-regles-recadrage-mobile.png"
           }
         },
         {
@@ -1055,6 +971,9 @@
     "App-Fiche-client.png": "Fiche client de Menuiseries Valdorre dans Seuil : encours de 182 400 € pour une limite de 250 000 €, aucun retard en cours, historique de paiement sur 12 mois et décision recommandée Acceptée, par la règle 2. Données fictives.",
     "App-File-exceptions.png": "File des exceptions de Seuil : trois demandes triées par priorité puis par montant, et le détail de la demande de Groupe Orvelle, envoyée à l'analyste par la règle 3. Données fictives.",
     "App-Editeur-regles.png": "Éditeur de règles de Seuil : les quatre règles de décision écrites en phrases, le test du brouillon sur les trois clients de démonstration et les droits de publication. Données fictives.",
-    "App-Mobile-commande.png": "Vue mobile de Seuil : pour Menuiseries Valdorre, une commande de 38 000 € est acceptée par la règle 2. Dessous, les dernières vérifications. Données fictives."
+    "App-Mobile-commande.png": "Vue mobile de Seuil : pour Menuiseries Valdorre, une commande de 38 000 € est acceptée par la règle 2. Dessous, les dernières vérifications. Données fictives.",
+    "App-Editeur-regles-recadrage-mobile.png": "Éditeur de règles de Seuil : les quatre règles de décision écrites en phrases, le test du brouillon sur les trois clients de démonstration et les droits de publication. Données fictives.",
+    "App-Fiche-client-recadrage-mobile.png": "Fiche client de Menuiseries Valdorre dans Seuil : encours de 182 400 € pour une limite de 250 000 €, aucun retard en cours, historique de paiement sur 12 mois et décision recommandée Acceptée, par la règle 2. Données fictives.",
+    "App-File-exceptions-recadrage-mobile.png": "File des exceptions de Seuil : trois demandes triées par priorité puis par montant, et le détail de la demande de Groupe Orvelle, envoyée à l'analyste par la règle 3. Données fictives."
   }
 }
