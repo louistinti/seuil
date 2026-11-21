@@ -176,6 +176,10 @@ test.describe('règle en langage naturel (Produit)', () => {
     await page.keyboard.press('Enter');
     await expect(panneau.getByText('Règle traduite, à vérifier')).toBeFocused();
     await expect(panneau.locator('[aria-current="step"]')).toContainText('Vérifier');
+    // L'étape en cours n'est annoncée qu'une fois (aria-current) : ni texte masqué ni étiquette « En cours » lus en plus.
+    await expect(panneau.locator('[aria-current="step"] .statut-etape')).toHaveText('');
+    await expect(panneau.locator('[aria-current="step"] .en-cours')).toHaveAttribute('aria-hidden', 'true');
+    await expect(panneau.locator('[aria-current="step"]')).toHaveCount(1);
     await expect(panneau.getByRole('combobox', { name: 'Seuil' })).toHaveValue('limite_110');
     expect(await axe(page)).toEqual([]);
 
@@ -190,6 +194,7 @@ test.describe('règle en langage naturel (Produit)', () => {
     await panneau.getByRole('button', { name: 'Demander la validation' }).click();
     await expect(panneau.getByRole('status')).toContainText('rien n’est envoyé'.replace('’', "'"));
     await expect(panneau.locator('[aria-current="step"]')).toContainText('Valider');
+    await expect(panneau.locator('[aria-current="step"] .en-cours')).not.toHaveAttribute('aria-hidden', 'true'); // « Direction financière » reste lu
   });
 
   test('un bloc modifié change le test : sans la marge de 10 %, Groupe Orvelle est refusé', async ({ page }) => {

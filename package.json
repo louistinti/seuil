@@ -20,7 +20,8 @@
     "migration:lot1": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-tarifs-et-faits.ts",
     "captures:hd": "node --env-file-if-exists=.env scripts/remplacer-captures.ts",
     "migration:credit": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-credit.ts",
-    "migration:langage-naturel": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-langage-naturel.ts"
+    "migration:langage-naturel": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-langage-naturel.ts",
+    "migration:corrections": "node --env-file-if-exists=.env scripts/migrations/2026-11-21-corrections-contenu.ts"
   },
   "dependencies": {
     "@fontsource/geist": "^5.3.0",

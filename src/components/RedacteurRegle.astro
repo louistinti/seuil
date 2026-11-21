@@ -1,7 +1,7 @@
 ---
 // Rédacteur de règle en langage naturel (composants.md, maquettes NL-Etat-1 à 6).
 // Rendu serveur de l'état 1, puis machine à états côté client, en TypeScript sans framework.
-// L'IA aide à rédiger, elle ne décide jamais. Sur le site, la traduction est simulée (src/data/regles-langage-naturel.json).
+// L'IA traduit uniquement la phrase en règle, elle ne décide jamais. Sur le site, la traduction est simulée (src/data/regles-langage-naturel.json).
 import Etiquette from './Etiquette.astro';
 import Icone from './Icone.astro';
 import { exemples, textes as t } from '../lib/regle-langage-naturel';
@@ -25,8 +25,12 @@ const choix = Object.entries(t.choix);
             <Icone nom="coche" taille={14} />
           </span>
           <span class="libelle-etape">{typo(libelle)}</span>
-          <span class="sr-only statut-etape">{i === 0 ? ', en cours' : ', à venir'}</span>
-          <Etiquette class="en-cours">{typo(i === 3 ? t.etape_valider_precision : t.etape_en_cours)}</Etiquette>
+          {/* L'étape en cours n'est annoncée qu'une fois, par aria-current. « En cours » est donc masqué aux lecteurs d'écran ;
+              « Direction financière » (étape 4) reste lu, c'est une information. */}
+          <span class="sr-only statut-etape">{i === 0 ? '' : ', à venir'}</span>
+          <Etiquette class="en-cours" aria-hidden={i === 3 ? undefined : 'true'}>
+            {typo(i === 3 ? t.etape_valider_precision : t.etape_en_cours)}
+          </Etiquette>
         </li>
       ))
     }
@@ -242,7 +246,7 @@ const choix = Object.entries(t.choix);
         li.dataset.statut = statut;
         if (statut === 'cours') li.setAttribute('aria-current', 'step');
         else li.removeAttribute('aria-current');
-        li.querySelector('.statut-etape')!.textContent = statut === 'fait' ? ', fait' : statut === 'cours' ? ', en cours' : ', à venir';
+        li.querySelector('.statut-etape')!.textContent = statut === 'fait' ? ', fait' : statut === 'cours' ? '' : ', à venir';
       });
     };
 

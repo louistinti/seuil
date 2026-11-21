@@ -12,7 +12,9 @@ interface Props {
   chargement?: 'lazy' | 'eager';
 }
 const { image, mobile, largeur = 1296, chargement = 'lazy' } = Astro.props;
-const telephone = (i: Image) => i.hauteur > i.largeur;
+// Vue téléphone : écran d'au moins 1,8 fois plus haut que large (390 × 844, soit 2,16). Les recadrages mobiles
+// des écrans desktop peuvent être en portrait (jusqu'à 1,6) sans être des téléphones.
+const telephone = (i: Image) => i.hauteur >= i.largeur * 1.8;
 
 // Largeur réellement affichée, selon les marges du conteneur (16, 32 puis 64 px) et le plafond de 1296 px.
 const TAILLES_ECRAN = `(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) calc(100vw - 64px), (max-width: ${largeur + 127}px) calc(100vw - 128px), ${largeur}px`;

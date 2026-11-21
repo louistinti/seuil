@@ -78,7 +78,7 @@
     "bouton_validation": "Demander la validation",
     "bouton_modifier_regle": "Modifier la règle",
     "validation_simulee": "Sur ce site, rien n'est envoyé : la demande de validation est simulée.",
-    "principe": "L'IA aide à rédiger, elle ne décide jamais : toute règle est testée, puis validée par la direction financière avant publication.",
+    "principe": "L'IA traduit uniquement votre phrase en règle, elle ne décide jamais : toute règle est testée, puis validée par la direction financière avant publication.",
     "mention": "Sur ce site, la traduction est simulée : seules les phrases d'exemple sont reconnues.",
     "libelles_blocs": { "mesure": "Mesure", "comparaison": "Comparaison", "seuil": "Seuil", "condition": "Condition" }
   }

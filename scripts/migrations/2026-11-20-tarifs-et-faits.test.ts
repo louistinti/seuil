@@ -1,15 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { migrer, TRANSFORMATIONS, URL_INSEE_PME, URL_PRIX_LEANPAY } from './2026-11-20-tarifs-et-faits';
+import { migrer, TRANSFORMATIONS, URL_INSEE_PME } from './2026-11-20-tarifs-et-faits';
+import { migrer as corriger, TRANSFORMATIONS as CORRECTIONS, URL_PRIX_LEANPAY } from './2026-11-21-corrections-contenu';
 
 const contenu = JSON.parse(readFileSync(join(process.cwd(), 'content', 'pages.json'), 'utf8'));
 const page = (id: string) => contenu.pages.find((p: { _id: string }) => p._id === id);
 const texte = (o: unknown) => JSON.stringify(o);
 
 describe('migration du 20 novembre 2026 (lot 1)', () => {
-  it('est déjà appliquée au contenu local et ne change plus rien si on la relance', () => {
-    for (const id of Object.keys(TRANSFORMATIONS)) expect(migrer(page(id))).toEqual(page(id));
+  it('est déjà appliquée au contenu local et ne change plus rien si on la relance (suivie des corrections du 21 novembre)', () => {
+    const suite = (p: any) => (CORRECTIONS[p._id] ? corriger(migrer(p)) : migrer(p));
+    for (const id of Object.keys(TRANSFORMATIONS)) expect(suite(page(id))).toEqual(page(id));
   });
 
   it('ne laisse aucune trace du critère « clients actifs »', () => {
@@ -20,7 +22,7 @@ describe('migration du 20 novembre 2026 (lot 1)', () => {
     const tarifs = page('page-tarifs').sections.find((s: { _type: string }) => s._type === 'sectionTarifs');
     expect(tarifs.formules.map((f: any) => [f.nom, f.chiffreAffaires.valeur, f.prix.valeur, f.precisionPrix])).toEqual([
       ['Départ', 'moins de 15 M€', '245 €', 'HT par mois'],
-      ['Équipe', 'de 15 à 50 M€', '345 €', 'HT par mois'],
+      ['Équipe', 'de 15 à 50 M€', '545 €', 'HT par mois'],
       ['Groupe', 'plus de 50 M€', 'Sur devis', undefined],
     ]);
     expect(tarifs.source[0].markDefs.map((d: { href: string }) => d.href)).toEqual([URL_PRIX_LEANPAY, URL_INSEE_PME]);

@@ -12,6 +12,8 @@ describe('traduction simulée', () => {
     expect(traduire(C).etat).toBe('traduite');
     expect(traduire(`  ${A.toUpperCase().replaceAll("'", '’').replaceAll(' ', '   ')} `).etat).toBe('traduite');
     expect(normaliser('Encours + commande')).toBe('encours + commande');
+    // Sans le point final, tel qu'on le tape : la question de clarification sur « retard » apparaît quand même.
+    expect(traduire("Envoyer à l'analyste si le retard dépasse 30 jours").etat).toBe('ambigue');
   });
 
   it('ne reconnaît aucune autre phrase, même un début d’exemple', () => {

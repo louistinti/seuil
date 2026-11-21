@@ -1,10 +1,12 @@
 ---
 interface Props {
   class?: string;
+  'aria-hidden'?: 'true';
 }
+const { class: classe, ...attributs } = Astro.props;
 ---
 
-<span class:list={['etiquette', Astro.props.class]}><slot /></span>
+<span class:list={['etiquette', classe]} {...attributs}><slot /></span>
 
 <style is:global>
   .etiquette {

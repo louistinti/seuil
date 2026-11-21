@@ -31,7 +31,7 @@ const commandesTest = data.commandes_test as Record<string, number>;
 
 /** Comparaison tolérante : casse, espaces multiples, espaces insécables et apostrophes typographiques. */
 export function normaliser(phrase: string): string {
-  return phrase.replace(/[  ]/g, ' ').replace(/[’ʼ]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+  return phrase.replace(/[  ]/g, ' ').replace(/[’ʼ]/g, "'").replace(/\s+/g, ' ').trim().replace(/\s*\.$/, '').toLowerCase();
 }
 
 export type Traduction =

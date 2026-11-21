@@ -217,7 +217,7 @@ Seuil est une entreprise fictive, conçue comme démonstration. Ce document acco
 ## Règle en langage naturel
 
 ### Rédacteur de règle en langage naturel
-- **Rôle.** La personne de la finance écrit une règle en français, Seuil la traduit en règle structurée avec les blocs de l'éditeur de règles. L'IA aide à rédiger, elle ne décide jamais : la règle est testée, puis publiée après validation de la direction financière.
+- **Rôle.** La personne de la finance écrit une règle en français, Seuil la traduit en règle structurée avec les blocs de l'éditeur de règles. L'IA traduit uniquement votre phrase en règle, elle ne décide jamais : la règle est testée, puis publiée après validation de la direction financière.
 - **Maquettes.** `NL-Etat-1` à `NL-Etat-6`, en 1440 et en 390. Textes et règles traduites dans `contenu/regle-langage-naturel.json`.
 - **Structure.** En-tête (titre « Nouvelle règle », étiquettes « Données fictives » et « Traduction simulée sur ce site »), indicateur d'étapes, zone de phrase, zone de résultat (`aria-live="polite"`), mention de bas de panneau.
 - **Variantes.** Desktop : zone de phrase et zone de résultat côte à côte (5 et 7 colonnes). Mobile : empilées, boutons en pleine largeur, blocs de règle de 44 px de haut.
