@@ -16,8 +16,17 @@ export async function getStaticPaths() {
 const { page, reglages } = Astro.props as { page: Page; reglages: Awaited<ReturnType<typeof chargerContenu>>['reglages'] };
 const chemin = route(page.slug);
 const titre = page.slug === 'accueil' ? 'Seuil, décisions de crédit client' : `${page.titre} | Seuil`;
+// Image de partage : celle choisie dans Sanity si elle existe, sinon celle générée au build.
+const partage = page.imagePartage;
 ---
 
-<Base titre={titre} description={page.description} reglages={reglages} chemin={chemin} image={`/partage/${page.slug}.png`} imageAlt={altPartage(page)}>
+<Base
+  titre={titre}
+  description={page.description}
+  reglages={reglages}
+  chemin={chemin}
+  image={partage?.url ?? `/partage/${page.slug}.png`}
+  imageAlt={partage?.alt || altPartage(page)}
+>
   <Sections sections={page.sections} />
 </Base>

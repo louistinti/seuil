@@ -21,7 +21,8 @@
     "captures:hd": "node --env-file-if-exists=.env scripts/remplacer-captures.ts",
     "migration:credit": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-credit.ts",
     "migration:langage-naturel": "node --env-file-if-exists=.env scripts/migrations/2026-11-20-langage-naturel.ts",
-    "migration:corrections": "node --env-file-if-exists=.env scripts/migrations/2026-11-21-corrections-contenu.ts"
+    "migration:corrections": "node --env-file-if-exists=.env scripts/migrations/2026-11-21-corrections-contenu.ts",
+    "migration:partage-accueil": "node --env-file-if-exists=.env scripts/migrations/2026-11-22-image-partage-accueil.ts"
   },
   "dependencies": {
     "@fontsource/geist": "^5.3.0",

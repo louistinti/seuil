@@ -159,6 +159,8 @@ export interface Page {
   titre: string;
   slug: string;
   description: string;
+  /** Image de partage choisie dans Sanity ; sans elle, /partage/<slug>.png est générée au build. */
+  imagePartage?: Image | null;
   sections: Section[];
 }
 

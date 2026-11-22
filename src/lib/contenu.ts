@@ -23,7 +23,7 @@ const client = projectId
 
 const IMAGE = `{alt, crop, "url": asset->url, "largeur": asset->metadata.dimensions.width, "hauteur": asset->metadata.dimensions.height}`;
 const REQUETE_PAGES = `*[_type == "page" && defined(slug.current)] | order(ordre asc) {
-  _id, titre, "slug": slug.current, description,
+  _id, titre, "slug": slug.current, description, "imagePartage": imagePartage${IMAGE},
   sections[] { ..., "capture": capture${IMAGE}, "captureMobile": captureMobile${IMAGE} }
 }`;
 const REQUETE_REGLAGES = `*[_id == "reglages"][0]`;
@@ -59,7 +59,7 @@ function normaliser(page: Record<string, any>): Page {
     return section as Section;
   });
   const slug = typeof page.slug === 'string' ? page.slug : page.slug?.current;
-  return { _id: page._id, titre: page.titre, slug, description: page.description, sections };
+  return { _id: page._id, titre: page.titre, slug, description: page.description, imagePartage: image(page.imagePartage), sections };
 }
 
 let cache: Promise<{ pages: Page[]; reglages: Reglages }> | undefined;

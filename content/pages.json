@@ -265,7 +265,10 @@
             "href": "/demo"
           }
         }
-      ]
+      ],
+      "imagePartage": {
+        "fichier": "Partage-accueil.png"
+      }
     },
     {
       "_id": "page-produit",
@@ -974,6 +977,7 @@
     "App-Mobile-commande.png": "Vue mobile de Seuil : pour Menuiseries Valdorre, une commande de 38 000 € est acceptée par la règle 2. Dessous, les dernières vérifications. Données fictives.",
     "App-Editeur-regles-recadrage-mobile.png": "Éditeur de règles de Seuil : les quatre règles de décision écrites en phrases, le test du brouillon sur les trois clients de démonstration et les droits de publication. Données fictives.",
     "App-Fiche-client-recadrage-mobile.png": "Fiche client de Menuiseries Valdorre dans Seuil : encours de 182 400 € pour une limite de 250 000 €, aucun retard en cours, historique de paiement sur 12 mois et décision recommandée Acceptée, par la règle 2. Données fictives.",
-    "App-File-exceptions-recadrage-mobile.png": "File des exceptions de Seuil : trois demandes triées par priorité puis par montant, et le détail de la demande de Groupe Orvelle, envoyée à l'analyste par la règle 3. Données fictives."
+    "App-File-exceptions-recadrage-mobile.png": "File des exceptions de Seuil : trois demandes triées par priorité puis par montant, et le détail de la demande de Groupe Orvelle, envoyée à l'analyste par la règle 3. Données fictives.",
+    "Partage-accueil.png": "Seuil : décidez des limites de crédit en quelques secondes. Une commande de 38 000 € de Menuiseries Valdorre est acceptée par la règle 2. Données fictives."
   }
 }

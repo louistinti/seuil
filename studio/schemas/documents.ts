@@ -31,6 +31,14 @@ export const page = defineType({
       max: 160,
       description: 'Une ou deux phrases affichées sous le titre dans les résultats de recherche.',
     }),
+    defineField({
+      name: 'imagePartage',
+      title: 'Image de partage (facultative)',
+      type: 'imageCommentee',
+      group: 'referencement',
+      description:
+        'Aperçu affiché quand la page est partagée (LinkedIn, messageries), en 1200 × 630 px. Sans image, le site en génère une à partir du titre de la page.',
+    }),
     defineField({name: 'ordre', title: 'Ordre dans la liste du Studio', type: 'number', group: 'referencement', initialValue: 10}),
     defineField({
       name: 'sections',
