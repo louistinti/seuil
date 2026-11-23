@@ -1,4 +1,4 @@
-// Migration du 20 novembre 2026 : crédit en pied de page (« Créé par Louis Tinti », lié au portfolio).
+// Migration du 20 novembre 2026 : crédit en pied de page (« Créé par Louis Tintillier », lié au portfolio ; nom complet depuis le 23 novembre).
 //
 // Usage :
 //   npm run migration:credit -- --essai   montre ce qui changerait dans Sanity, sans rien écrire
@@ -10,7 +10,7 @@ import { join } from 'node:path';
 export const CREDIT = {
   _type: 'object',
   texte: 'Créé par',
-  lien: { _type: 'lien', libelle: 'Louis Tinti', href: 'https://louistdesign.me' },
+  lien: { _type: 'lien', libelle: 'Louis Tintillier', href: 'https://louistdesign.me' },
 };
 
 async function main() {
